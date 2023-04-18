@@ -145,11 +145,9 @@
                 <div id="content" class="content">
                     <main>
                         <h2 id="data-types"><a class="header" href="#data-types">Data Types</a></h2>
-<p>Every value in Cairo is of a certain <em>data type</em>, which tells Cairo what kind of
-data is being specified so it knows how to work with that data. This section covers two subsets of data types: scalars and compounds.</p>
-<p>Keep in mind that Cairo is a <em>statically typed</em> language, which means that it
-must know the types of all variables at compile time. The compiler can usually infer the desired type based on the value and its usage. In cases
-when many types are possible, we can use a cast method where we specify the desired output type.</p>
+<h2 id="tipos-de-datos"><a class="header" href="#tipos-de-datos">Tipos de datos</a></h2>
+<p>Cada valor en Cairo tiene un cierto <em>tipo de dato</em>, lo que le dice a Cairo qué tipo de datos se están especificando para que sepa cómo trabajar con esos datos. Esta sección cubre dos subconjuntos de tipos de datos: escalares y compuestos.</p>
+<p>Tenga en cuenta que Cairo es un lenguaje <em>de tipado estático</em>, lo que significa que debe conocer los tipos de todas las variables en tiempo de compilación. El compilador suele inferir el tipo deseado en función del valor y su uso. En casos en que pueden ser posibles varios tipos, podemos utilizar un método de conversión donde especificamos el tipo de salida deseado.</p>
 <pre><code class="language-Rust">use traits::TryInto;
 use option::OptionTrait;
 fn main(){
@@ -157,27 +155,22 @@ fn main(){
     let y:u32 = x.try_into().unwrap();
 }
 </code></pre>
-<p>You’ll see different type annotations for other data types.</p>
-<h3 id="scalar-types"><a class="header" href="#scalar-types">Scalar Types</a></h3>
-<p>A <em>scalar</em> type represents a single value. Cairo has three primary scalar types:
-felts, integers, and booleans. You may recognize
-these from other programming languages. Let’s jump into how they work in Cairo.</p>
-<h4 id="felt-type"><a class="header" href="#felt-type">Felt Type</a></h4>
-<p>In Cairo, if you don't specify the type of a variable or argument, its type defaults to a field element, represented by the keyword <code>felt252</code>. In the context of Cairo, when we say “a field element” we mean an integer in the range <code>0 &lt;= x &lt; P</code>,
-where <code>P</code> is a very large prime number currently equal to <code>P = 2^{251} + 17 * 2^{192}+1</code>. When adding, subtracting, or multiplying, if the result falls outside the specified range of the prime number, an overflow occurs, and an appropriate multiple of P is added or subtracted to bring the result back within the range (i.e., the result is computed modulo P).</p>
-<p>The most important difference between integers and field elements is division: Division of field elements (and therefore division in Cairo) is unlike regular CPUs division, where
-integer division <code>x / y</code> is defined as <code>[x/y]</code> where the integer part of the quotient is returned (so you get <code>7 / 3 = 2</code>) and it may or may not satisfy the equation <code>(x / y) * y == x</code>,
-depending on the divisibility of <code>x</code> by <code>y</code>.</p>
-<p>In Cairo, the result of <code>x/y</code> is defined to always satisfy the equation <code>(x / y) * y == x</code>. If y divides x as integers, you will get the expected result in Cairo (for example <code>6 / 2</code>
-will indeed result in <code>3</code>).
-But when y does not divide x, you may get a surprising result: For example, since <code>2 * ((P+1)/2) = P+1 ≡ 1 mod[P]</code>, the value of <code>1 / 2</code> in Cairo is <code>(P+1)/2</code> (and not 0 or 0.5), as it satisfies the above equation.</p>
-<h4 id="integer-types"><a class="header" href="#integer-types">Integer Types</a></h4>
-<p>The felt252 type is a fundamental type that serves as the basis for creating all types in the core library.
-However, it is highly recommended for programmers to use the integer types instead of the <code>felt252</code> type whenever possible, as the <code>integer</code> types come with added security features that provide extra protection against potential vulnerabilities in the code, such as overflow checks. By using these integer types, programmers can ensure that their programs are more secure and less susceptible to attacks or other security threats.
-An <em>integer</em> is a number without a fractional component. This type declaration indicates the number of bits the programmer can use to store the integer.
-Table 3-1 shows
-the built-in integer types in Cairo. We can use any of these variants to declare
-the type of an integer value.</p>
+<p>Verá diferentes anotaciones de tipo para otros tipos de datos.</p>
+<h3 id="tipos-escalares"><a class="header" href="#tipos-escalares">Tipos escalares</a></h3>
+<p>Un tipo <em>scalar</em> representa un único valor. Cairo tiene tres tipos escalares primarios:
+fieltros, enteros y booleanos. Puede que reconozca de otros lenguajes de programación. Veamos cómo funcionan en Cairo.</p>
+<h4 id="tipo-felt"><a class="header" href="#tipo-felt">Tipo Felt</a></h4>
+<p>En Cairo, si no especificas el tipo de una variable o argumento, su tipo por defecto es un elemento de campo, representado por la palabra clave <code>felt252</code>. En el contexto de Cairo, cuando decimos &quot;un elemento de campo&quot; nos referimos a un entero en el rango <code>0 &lt;= x &lt; P</code>, donde <code>P</code> es un número primo muy grande actualmente igual a <code>P = 2^{251} + 17 * 2^{192}+1</code>. Al sumar, restar o multiplicar, si el resultado queda fuera del rango especificado del número primo, se produce un desbordamiento y se suma o resta un múltiplo apropiado de P para que el resultado vuelva a estar dentro del rango (es decir, el resultado se calcula módulo P).</p>
+<p>La diferencia más importante entre los números enteros y los elementos de campo es la división: La división de elementos de campo (y, por tanto, la división en Cairo) es distinta de la división normal de las CPU, en la que
+la división entera <code>x / y</code> se define como <code>[x/y]</code> donde se devuelve la parte entera del cociente (por lo que se obtiene <code>7 / 3 = 2</code>) y puede o no satisfacer la ecuación <code>(x / y) * y == x</code>, dependiendo de la divisibilidad de <code>x</code> por <code>y</code>.</p>
+<p>En Cairo, el resultado de <code>x/y</code> está definido para satisfacer siempre la ecuación <code>(x / y) * y == x</code>. Si <code>y</code> divide a <code>x</code> entre enteros, obtendrás el resultado esperado en Cairo (por ejemplo <code>6 / 2</code> dará como resultado <code>3</code>).
+Pero cuando <code>y</code> no divide a <code>x</code>, puedes obtener un resultado sorprendente: Por ejemplo, como <code>2 * ((P+1)/2) = P+1 ≡ 1 mod[P]</code>, el valor de <code>1 / 2</code> en Cairo es <code>(P+1)/2</code> (y no 0 ó 0,5), ya que satisface la ecuación anterior.</p>
+<h4 id="tipos-enteros"><a class="header" href="#tipos-enteros">Tipos enteros</a></h4>
+<p>El tipo felt252 es un tipo fundamental que sirve como base para la creación de todos los tipos en la librería central.
+Sin embargo, se recomienda encarecidamente a los programadores que utilicen los tipos enteros en lugar del tipo <code>felt252</code> siempre que sea posible, ya que los tipos <code>integer</code> vienen con características de seguridad añadidas que proporcionan protección extra contra posibles vulnerabilidades en el código, como comprobaciones de desbordamiento. Utilizando estos tipos de enteros, los programadores pueden asegurarse de que sus programas son más seguros y menos susceptibles a ataques u otras amenazas de seguridad.</p>
+<p>Un <em>integer</em> es un número sin componente fraccionario. Esta declaración de tipo indica el número de bits que el programador puede utilizar para almacenar el entero.</p>
+<p>La Tabla 3-1 muestra los tipos enteros incorporados en Cairo. Podemos usar cualquiera de estas variantes para declarar
+el tipo de un valor entero.</p>
 <p><span class="caption">Table 3-1: Integer Types in Cairo</span></p>
 <div class="table-wrapper"><table><thead><tr><th>Length</th><th>Unsigned</th></tr></thead><tbody>
 <tr><td>8-bit</td><td><code>u8</code></td></tr>
@@ -189,8 +182,8 @@ the type of an integer value.</p>
 <tr><td>32-bit</td><td><code>usize</code></td></tr>
 </tbody></table>
 </div>
-<p>Each variant has an explicit size. Note that for now, the <code>usize</code> type is just an alias for <code>u32</code>; however, it might be useful when in the future Cairo can be compiled to MLIR.
-As variables are unsigned, they can't contain a negative number. This code will cause the program to panic:</p>
+<p>Cada variante tiene un tamaño explícito. Tenga en cuenta que por ahora, el tipo <code>usize</code> es sólo un alias para <code>u32</code>; sin embargo, podría ser útil cuando en el futuro Cairo pueda ser compilado a MLIR.
+Como las variables son sin signo, no pueden contener un número negativo. Este código hará que el programa entre en pánico:</p>
 <pre><code class="language-rust">fn sub_u8s(x: u8, y: u8) -&gt; u8 {
     x - y
 }
@@ -198,9 +191,9 @@ As variables are unsigned, they can't contain a negative number. This code will 
 fn main() {
     sub_u8s(1,3);
 }</code></pre>
-<p>You can write integer literals in any of the forms shown in Table 3-2. Note
-that number literals that can be multiple numeric types allow a type suffix,
-such as <code>57_u8</code>, to designate the type.</p>
+<p>Puede escribir literales enteros en cualquiera de las formas mostradas en la Tabla 3-2. Observe
+que los literales numéricos que pueden ser múltiples tipos numéricos permiten un sufijo de tipo
+como <code>57_u8</code>, para designar el tipo.</p>
 <p><span class="caption">Table 3-2: Integer Literals in Cairo</span></p>
 <div class="table-wrapper"><table><thead><tr><th>Numeric literals</th><th>Example</th></tr></thead><tbody>
 <tr><td>Decimal</td><td><code>98222</code></td></tr>
@@ -209,13 +202,10 @@ such as <code>57_u8</code>, to designate the type.</p>
 <tr><td>Binary</td><td><code>0b01</code></td></tr>
 </tbody></table>
 </div>
-<p>So how do you know which type of integer to use? Try to estimate the max value your int can have and choose the good size.
-The primary situation in which you’d use <code>usize</code> is when indexing some sort of collection.</p>
-<h4 id="numeric-operations"><a class="header" href="#numeric-operations">Numeric Operations</a></h4>
-<p>Cairo supports the basic mathematical operations you’d expect for all the integer
-types: addition, subtraction, multiplication, division, and remainder (u256 doesn't support division and remainder yet). Integer
-division truncates toward zero to the nearest integer. The following code shows
-how you’d use each numeric operation in a <code>let</code> statement:</p>
+<p>Entonces, ¿cómo saber qué tipo de entero utilizar? Intenta estimar el valor máximo que puede tener tu int y elige un buen tamaño.
+La principal situación en la que usarías <code>usize</code> es al indexar algún tipo de colección.</p>
+<h4 id="operaciones-numéricas"><a class="header" href="#operaciones-numéricas">Operaciones numéricas</a></h4>
+<p>Cairo soporta las operaciones matemáticas básicas que esperarías para todos los tipos de enteros: suma, resta, multiplicación y resto (u256 no soporta división y resto todavía). Entero trunca hacia cero al entero más cercano. El siguiente código muestra cómo utilizar cada operación numérica en una sentencia <code>let</code>:</p>
 <pre><code class="language-rust">fn main() {
      // addition
     let sum = 5_u128 + 10_u128;
@@ -233,8 +223,7 @@ how you’d use each numeric operation in a <code>let</code> statement:</p>
     // remainder
     let remainder = 43_u128 % 5_u128; // result is 3
 }</code></pre>
-<p>Each expression in these statements uses a mathematical operator and evaluates
-to a single value, which is then bound to a variable.</p>
+<p>Cada expresión de estas sentencias utiliza un operador matemático y se evalúa a un único valor, que se asigna a una variable.</p>
 <!-- TODO: Appendix operator -->
 <!-- [Appendix B][appendix_b] ignore contains a list of all operators that Cairo provides. -->
 <h4 id="the-boolean-type"><a class="header" href="#the-boolean-type">The Boolean Type</a></h4>

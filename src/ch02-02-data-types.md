@@ -1,11 +1,11 @@
 ## Data Types
 
-Every value in Cairo is of a certain _data type_, which tells Cairo what kind of
-data is being specified so it knows how to work with that data. This section covers two subsets of data types: scalars and compounds.
+## Tipos de datos
 
-Keep in mind that Cairo is a _statically typed_ language, which means that it
-must know the types of all variables at compile time. The compiler can usually infer the desired type based on the value and its usage. In cases
-when many types are possible, we can use a cast method where we specify the desired output type.
+Cada valor en Cairo tiene un cierto _tipo de dato_, lo que le dice a Cairo qué tipo de datos se están especificando para que sepa cómo trabajar con esos datos. Esta sección cubre dos subconjuntos de tipos de datos: escalares y compuestos.
+
+Tenga en cuenta que Cairo es un lenguaje _de tipado estático_, lo que significa que debe conocer los tipos de todas las variables en tiempo de compilación. El compilador suele inferir el tipo deseado en función del valor y su uso. En casos en que pueden ser posibles varios tipos, podemos utilizar un método de conversión donde especificamos el tipo de salida deseado.
+
 
 ```Rust
 use traits::TryInto;
@@ -16,35 +16,31 @@ fn main(){
 }
 ```
 
-You’ll see different type annotations for other data types.
+Verá diferentes anotaciones de tipo para otros tipos de datos.
 
-### Scalar Types
+### Tipos escalares
 
-A _scalar_ type represents a single value. Cairo has three primary scalar types:
-felts, integers, and booleans. You may recognize
-these from other programming languages. Let’s jump into how they work in Cairo.
+Un tipo _scalar_ representa un único valor. Cairo tiene tres tipos escalares primarios:
+fieltros, enteros y booleanos. Puede que reconozca de otros lenguajes de programación. Veamos cómo funcionan en Cairo.
 
-#### Felt Type
+#### Tipo Felt 
 
-In Cairo, if you don't specify the type of a variable or argument, its type defaults to a field element, represented by the keyword `felt252`. In the context of Cairo, when we say “a field element” we mean an integer in the range `0 <= x < P`,
-where `P` is a very large prime number currently equal to `P = 2^{251} + 17 * 2^{192}+1`. When adding, subtracting, or multiplying, if the result falls outside the specified range of the prime number, an overflow occurs, and an appropriate multiple of P is added or subtracted to bring the result back within the range (i.e., the result is computed modulo P).
+En Cairo, si no especificas el tipo de una variable o argumento, su tipo por defecto es un elemento de campo, representado por la palabra clave `felt252`. En el contexto de Cairo, cuando decimos "un elemento de campo" nos referimos a un entero en el rango `0 <= x < P`, donde `P` es un número primo muy grande actualmente igual a `P = 2^{251} + 17 * 2^{192}+1`. Al sumar, restar o multiplicar, si el resultado queda fuera del rango especificado del número primo, se produce un desbordamiento y se suma o resta un múltiplo apropiado de P para que el resultado vuelva a estar dentro del rango (es decir, el resultado se calcula módulo P).
 
-The most important difference between integers and field elements is division: Division of field elements (and therefore division in Cairo) is unlike regular CPUs division, where
-integer division `x / y` is defined as `[x/y]` where the integer part of the quotient is returned (so you get `7 / 3 = 2`) and it may or may not satisfy the equation `(x / y) * y == x`,
-depending on the divisibility of `x` by `y`.
+La diferencia más importante entre los números enteros y los elementos de campo es la división: La división de elementos de campo (y, por tanto, la división en Cairo) es distinta de la división normal de las CPU, en la que
+la división entera `x / y` se define como `[x/y]` donde se devuelve la parte entera del cociente (por lo que se obtiene `7 / 3 = 2`) y puede o no satisfacer la ecuación `(x / y) * y == x`, dependiendo de la divisibilidad de `x` por `y`.
 
-In Cairo, the result of `x/y` is defined to always satisfy the equation `(x / y) * y == x`. If y divides x as integers, you will get the expected result in Cairo (for example `6 / 2`
-will indeed result in `3`).
-But when y does not divide x, you may get a surprising result: For example, since `2 * ((P+1)/2) = P+1 ≡ 1 mod[P]`, the value of `1 / 2` in Cairo is `(P+1)/2` (and not 0 or 0.5), as it satisfies the above equation.
+En Cairo, el resultado de `x/y` está definido para satisfacer siempre la ecuación `(x / y) * y == x`. Si `y` divide a `x` entre enteros, obtendrás el resultado esperado en Cairo (por ejemplo `6 / 2` dará como resultado `3`).
+Pero cuando `y` no divide a `x`, puedes obtener un resultado sorprendente: Por ejemplo, como `2 * ((P+1)/2) = P+1 ≡ 1 mod[P]`, el valor de `1 / 2` en Cairo es `(P+1)/2` (y no 0 ó 0,5), ya que satisface la ecuación anterior.
+#### Tipos enteros
 
-#### Integer Types
+El tipo felt252 es un tipo fundamental que sirve como base para la creación de todos los tipos en la librería central.
+Sin embargo, se recomienda encarecidamente a los programadores que utilicen los tipos enteros en lugar del tipo `felt252` siempre que sea posible, ya que los tipos `integer` vienen con características de seguridad añadidas que proporcionan protección extra contra posibles vulnerabilidades en el código, como comprobaciones de desbordamiento. Utilizando estos tipos de enteros, los programadores pueden asegurarse de que sus programas son más seguros y menos susceptibles a ataques u otras amenazas de seguridad.
 
-The felt252 type is a fundamental type that serves as the basis for creating all types in the core library.
-However, it is highly recommended for programmers to use the integer types instead of the `felt252` type whenever possible, as the `integer` types come with added security features that provide extra protection against potential vulnerabilities in the code, such as overflow checks. By using these integer types, programmers can ensure that their programs are more secure and less susceptible to attacks or other security threats.
-An _integer_ is a number without a fractional component. This type declaration indicates the number of bits the programmer can use to store the integer.
-Table 3-1 shows
-the built-in integer types in Cairo. We can use any of these variants to declare
-the type of an integer value.
+Un _integer_ es un número sin componente fraccionario. Esta declaración de tipo indica el número de bits que el programador puede utilizar para almacenar el entero.
+
+La Tabla 3-1 muestra los tipos enteros incorporados en Cairo. Podemos usar cualquiera de estas variantes para declarar
+el tipo de un valor entero.
 
 <span class="caption">Table 3-1: Integer Types in Cairo</span>
 
@@ -58,8 +54,8 @@ the type of an integer value.
 | 256-bit | `u256`   |
 | 32-bit  | `usize`  |
 
-Each variant has an explicit size. Note that for now, the `usize` type is just an alias for `u32`; however, it might be useful when in the future Cairo can be compiled to MLIR.
-As variables are unsigned, they can't contain a negative number. This code will cause the program to panic:
+Cada variante tiene un tamaño explícito. Tenga en cuenta que por ahora, el tipo `usize` es sólo un alias para `u32`; sin embargo, podría ser útil cuando en el futuro Cairo pueda ser compilado a MLIR.
+Como las variables son sin signo, no pueden contener un número negativo. Este código hará que el programa entre en pánico:
 
 ```rust
 fn sub_u8s(x: u8, y: u8) -> u8 {
@@ -71,9 +67,9 @@ fn main() {
 }
 ```
 
-You can write integer literals in any of the forms shown in Table 3-2. Note
-that number literals that can be multiple numeric types allow a type suffix,
-such as `57_u8`, to designate the type.
+Puede escribir literales enteros en cualquiera de las formas mostradas en la Tabla 3-2. Observe
+que los literales numéricos que pueden ser múltiples tipos numéricos permiten un sufijo de tipo
+como `57_u8`, para designar el tipo.
 
 <span class="caption">Table 3-2: Integer Literals in Cairo</span>
 
@@ -84,15 +80,12 @@ such as `57_u8`, to designate the type.
 | Octal            | `0o04321` |
 | Binary           | `0b01`    |
 
-So how do you know which type of integer to use? Try to estimate the max value your int can have and choose the good size.
-The primary situation in which you’d use `usize` is when indexing some sort of collection.
+Entonces, ¿cómo saber qué tipo de entero utilizar? Intenta estimar el valor máximo que puede tener tu int y elige un buen tamaño.
+La principal situación en la que usarías `usize` es al indexar algún tipo de colección.
 
-#### Numeric Operations
+#### Operaciones numéricas
 
-Cairo supports the basic mathematical operations you’d expect for all the integer
-types: addition, subtraction, multiplication, division, and remainder (u256 doesn't support division and remainder yet). Integer
-division truncates toward zero to the nearest integer. The following code shows
-how you’d use each numeric operation in a `let` statement:
+Cairo soporta las operaciones matemáticas básicas que esperarías para todos los tipos de enteros: suma, resta, multiplicación y resto (u256 no soporta división y resto todavía). Entero trunca hacia cero al entero más cercano. El siguiente código muestra cómo utilizar cada operación numérica en una sentencia `let`:
 
 ```rust
 fn main() {
@@ -114,8 +107,7 @@ fn main() {
 }
 ```
 
-Each expression in these statements uses a mathematical operator and evaluates
-to a single value, which is then bound to a variable.
+Cada expresión de estas sentencias utiliza un operador matemático y se evalúa a un único valor, que se asigna a una variable.
 
 <!-- TODO: Appendix operator -->
 <!-- [Appendix B][appendix_b] ignore contains a list of all operators that Cairo provides. -->

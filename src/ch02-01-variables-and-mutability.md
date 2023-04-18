@@ -1,18 +1,13 @@
-## Variables and Mutability
+## Variables y mutabilidad
 
-Cairo uses an immutable memory model, meaning that once a memory cell is written to,
-it can't be overwritten but only read from. To reflect this immutable memory model,
-variables in Cairo are immutable by default.
-However, the language abstracts this model and gives you the option to make your
-variables mutable. Let’s explore how and why Cairo enforces immutability, and how
-you can make your variables mutable.
+Cairo usa un modelo de memoria inmutable, lo que significa que una vez que se escribe en una celda de memoria, no puede ser sobrescrita sino sólo leída. Para reflejar este modelo de memoria inmutable, las variables en Cairo son inmutables por defecto.
+Sin embargo, el lenguaje abstrae este modelo y te da la opción de hacer tus
+variables mutables. Exploremos cómo y por qué Cairo impone la inmutabilidad, y cómo
+puedes hacer tus variables mutables.
 
-When a variable is immutable, once a value is bound to a name, you can’t change
-that value. To illustrate this, generate a new project called _variables_ in
-your _cairo_projects_ directory by using `scarb new variables`.
+Cuando una variable es inmutable, una vez que un valor está ligado a un nombre, no puedes cambiar ese valor. Para ilustrar esto, genera un nuevo proyecto llamado _variables_ en tu directorio _cairo_projects_ usando `scarb new variables`.
 
-Then, in your new _variables_ directory, open _src/lib.cairo_ and replace its
-code with the following code, which won’t compile just yet:
+A continuación, en su nuevo directorio _variables_, abra _src/lib.cairo_ y sustituya su código por el siguiente, que todavía no compilará:
 
 <span class="filename">Filename: src/lib.cairo</span>
 
@@ -26,8 +21,7 @@ fn main() {
 }
 ```
 
-Save and run the program using `cairo-run src/lib.cairo`. You should receive an error message
-regarding an immutability error, as shown in this output:
+Guarde y ejecute el programa utilizando `cairo-run src/lib.cairo`. Debería recibir un mensaje de error relativo a un error de inmutabilidad, como se muestra en esta salida:
 
 ```console
 error: Cannot assign to an immutable variable.
@@ -38,40 +32,22 @@ error: Cannot assign to an immutable variable.
 Error: failed to compile: src/lib.cairo
 ```
 
-This example shows how the compiler helps you find errors in your programs.
-Compiler errors can be frustrating, but really they only mean your program
-isn’t safely doing what you want it to do yet; they do _not_ mean that you’re
-not a good programmer! Experienced Caironautes still get compiler errors.
+Este ejemplo muestra cómo el compilador te ayuda a encontrar errores en tus programas.
+Los errores del compilador pueden ser frustrantes, pero en realidad sólo significan que su programa 
+todavía no está haciendo con seguridad lo que usted quiere que haga; ¡no significan que usted no sea un buen programador! Los Caironautas experimentados siguen teniendo errores de compilador.
 
-You received the error message `Cannot assign to an immutable variable.`
-because you tried to assign a second value to the immutable `x` variable.
+Recibiste el mensaje de error `Cannot assign to an immutable variable.` porque intentaste asignar un segundo valor a la variable inmutable `x`.
 
-It’s important that we get compile-time errors when we attempt to change a
-value that’s designated as immutable because this specific situation can lead to
-bugs. If one part of our code operates on the assumption that a value will
-never change and another part of our code changes that value, it’s possible
-that the first part of the code won’t do what it was designed to do. The cause
-of this kind of bug can be difficult to track down after the fact, especially
-when the second piece of code changes the value only _sometimes_. The Cairo
-compiler guarantees that when you state that a value won’t change, it really
-won’t change, so you don’t have to keep track of it yourself. Your code is thus
-easier to reason through.
+Es importante que obtengamos errores en tiempo de compilación cuando intentamos cambiar un valor designado como inmutable porque esta situación específica puede conducir a errores. Si una parte de nuestro código opera bajo la suposición de que un valor nunca cambiará y otra parte de nuestro código cambia ese valor, es posible
+que la primera parte del código no haga lo que fue diseñada para hacer. La causa de este tipo de error puede ser difícil de rastrear después de los hechos, especialmente cuando la segunda parte del código cambia el valor sólo _a veces_. El compilador Cairo garantiza que cuando dices que un valor no cambiará, realmente no cambiará, por lo que no tiene que hacer un seguimiento. Su código es así más fácil de razonar.
 
-But mutability can be very useful, and can make code more convenient to write.
-Although variables are immutable by default, you can make them mutable by
-adding `mut` in front of the variable name. Adding `mut` also conveys
-intent to future readers of the code by indicating that other parts of the code
-will be changing this variable’s value.
+Pero la mutabilidad puede ser muy útil, y puede hacer que el código sea más cómodo de escribir.
+Aunque las variables son inmutables por defecto, puedes hacerlas mutables añadiendo `mut` delante del nombre de la variable. Añadir `mut` también transmite intención a los futuros lectores del código indicando que otras partes del código cambiarán el valor de esta variable.
 
-However, you might be wondering at this point what exactly happens when a variable
-is declared as `mut`, as we previously mentioned that Cairo's memory is immutable.
-The answer is that Cairo's memory is immutable, but the memory address the variable points
-to can be changed. Upon examining the low-level Cairo Assembly code, it becomes clear that
-variable mutation is implemented as syntactic sugar, which translates mutation operations
-into a series of steps equivalent to variable shadowing. The only difference is that at the Cairo
-level, the variable is not redeclared so its type cannot change.
+Sin embargo, puede que en este punto te estés preguntando qué ocurre exactamente cuando una variable es declarada como `mut`, ya que previamente mencionamos que la memoria de Cairo es inmutable.
+La respuesta es que la memoria de Cairo es inmutable, pero la dirección de memoria a la que apunta la variable puede ser cambiada. Al examinar el código ensamblador de bajo nivel de Cairo, queda claro que la mutación de variables se implementa como azúcar sintáctico, que traduce las operaciones de mutación en una serie de pasos equivalentes al shadowing de variables. La única diferencia es que en el nivel la variable no se vuelve a declarar, por lo que su tipo no puede cambiar.
 
-For example, let’s change _src/lib.cairo_ to the following:
+Por ejemplo, cambiemos _src/lib.cairo_ por lo siguiente:
 
 <span class="filename">Filename: src/lib.cairo</span>
 
@@ -85,7 +61,7 @@ fn main() {
 }
 ```
 
-When we run the program now, we get this:
+Cuando ejecutamos el programa ahora, obtenemos esto:
 
 ```console
 ❯ cairo-run src/lib.cairo
@@ -96,60 +72,36 @@ When we run the program now, we get this:
 Run completed successfully, returning []
 ```
 
-We’re allowed to change the value bound to `x` from `5` to `6` when `mut` is
-used. Ultimately, deciding whether to use mutability or not is up to you and
-depends on what you think is clearest in that particular situation.
+Se nos permite cambiar el valor ligado a `x` de `5` a `6` cuando se usa `mut`. En última instancia, la decisión de utilizar la mutabilidad o no es suya y depende de lo que usted piensa que es más claro en esa situación particular.
 
-### Constants
+##### Constantes
 
-Like immutable variables, _constants_ are values that are bound to a name and
-are not allowed to change, but there are a few differences between constants
-and variables.
+Al igual que las variables inmutables, las _constantes_ son valores que están vinculados a un nombre y no se les permite cambiar, pero hay algunas diferencias entre las constantes y las variables.
 
-First, you aren’t allowed to use `mut` with constants. Constants aren’t just
-immutable by default—they’re always immutable. You declare constants using the
-`const` keyword instead of the `let` keyword, and the type of the value _must_
-be annotated. We’ll cover types and type annotations in the next section,
-[“Data Types”][data-types]<!-- ignore -->, so don’t worry about the details
-right now. Just know that you must always annotate the type.
+En primer lugar, no se permite el uso de `mut` con las constantes. Las constantes no son solo inmutables por defecto, sino que siempre son inmutables. Se declaran constantes usando la palabra clave `const` en lugar de la palabra clave `let`, y el tipo de valor _debe_ ser anotado. Cubriremos los tipos y las anotaciones de tipo en la próxima sección, [“Tipos de datos”][tipos-de-datos]<!-- ignore -->, así que no se preocupe por los detalles por ahora. Solo sepa que siempre debe anotar el tipo.
 
-Constants can only be declared in the global scope, which makes
-them useful for values that many parts of code need to know about.
+Las constantes solo se pueden declarar en el ámbito global, lo que las hace útiles para valores que muchas partes del código deben conocer.
 
-The last difference is that constants may be set only to a constant expression,
-not the result of a value that could only be computed at runtime. Only literal constants
-are currently supported.
+La última diferencia es que las constantes solo pueden ser asignadas a una expresión constante, no al resultado de un valor que solo se podría calcular en tiempo de ejecución. Actualmente, solo se admiten constantes literales.
 
-Here’s an example of a constant declaration:
+Aquí hay un ejemplo de declaración de constante:
+
 
 ```rust
 const ONE_HOUR_IN_SECONDS: u32 = 3600_u32;
 ```
 
-Cairo's naming convention for constants is to use all uppercase with
-underscores between words.
+La convención de nomenclatura de Cairo para las constantes es usar todas las mayúsculas con guiones bajos entre palabras.
 
-Constants are valid for the entire time a program runs, within the scope in
-which they were declared. This property makes constants useful for values in
-your application domain that multiple parts of the program might need to know
-about, such as the maximum number of points any player of a game is allowed to
-earn, or the speed of light.
+La convención de nombres de constantes en Cairo es utilizar todo en mayúsculas con guiones bajos entre palabras.
 
-Naming hardcoded values used throughout your program as constants is useful in
-conveying the meaning of that value to future maintainers of the code. It also
-helps to have only one place in your code you would need to change if the
-hardcoded value needed to be updated in the future.
+Las constantes son válidas durante todo el tiempo que se ejecuta un programa, dentro del ámbito en el que fueron declaradas. Esta propiedad hace que las constantes sean útiles para los valores en el dominio de su aplicación que varias partes del programa podrían necesitar conocer, como el número máximo de puntos que cualquier jugador de un juego puede ganar o la velocidad de la luz.
+
+Nombrar los valores codificados en duro utilizados en todo el programa como constantes es útil para transmitir el significado de ese valor a los futuros mantenedores del código. También ayuda a tener solo un lugar en su código donde tendría que cambiar si el valor codificado en duro necesitara ser actualizado en el futuro.
 
 ### Shadowing
 
-Variable shadowing refers to the declaration of a
-new variable with the same name as a previous variable. Caironautes say that the
-first variable is _shadowed_ by the second, which means that the second
-variable is what the compiler will see when you use the name of the variable.
-In effect, the second variable overshadows the first, taking any uses of the
-variable name to itself until either it itself is shadowed or the scope ends.
-We can shadow a variable by using the same variable’s name and repeating the
-use of the `let` keyword as follows:
+La sombra de una variable se refiere a la declaración de una nueva variable con el mismo nombre que una variable anterior. Los caironautas dicen que la primera variable está _sombreada_ por la segunda, lo que significa que el compilador verá la segunda variable cuando use el nombre de la variable. En efecto, la segunda variable oculta la primera, tomando cualquier uso del nombre de la variable para sí misma hasta que ella misma sea sombreada o que el ámbito termine. Podemos sombrear una variable usando el mismo nombre de la variable y repitiendo el uso de la palabra clave `let` de la siguiente manera:
 
 <span class="filename">Filename: src/lib.cairo</span>
 
@@ -168,13 +120,7 @@ fn main() {
 }
 ```
 
-This program first binds `x` to a value of `5`. Then it creates a new variable
-`x` by repeating `let x =`, taking the original value and adding `1` so the
-value of `x` is then `6`. Then, within an inner scope created with the curly
-brackets, the third `let` statement also shadows `x` and creates a new
-variable, multiplying the previous value by `2` to give `x` a value of `12`.
-When that scope is over, the inner shadowing ends and `x` returns to being `6`.
-When we run this program, it will output the following:
+Este programa primero asigna un valor de `5` a `x`. Luego crea una nueva variable `x` repitiendo `let x =`, tomando el valor original y sumando `1`, por lo que el valor de `x` es ahora `6`. Luego, dentro de un ámbito interno creado con llaves, la tercera instrucción `let` también sombrea `x` y crea una nueva variable, multiplicando el valor anterior por `2` para darle a `x` un valor de `12`. Cuando ese ámbito termina, la sombra interna termina y `x` vuelve a ser `6`. Al ejecutar este programa, se mostrará lo siguiente:
 
 ```console
 cairo-run src/lib.cairo
@@ -189,20 +135,9 @@ cairo-run src/lib.cairo
 
 Run completed successfully, returning []
 ```
+El sombreado es diferente de marcar una variable como `mut`, porque obtendremos un error en tiempo de compilación si intentamos reasignar a esta variable sin usar la palabra clave `let`. Al usar `let`, podemos realizar algunas transformaciones en un valor pero hacer que la variable sea inmutable después de que se hayan completado esas transformaciones.
 
-Shadowing is different from marking a variable as `mut` because we’ll get a
-compile-time error if we accidentally try to reassign to this variable without
-using the `let` keyword. By using `let`, we can perform a few transformations
-on a value but have the variable be immutable after those transformations have
-been completed.
-
-Another distinction between `mut` and shadowing is that when we use the `let` keyword again,
-we are effectively creating a new variable, which allows us to change the type of the
-value while reusing the same name. As mentioned before, variable shadowing and mutable variables
-are equivalent at the lower level.
-The only difference is that by shadowing a variable, the compiler will not complaing
-if you change its type. For example, say our program performs a type conversion between the
-`u64` and `felt252` types.
+Otra diferencia entre `mut` y el sombreado es que al usar la palabra clave `let` nuevamente, estamos creando efectivamente una nueva variable, lo que nos permite cambiar el tipo del valor mientras reutilizamos el mismo nombre. Como se mencionó antes, el sombreado de variables y las variables mutables son equivalentes a un nivel más bajo. La única diferencia es que al sombrear una variable, el compilador no se quejará si cambia su tipo. Por ejemplo, digamos que nuestro programa realiza una conversión de tipo entre los tipos `u64` y `felt252`.
 
 ```rust
 use debug::PrintTrait;
@@ -215,10 +150,8 @@ fn main() {
 }
 ```
 
-The first `x` variable has a `u64` type while the second `x` variable has a `felt252` type.
-Shadowing thus spares us from having to come up with different names, such as `x_u64`
-and `x_felt252`; instead, we can reuse the simpler `x` name. However, if we try to use
-`mut` for this, as shown here, we’ll get a compile-time error:
+LEl primer variable `x` tiene un tipo `u64`, mientras que la segunda variable `x` tiene un tipo `felt252`.
+Por lo tanto, el shadowing nos ahorra tener que inventar diferentes nombres, como `x_u64` y `x_felt252`; en su lugar, podemos reutilizar el nombre más simple `x`. Sin embargo, si intentamos usar `mut` para esto, como se muestra aquí, obtendremos un error en tiempo de compilación:
 
 ```rust
 use debug::PrintTrait;
@@ -231,7 +164,7 @@ fn main() {
 }
 ```
 
-The error says we’re were expecting a `u64` (the original type) but we got a different type:
+El error dice que se esperaba un `u64` (el tipo original) pero se obtuvo un tipo diferente:
 
 ```console
 ❯ cairo-run src/lib.cairo
@@ -243,7 +176,6 @@ error: Unexpected argument type. Expected: "core::integer::u64", found: "core::f
 Error: failed to compile: src/lib.cairo
 ```
 
-Now that we’ve explored how variables work, let’s look at more data types they
-can have.
+Ahora que hemos explorado cómo funcionan las variables, veamos otros tipos de datos que pueden tener.
 
 [data-types]: ch03-02-data-types.html#data-types

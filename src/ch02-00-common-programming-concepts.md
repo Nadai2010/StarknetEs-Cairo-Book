@@ -1,5 +1,5 @@
-# Common Programming Concepts
+# Conceptos comunes de programación
 
-This chapter covers concepts that appear in almost every programming language and how they work in Cairo. Many programming languages have much in common at their core. None of the concepts presented in this chapter are unique to Cairo, but we’ll discuss them in the context of Cairo and explain the conventions around using these concepts.
+Este capítulo cubre conceptos que aparecen en casi todos los lenguajes de programación y cómo funcionan en Cairo. Muchos lenguajes de programación tienen mucho en común en su núcleo. Ninguno de los conceptos presentados en este capítulo son exclusivos de Cairo, pero los discutiremos en el contexto de Cairo y explicaremos las convenciones sobre el uso de estos conceptos.
 
-Specifically, you’ll learn about variables, basic types, functions, comments, and control flow. These foundations will be in every Cairo program, and learning them early will give you a strong core to start from.
+Específicamente, aprenderás sobre variables, tipos básicos, funciones, comentarios y flujo de control. Estos fundamentos estarán en cada programa de Cairo, y aprenderlos desde el principio te dará un núcleo fuerte desde el que empezar.

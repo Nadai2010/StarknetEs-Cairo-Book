@@ -399,141 +399,137 @@ expresión ha terminado y la siguiente está lista para comenzar. La mayoría de
 proyecto crezca, querrá manejar todas las opciones y hacer fácil compartir su código.
 código. A continuación, te presentaremos la herramienta Scarb, que te ayudará a escribir
 programas Cairo del mundo real.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="hello-scarb"><a class="header" href="#hello-scarb">Hello, Scarb</a></h1>
-<p>Scarb is the Cairo package manager and heavily inspired by <a href="https://doc.rust-lang.org/cargo/">Cargo</a>, Rust’s build system and package manager.</p>
-<p>Scarb handles a lot of tasks for you, such as building your code (either pure Cairo or Starknet contracts), downloading the libraries your code depends on, and building those libraries.</p>
-<p>If we were to build the 'Hello, world!' project using Scarb, only the part of Scarb that handles building the code would be utilized, since the program doesn't require any external dependencies. As you write more complex Cairo programs, you’ll add dependencies, and if you start a project using Scarb, adding dependencies will be much easier to do.</p>
-<p>Let's start by installing Scarb.</p>
-<h2 id="installing-scarb"><a class="header" href="#installing-scarb">Installing Scarb</a></h2>
-<h3 id="requirements"><a class="header" href="#requirements">Requirements</a></h3>
-<p>Scarb requires a Git executable to be available in the <code>PATH</code> environment variable.</p>
-<h3 id="installation"><a class="header" href="#installation">Installation</a></h3>
-<p>As for now, Scarb needs manual installation with the following steps:</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="hola-scarb"><a class="header" href="#hola-scarb">Hola, Scarb</a></h1>
+<p>Scarb es el gestor de paquetes de Cairo y está fuertemente inspirado en <a href="https://doc.rust-lang.org/cargo/">Cargo</a>, el sistema de construcción y gestor de paquetes de Rust.</p>
+<p>Scarb maneja muchas tareas por ti, como construir tu código (ya sea Cairo puro o contratos Starknet), descargar las librerías de las que depende tu código, y construir esas librerías.</p>
+<p>Si fuéramos a construir el proyecto <code>Hello, world!</code> usando Scarb, sólo la parte de Scarb que maneja la construcción del código sería utilizada, ya que el programa no requiere ninguna dependencia externa. A medida que escriba programas Cairo más complejos, agregará dependencias, y si inicia un proyecto utilizando Scarb, agregar dependencias será mucho más fácil de hacer.</p>
+<p>Empecemos instalando Scarb.</p>
+<h2 id="instalando-scarb"><a class="header" href="#instalando-scarb">Instalando Scarb</a></h2>
+<h3 id="requisitos"><a class="header" href="#requisitos">Requisitos</a></h3>
+<p>Scarb requiere un ejecutable Git disponible en la variable de entorno <code>PATH</code>.</p>
+<h3 id="instalación-2"><a class="header" href="#instalación-2">Instalación</a></h3>
+<p>Por ahora, Scarb necesita instalación manual con los siguientes pasos:</p>
 <ul>
 <li>
-<p>Download the release archive matching your operating system and CPU architecture, from <a href="https://github.com/software-mansion/scarb/releases">Scarb releases on GitHub</a></p>
+<p>Descargue el archivo de versiones correspondiente a su sistema operativo y arquitectura de CPU desde <a href="https://github.com/software-mansion/scarb/releases">Scarb releases on GitHub</a></p>
 </li>
 <li>
-<p>Extract it to a location where you would like to have Scarb installed, e.g. <code>~/scarb</code></p>
+<p>Extráigalo a una ubicación en la que desee tener Scarb instalado, por ejemplo. <code>~/scarb</code></p>
 </li>
 <li>
-<p>Add path to the <code>scarb/bin</code> directory to your <code>PATH</code> environment variable.</p>
-<p>This depend on what shell you are using. Let’s take the example of <a href="https://ohmyz.sh/">zsh</a> and you have extracted Scarb to <code>~/scarb</code>:</p>
+<p>Añada la ruta al directorio <code>scarb/bin</code> a su variable de entorno <code>PATH</code>.</p>
+<p>Esto depende del shell que esté utilizando. Tomemos el ejemplo de <a href="https://ohmyz.sh/">zsh</a> y has extraido Scarb a <code>~/scarb</code>:</p>
 <ul>
-<li>Open <code>~/.zshrc</code> file in your favorite editor</li>
-<li>Add the following line to the end of the file: <code>export PATH=&quot;$PATH:~/scarb/bin&quot;</code></li>
+<li>Abra el archivo <code>~/.zshrc</code> en su editor favorito
+-Añada la siguiente línea al final del archivo: <code>export PATH=&quot;$PATH:~/scarb/bin&quot;</code></li>
 </ul>
 </li>
 <li>
-<p>Verify installation by running the following command in new terminal session, it should print both Scarb and Cairo language versions, e.g:</p>
+<p>Verifique la instalación ejecutando el siguiente comando en una nueva sesión de terminal, debería imprimir las versiones en Scarb y Cairo, por ejemplo:</p>
 <pre><code class="language-bash">$ scarb --version
 scarb 0.1.0 (289137c24 2023-03-28)
 cairo: 1.0.0-alpha.6
 </code></pre>
 </li>
 </ul>
-<h3 id="creating-a-project-with-scarb"><a class="header" href="#creating-a-project-with-scarb">Creating a Project with Scarb</a></h3>
-<p>Let’s create a new project using Scarb and look at how it differs from our original “Hello, world!” project.</p>
-<p>Navigate back to your projects directory (or wherever you decided to store your code). Then run the following:</p>
+<h3 id="creando-un-proyecto-con-scarb"><a class="header" href="#creando-un-proyecto-con-scarb">Creando un Proyecto con Scarb</a></h3>
+<p>Vamos a crear un nuevo proyecto utilizando Scarb y ver en qué se diferencia de nuestro proyecto original “Hello, world!”.</p>
+<p>Navegue de nuevo a su directorio de proyectos (o donde haya decidido almacenar su código). Luego ejecute lo siguiente:</p>
 <pre><code class="language-bash">$ scarb new hello_scarb
 </code></pre>
-<p>It creates a new directory and project called hello_scarb. We’ve named our project hello_scarb, and Scarb creates its files in a directory of the same name.</p>
-<p>Go into the hello_scarb directory with the command <code>cd hello_scarb</code>. You’ll see that Scarb has generated two files and one directory for us: a <code>Scarb.toml</code> file and a src directory with a <code>lib.cairo</code> file inside.</p>
-<p>It has also initialized a new Git repository along with a <code>.gitignore</code> file</p>
+<p>Crea un nuevo directorio y proyecto llamado hello_scarb. Hemos llamado a nuestro proyecto hello_scarb, y Scarb crea sus archivos en un directorio con el mismo nombre.</p>
+<p>Entre en el directorio hello_scarb con el comando <code>cd hello_scarb</code>.Verás que Scarb ha generado dos archivos y un directorio para nosotros: un archivo <code>Scarb.toml</code> y un directorio src con un archivo <code>lib.cairo</code> dentro.</p>
+<p>También ha inicializado un nuevo repositorio Git junto con un archivo <code>.gitignore</code>.</p>
 <blockquote>
-<p>Note: Git is a common version control system. You can stop using version control system by using the <code>--vcs</code> flag.
-Run <code>scarb new -help</code> to see the available options.</p>
+<p>Nota: Git es un sistema de control de versiones común. Puede dejar de usar el sistema de control de versiones 
+usando la bandera <code>--vcs</code>.
+Ejecute <code>scarb new -help</code> para ver las opciones disponibles.</p>
 </blockquote>
-<p>Open <em>Scarb.toml</em> in your text editor of choice. It should look similar to the code in Listing 1-2.</p>
+<p>Abra <em>Scarb.toml</em> en su editor de texto preferido. Debería parecerse al código del Listado 1-2.</p>
 <p><span class="filename">Filename: Scarb.toml</span></p>
 <pre><code class="language-toml">[package]
 name = &quot;hello_scarb&quot;
 version = &quot;0.1.0&quot;
 
-# See more keys and their definitions at https://docs.swmansion.com/scarb/docs/reference/manifest
+# Vea más claves y sus definiciones en https://docs.swmansion.com/scarb/docs/reference/manifest
 
 [dependencies]
 # foo = { path = &quot;vendor/foo&quot; }
 </code></pre>
 <p><span class="caption">Listing 1-2: Contents of Scarb.toml generated by <code>scarb new</code></span></p>
-<p>This file is in the <a href="https://toml.io/">TOML</a> (Tom’s Obvious, Minimal Language) format, which is Scarb’s configuration format.</p>
-<p>The first line, <code>[package]</code>, is a section heading that indicates that the following statements are configuring a package. As we add more information to this file, we’ll add other sections.</p>
-<p>The next two lines set the configuration information Scarb needs to compile your program: the name and the version of Scarb to use.</p>
-<p>The last line, <code>[dependencies]</code>, is the start of a section for you to list any of your project’s dependencies. In Cairo, packages of code are referred to as crates. We won’t need any other crates for this project.</p>
-<p>The other file created by Scarb is <code>src/lib.cairo</code>, let's delete all the content and put in the following content, we will explain the reason later.</p>
+<p>Este archivo se encuentra en formato <a href="https://toml.io/">TOML</a> (Tom’s Obvious, Minimal Language), que es el formato de configuración de Scarb.</p>
+<p>La primera línea, <code>[package]</code>, es un encabezado de sección que indica que las siguientes sentencias están configurando un paquete. A medida que agreguemos más información a este archivo, agregaremos otras secciones.</p>
+<p>Las siguientes dos líneas establecen la información de configuración que Scarb necesita para compilar su programa: el nombre y la versión de Scarb a utilizar.</p>
+<p>La última línea, <code>[dependencies]</code>, es el comienzo de una sección para que puedas listar cualquiera de las dependencias de tu proyecto. En Cairo, los paquetes de código se conocen como crates. No necesitaremos ninguna otra crate para este proyecto.</p>
+<p>El otro archivo creado por Scarb es <code>src/lib.cairo</code>, borremos todo el contenido y pongamos el siguiente contenido, explicaremos la razón más adelante.</p>
 <pre><code class="language-rust">mod hello_scarb;</code></pre>
-<p>Then create a new file called <code>src/hello_scarb.cairo</code> and put the following code in it:</p>
+<p>A continuación, cree un nuevo archivo llamado <code>src/hello_scarb.cairo</code> y ponle el siguiente código:</p>
 <p><span class="filename">Filename: src/hello_scarb.cairo</span></p>
 <pre><code class="language-rust">use debug::PrintTrait;
 fn main() {
     'Hello, Scarb!'.print();
 }</code></pre>
-<p>We have just created a file called <code>lib.cairo</code>, which contains a module declaration referencing another module named &quot;hello_scarb&quot;, as well as the file <code>hello_scarb.cairo</code>,containing the implementation details of the &quot;hello_scarb&quot; module.</p>
-<p>Scarb requires your source files to be located within the src directory.</p>
-<p>The top-level project directory is reserved for README files, license information, configuration files, and any other non-code-related content.
-Scarb ensures a designated location for all project components, maintaining a structured organization.</p>
-<p>If you started a project that doesn’t use Scarb, as we did with the “Hello, world!” project, you can convert it to a project that does use Scarb. Move the project code into the src directory and create an appropriate <code>Scarb.toml</code> file.</p>
-<h3 id="building-a-scarb-project"><a class="header" href="#building-a-scarb-project">Building a Scarb Project</a></h3>
-<p>From your hello_scarb directory, build your project by entering the following command:</p>
+<p>Acabamos de crear un archivo llamado <code>lib.cairo</code>, que contiene una declaración de módulo que hace referencia a otro módulo llamado &quot;hello_scarb&quot;, así como el archivo <code>hello_scarb.cairo</code>, que contiene los detalles de implementación del módulo &quot;hello_scarb&quot;.</p>
+<p>Scarb requiere que sus archivos fuente se encuentren dentro del directorio src.</p>
+<p>El directorio de proyecto de nivel superior está reservado para los archivos README, información de licencia, archivos de configuración, y cualquier otro contenido no relacionado con el código.
+Scarb asegura una ubicación designada para todos los componentes del proyecto, manteniendo una organización estructurada.</p>
+<p>Si ha iniciado un proyecto que no utiliza Scarb, como hicimos con el proyecto “Hello, world!”, puede convertirlo en un proyecto que utilice Scarb. Mueva el código del proyecto al directorio src y cree un archivo <code>Scarb.toml</code> apropiado.</p>
+<h3 id="creación-de-un-proyecto-scarb"><a class="header" href="#creación-de-un-proyecto-scarb">Creación de un proyecto Scarb</a></h3>
+<p>Desde su directorio hello_scarb, construya su proyecto introduciendo el siguiente comando:</p>
 <pre><code class="language-bash">$ scarb build
    Compiling hello_scarb v0.1.0 (file:///projects/Scarb.toml)
     Finished release target(s) in 0 seconds
 </code></pre>
-<p>This command creates a <code>sierra</code> file in <code>target/release</code>, let's ignore the <code>sierra</code> file for now.</p>
-<p>If you have installed Cairo correctly, you should be able to run and see the following output:</p>
+<p>Este comando crea un archivo <code>sierra</code> en <code>target/release</code>, ignoremos el archivo <code>sierra</code> por ahora.</p>
+<p>Si has instalado Cairo correctamente, deberías ser capaz de ejecutarlo y ver la siguiente salida:</p>
 <pre><code class="language-bash">$ cairo-run src/lib.cairo
 [DEBUG] Hello, Scarb!                   (raw: 5735816763073854913753904210465)
 
 Run completed successfully, returning []
 </code></pre>
 <blockquote>
-<p>Note: You will notice here that we didn't use a Scarb command, but rather a command from the Cairo binaries directly.
-As Scarb doesn't have a command to execute Cairo code, yet we have to use the <code>cairo-run</code> command directly.
-We will use this command in the rest of the tutorial, but we will also use Scarb commands to initialize projects.</p>
+<p>Nota: Notarás aquí que no usamos un comando de Scarb, sino un comando de los binarios de Cairo directamente.
+Como Scarb no tiene un comando para ejecutar código de Cairo, tenemos que usar el comando <code>cairo-run</code> directamente.
+Usaremos este comando en el resto del tutorial, pero también usaremos comandos de Scarb para inicializar proyectos.</p>
 </blockquote>
-<h3 id="defining-custom-scripts"><a class="header" href="#defining-custom-scripts">Defining Custom Scripts</a></h3>
-<p>We can define scarb scripts in <code>Scarb.toml</code> file, which can be used to execute custom shell scripts.
-Add the following line to your <code>Scarb.toml</code> file:</p>
+<h3 id="definición-de-scripts-personalizados"><a class="header" href="#definición-de-scripts-personalizados">Definición de scripts personalizados</a></h3>
+<p>Podemos definir scripts scarb en el archivo <code>Scarb.toml</code>, que puede ser usado para ejecutar scripts shell personalizados.</p>
+<p>Añada la siguiente línea a su fichero <code>Scarb.toml</code>:</p>
 <pre><code class="language-toml">[scripts]
 run-lib = &quot;cairo-run src/lib.cairo&quot;
 </code></pre>
-<p>Now you can run the following command to run the project:</p>
+<p>Ahora puede ejecutar el siguiente comando para ejecutar el proyecto:</p>
 <pre><code class="language-bash">$ scarb run run-lib
 [DEBUG] Hello, Scarb!                   (raw: 5735816763073854913753904210465)
 
 Run completed successfully, returning []
 </code></pre>
-<p>Using <code>scarb run</code> is a convenient way to run custom shell scripts that can be useful to run files and test your project.</p>
-<p>Let’s recap what we’ve learned so far about Scarb:</p>
+<p>Usar <code>scarb run</code> es una forma conveniente de ejecutar scripts de shell personalizados que pueden ser útiles para ejecutar archivos y probar su proyecto.</p>
+<p>Recapitulemos lo que hemos aprendido hasta ahora sobre Scarb:</p>
 <ul>
-<li>We can create a project using <code>scarb new</code>.</li>
-<li>We can build a project using <code>scarb build</code> to generate the compiled Sierra code.</li>
-<li>We can define custom scripts in <code>Scarb.toml</code> and call them with the <code>scarb run</code> command.</li>
+<li>Podemos crear un proyecto usando <code>scarb new</code>.</li>
+<li>Podemos construir un proyecto usando <code>scarb build</code> para generar el código Sierra compilado.</li>
+<li>Podemos definir scripts personalizados en <code>Scarb.toml</code> y llamarlos con el comando <code>scarb run</code>.</li>
 </ul>
-<p>An additional advantage of using Scarb is that the commands are the same no matter which operating system you’re working on. So, at this point, we’ll no longer provide specific instructions for Linux and macOS versus Windows.</p>
-<h1 id="summary"><a class="header" href="#summary">Summary</a></h1>
-<p>You’re already off to a great start on your Cairo journey! In this chapter, you’ve learned how to:</p>
+<p>Una ventaja adicional de usar Scarb es que los comandos son los mismos sin importar el sistema operativo en el que estemos trabajando. Así que, en este punto, ya no proporcionaremos instrucciones específicas para Linux y macOS frente a Windows.</p>
+<h1 id="resumen"><a class="header" href="#resumen">Resumen</a></h1>
+<p>Ya has empezado con buen pie tu viaje en Cairo. En este capítulo, has aprendido cómo:</p>
 <ul>
-<li>Install the latest stable version of Cairo</li>
-<li>Write and run a “Hello, world!” program using <code>cairo-run</code> directly</li>
-<li>Create and run a new project using the conventions of Scarb</li>
+<li>Instalar la última versión estable de Cairo</li>
+<li>Escribir y ejecutar un programa &quot; Hello, world!&quot; usando <code>cairo-run</code> directamente</li>
+<li>Crear y ejecutar un nuevo proyecto usando las convenciones de Scarb</li>
 </ul>
-<p>This is a great time to build a more substantial program to get used to reading and writing Cairo code.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="common-programming-concepts"><a class="header" href="#common-programming-concepts">Common Programming Concepts</a></h1>
-<p>This chapter covers concepts that appear in almost every programming language and how they work in Cairo. Many programming languages have much in common at their core. None of the concepts presented in this chapter are unique to Cairo, but we’ll discuss them in the context of Cairo and explain the conventions around using these concepts.</p>
-<p>Specifically, you’ll learn about variables, basic types, functions, comments, and control flow. These foundations will be in every Cairo program, and learning them early will give you a strong core to start from.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="variables-and-mutability"><a class="header" href="#variables-and-mutability">Variables and Mutability</a></h2>
-<p>Cairo uses an immutable memory model, meaning that once a memory cell is written to,
-it can't be overwritten but only read from. To reflect this immutable memory model,
-variables in Cairo are immutable by default.
-However, the language abstracts this model and gives you the option to make your
-variables mutable. Let’s explore how and why Cairo enforces immutability, and how
-you can make your variables mutable.</p>
-<p>When a variable is immutable, once a value is bound to a name, you can’t change
-that value. To illustrate this, generate a new project called <em>variables</em> in
-your <em>cairo_projects</em> directory by using <code>scarb new variables</code>.</p>
-<p>Then, in your new <em>variables</em> directory, open <em>src/lib.cairo</em> and replace its
-code with the following code, which won’t compile just yet:</p>
+<p>Este es un buen momento para construir un programa más sustancial para acostumbrarte a leer y escribir código de Cairo.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="conceptos-comunes-de-programación"><a class="header" href="#conceptos-comunes-de-programación">Conceptos comunes de programación</a></h1>
+<p>Este capítulo cubre conceptos que aparecen en casi todos los lenguajes de programación y cómo funcionan en Cairo. Muchos lenguajes de programación tienen mucho en común en su núcleo. Ninguno de los conceptos presentados en este capítulo son exclusivos de Cairo, pero los discutiremos en el contexto de Cairo y explicaremos las convenciones sobre el uso de estos conceptos.</p>
+<p>Específicamente, aprenderás sobre variables, tipos básicos, funciones, comentarios y flujo de control. Estos fundamentos estarán en cada programa de Cairo, y aprenderlos desde el principio te dará un núcleo fuerte desde el que empezar.</p>
+<div style="break-before: page; page-break-before: always;"></div><h2 id="variables-y-mutabilidad"><a class="header" href="#variables-y-mutabilidad">Variables y mutabilidad</a></h2>
+<p>Cairo usa un modelo de memoria inmutable, lo que significa que una vez que se escribe en una celda de memoria, no puede ser sobrescrita sino sólo leída. Para reflejar este modelo de memoria inmutable, las variables en Cairo son inmutables por defecto.
+Sin embargo, el lenguaje abstrae este modelo y te da la opción de hacer tus
+variables mutables. Exploremos cómo y por qué Cairo impone la inmutabilidad, y cómo
+puedes hacer tus variables mutables.</p>
+<p>Cuando una variable es inmutable, una vez que un valor está ligado a un nombre, no puedes cambiar ese valor. Para ilustrar esto, genera un nuevo proyecto llamado <em>variables</em> en tu directorio <em>cairo_projects</em> usando <code>scarb new variables</code>.</p>
+<p>A continuación, en su nuevo directorio <em>variables</em>, abra <em>src/lib.cairo</em> y sustituya su código por el siguiente, que todavía no compilará:</p>
 <p><span class="filename">Filename: src/lib.cairo</span></p>
 <pre><code class="language-rust">use debug::PrintTrait;
 fn main() {
@@ -542,8 +538,7 @@ fn main() {
     x = 6;
     x.print();
 }</code></pre>
-<p>Save and run the program using <code>cairo-run src/lib.cairo</code>. You should receive an error message
-regarding an immutability error, as shown in this output:</p>
+<p>Guarde y ejecute el programa utilizando <code>cairo-run src/lib.cairo</code>. Debería recibir un mensaje de error relativo a un error de inmutabilidad, como se muestra en esta salida:</p>
 <pre><code class="language-console">error: Cannot assign to an immutable variable.
  --&gt; lib.cairo:5:5
     x = 6;
@@ -551,35 +546,17 @@ regarding an immutability error, as shown in this output:</p>
 
 Error: failed to compile: src/lib.cairo
 </code></pre>
-<p>This example shows how the compiler helps you find errors in your programs.
-Compiler errors can be frustrating, but really they only mean your program
-isn’t safely doing what you want it to do yet; they do <em>not</em> mean that you’re
-not a good programmer! Experienced Caironautes still get compiler errors.</p>
-<p>You received the error message <code>Cannot assign to an immutable variable.</code>
-because you tried to assign a second value to the immutable <code>x</code> variable.</p>
-<p>It’s important that we get compile-time errors when we attempt to change a
-value that’s designated as immutable because this specific situation can lead to
-bugs. If one part of our code operates on the assumption that a value will
-never change and another part of our code changes that value, it’s possible
-that the first part of the code won’t do what it was designed to do. The cause
-of this kind of bug can be difficult to track down after the fact, especially
-when the second piece of code changes the value only <em>sometimes</em>. The Cairo
-compiler guarantees that when you state that a value won’t change, it really
-won’t change, so you don’t have to keep track of it yourself. Your code is thus
-easier to reason through.</p>
-<p>But mutability can be very useful, and can make code more convenient to write.
-Although variables are immutable by default, you can make them mutable by
-adding <code>mut</code> in front of the variable name. Adding <code>mut</code> also conveys
-intent to future readers of the code by indicating that other parts of the code
-will be changing this variable’s value.</p>
-<p>However, you might be wondering at this point what exactly happens when a variable
-is declared as <code>mut</code>, as we previously mentioned that Cairo's memory is immutable.
-The answer is that Cairo's memory is immutable, but the memory address the variable points
-to can be changed. Upon examining the low-level Cairo Assembly code, it becomes clear that
-variable mutation is implemented as syntactic sugar, which translates mutation operations
-into a series of steps equivalent to variable shadowing. The only difference is that at the Cairo
-level, the variable is not redeclared so its type cannot change.</p>
-<p>For example, let’s change <em>src/lib.cairo</em> to the following:</p>
+<p>Este ejemplo muestra cómo el compilador te ayuda a encontrar errores en tus programas.
+Los errores del compilador pueden ser frustrantes, pero en realidad sólo significan que su programa 
+todavía no está haciendo con seguridad lo que usted quiere que haga; ¡no significan que usted no sea un buen programador! Los Caironautas experimentados siguen teniendo errores de compilador.</p>
+<p>Recibiste el mensaje de error <code>Cannot assign to an immutable variable.</code> porque intentaste asignar un segundo valor a la variable inmutable <code>x</code>.</p>
+<p>Es importante que obtengamos errores en tiempo de compilación cuando intentamos cambiar un valor designado como inmutable porque esta situación específica puede conducir a errores. Si una parte de nuestro código opera bajo la suposición de que un valor nunca cambiará y otra parte de nuestro código cambia ese valor, es posible
+que la primera parte del código no haga lo que fue diseñada para hacer. La causa de este tipo de error puede ser difícil de rastrear después de los hechos, especialmente cuando la segunda parte del código cambia el valor sólo <em>a veces</em>. El compilador Cairo garantiza que cuando dices que un valor no cambiará, realmente no cambiará, por lo que no tiene que hacer un seguimiento. Su código es así más fácil de razonar.</p>
+<p>Pero la mutabilidad puede ser muy útil, y puede hacer que el código sea más cómodo de escribir.
+Aunque las variables son inmutables por defecto, puedes hacerlas mutables añadiendo <code>mut</code> delante del nombre de la variable. Añadir <code>mut</code> también transmite intención a los futuros lectores del código indicando que otras partes del código cambiarán el valor de esta variable.</p>
+<p>Sin embargo, puede que en este punto te estés preguntando qué ocurre exactamente cuando una variable es declarada como <code>mut</code>, ya que previamente mencionamos que la memoria de Cairo es inmutable.
+La respuesta es que la memoria de Cairo es inmutable, pero la dirección de memoria a la que apunta la variable puede ser cambiada. Al examinar el código ensamblador de bajo nivel de Cairo, queda claro que la mutación de variables se implementa como azúcar sintáctico, que traduce las operaciones de mutación en una serie de pasos equivalentes al shadowing de variables. La única diferencia es que en el nivel la variable no se vuelve a declarar, por lo que su tipo no puede cambiar.</p>
+<p>Por ejemplo, cambiemos <em>src/lib.cairo</em> por lo siguiente:</p>
 <p><span class="filename">Filename: src/lib.cairo</span></p>
 <pre><code class="language-rust">use debug::PrintTrait;
 fn main() {
@@ -588,7 +565,7 @@ fn main() {
     x = 6;
     x.print();
 }</code></pre>
-<p>When we run the program now, we get this:</p>
+<p>Cuando ejecutamos el programa ahora, obtenemos esto:</p>
 <pre><code class="language-console">❯ cairo-run src/lib.cairo
 [DEBUG]	                              	(raw: 5)
 
@@ -596,46 +573,20 @@ fn main() {
 
 Run completed successfully, returning []
 </code></pre>
-<p>We’re allowed to change the value bound to <code>x</code> from <code>5</code> to <code>6</code> when <code>mut</code> is
-used. Ultimately, deciding whether to use mutability or not is up to you and
-depends on what you think is clearest in that particular situation.</p>
-<h3 id="constants"><a class="header" href="#constants">Constants</a></h3>
-<p>Like immutable variables, <em>constants</em> are values that are bound to a name and
-are not allowed to change, but there are a few differences between constants
-and variables.</p>
-<p>First, you aren’t allowed to use <code>mut</code> with constants. Constants aren’t just
-immutable by default—they’re always immutable. You declare constants using the
-<code>const</code> keyword instead of the <code>let</code> keyword, and the type of the value <em>must</em>
-be annotated. We’ll cover types and type annotations in the next section,
-<a href="ch03-02-data-types.html#data-types">“Data Types”</a><!-- ignore -->, so don’t worry about the details
-right now. Just know that you must always annotate the type.</p>
-<p>Constants can only be declared in the global scope, which makes
-them useful for values that many parts of code need to know about.</p>
-<p>The last difference is that constants may be set only to a constant expression,
-not the result of a value that could only be computed at runtime. Only literal constants
-are currently supported.</p>
-<p>Here’s an example of a constant declaration:</p>
+<p>Se nos permite cambiar el valor ligado a <code>x</code> de <code>5</code> a <code>6</code> cuando se usa <code>mut</code>. En última instancia, la decisión de utilizar la mutabilidad o no es suya y depende de lo que usted piensa que es más claro en esa situación particular.</p>
+<h5 id="constantes"><a class="header" href="#constantes">Constantes</a></h5>
+<p>Al igual que las variables inmutables, las <em>constantes</em> son valores que están vinculados a un nombre y no se les permite cambiar, pero hay algunas diferencias entre las constantes y las variables.</p>
+<p>En primer lugar, no se permite el uso de <code>mut</code> con las constantes. Las constantes no son solo inmutables por defecto, sino que siempre son inmutables. Se declaran constantes usando la palabra clave <code>const</code> en lugar de la palabra clave <code>let</code>, y el tipo de valor <em>debe</em> ser anotado. Cubriremos los tipos y las anotaciones de tipo en la próxima sección, [“Tipos de datos”][tipos-de-datos]<!-- ignore -->, así que no se preocupe por los detalles por ahora. Solo sepa que siempre debe anotar el tipo.</p>
+<p>Las constantes solo se pueden declarar en el ámbito global, lo que las hace útiles para valores que muchas partes del código deben conocer.</p>
+<p>La última diferencia es que las constantes solo pueden ser asignadas a una expresión constante, no al resultado de un valor que solo se podría calcular en tiempo de ejecución. Actualmente, solo se admiten constantes literales.</p>
+<p>Aquí hay un ejemplo de declaración de constante:</p>
 <pre><code class="language-rust">const ONE_HOUR_IN_SECONDS: u32 = 3600_u32;</code></pre>
-<p>Cairo's naming convention for constants is to use all uppercase with
-underscores between words.</p>
-<p>Constants are valid for the entire time a program runs, within the scope in
-which they were declared. This property makes constants useful for values in
-your application domain that multiple parts of the program might need to know
-about, such as the maximum number of points any player of a game is allowed to
-earn, or the speed of light.</p>
-<p>Naming hardcoded values used throughout your program as constants is useful in
-conveying the meaning of that value to future maintainers of the code. It also
-helps to have only one place in your code you would need to change if the
-hardcoded value needed to be updated in the future.</p>
+<p>La convención de nomenclatura de Cairo para las constantes es usar todas las mayúsculas con guiones bajos entre palabras.</p>
+<p>La convención de nombres de constantes en Cairo es utilizar todo en mayúsculas con guiones bajos entre palabras.</p>
+<p>Las constantes son válidas durante todo el tiempo que se ejecuta un programa, dentro del ámbito en el que fueron declaradas. Esta propiedad hace que las constantes sean útiles para los valores en el dominio de su aplicación que varias partes del programa podrían necesitar conocer, como el número máximo de puntos que cualquier jugador de un juego puede ganar o la velocidad de la luz.</p>
+<p>Nombrar los valores codificados en duro utilizados en todo el programa como constantes es útil para transmitir el significado de ese valor a los futuros mantenedores del código. También ayuda a tener solo un lugar en su código donde tendría que cambiar si el valor codificado en duro necesitara ser actualizado en el futuro.</p>
 <h3 id="shadowing"><a class="header" href="#shadowing">Shadowing</a></h3>
-<p>Variable shadowing refers to the declaration of a
-new variable with the same name as a previous variable. Caironautes say that the
-first variable is <em>shadowed</em> by the second, which means that the second
-variable is what the compiler will see when you use the name of the variable.
-In effect, the second variable overshadows the first, taking any uses of the
-variable name to itself until either it itself is shadowed or the scope ends.
-We can shadow a variable by using the same variable’s name and repeating the
-use of the <code>let</code> keyword as follows:</p>
+<p>La sombra de una variable se refiere a la declaración de una nueva variable con el mismo nombre que una variable anterior. Los caironautas dicen que la primera variable está <em>sombreada</em> por la segunda, lo que significa que el compilador verá la segunda variable cuando use el nombre de la variable. En efecto, la segunda variable oculta la primera, tomando cualquier uso del nombre de la variable para sí misma hasta que ella misma sea sombreada o que el ámbito termine. Podemos sombrear una variable usando el mismo nombre de la variable y repitiendo el uso de la palabra clave <code>let</code> de la siguiente manera:</p>
 <p><span class="filename">Filename: src/lib.cairo</span></p>
 <pre><code class="language-swift">use debug::PrintTrait;
 fn main() {
@@ -650,13 +601,7 @@ fn main() {
     x.print();
 }
 </code></pre>
-<p>This program first binds <code>x</code> to a value of <code>5</code>. Then it creates a new variable
-<code>x</code> by repeating <code>let x =</code>, taking the original value and adding <code>1</code> so the
-value of <code>x</code> is then <code>6</code>. Then, within an inner scope created with the curly
-brackets, the third <code>let</code> statement also shadows <code>x</code> and creates a new
-variable, multiplying the previous value by <code>2</code> to give <code>x</code> a value of <code>12</code>.
-When that scope is over, the inner shadowing ends and <code>x</code> returns to being <code>6</code>.
-When we run this program, it will output the following:</p>
+<p>Este programa primero asigna un valor de <code>5</code> a <code>x</code>. Luego crea una nueva variable <code>x</code> repitiendo <code>let x =</code>, tomando el valor original y sumando <code>1</code>, por lo que el valor de <code>x</code> es ahora <code>6</code>. Luego, dentro de un ámbito interno creado con llaves, la tercera instrucción <code>let</code> también sombrea <code>x</code> y crea una nueva variable, multiplicando el valor anterior por <code>2</code> para darle a <code>x</code> un valor de <code>12</code>. Cuando ese ámbito termina, la sombra interna termina y <code>x</code> vuelve a ser <code>6</code>. Al ejecutar este programa, se mostrará lo siguiente:</p>
 <pre><code class="language-console">cairo-run src/lib.cairo
 [DEBUG]	Inner scope x value is:        	(raw: 7033328135641142205392067879065573688897582790068499258)
 
@@ -669,18 +614,8 @@ When we run this program, it will output the following:</p>
 
 Run completed successfully, returning []
 </code></pre>
-<p>Shadowing is different from marking a variable as <code>mut</code> because we’ll get a
-compile-time error if we accidentally try to reassign to this variable without
-using the <code>let</code> keyword. By using <code>let</code>, we can perform a few transformations
-on a value but have the variable be immutable after those transformations have
-been completed.</p>
-<p>Another distinction between <code>mut</code> and shadowing is that when we use the <code>let</code> keyword again,
-we are effectively creating a new variable, which allows us to change the type of the
-value while reusing the same name. As mentioned before, variable shadowing and mutable variables
-are equivalent at the lower level.
-The only difference is that by shadowing a variable, the compiler will not complaing
-if you change its type. For example, say our program performs a type conversion between the
-<code>u64</code> and <code>felt252</code> types.</p>
+<p>El sombreado es diferente de marcar una variable como <code>mut</code>, porque obtendremos un error en tiempo de compilación si intentamos reasignar a esta variable sin usar la palabra clave <code>let</code>. Al usar <code>let</code>, podemos realizar algunas transformaciones en un valor pero hacer que la variable sea inmutable después de que se hayan completado esas transformaciones.</p>
+<p>Otra diferencia entre <code>mut</code> y el sombreado es que al usar la palabra clave <code>let</code> nuevamente, estamos creando efectivamente una nueva variable, lo que nos permite cambiar el tipo del valor mientras reutilizamos el mismo nombre. Como se mencionó antes, el sombreado de variables y las variables mutables son equivalentes a un nivel más bajo. La única diferencia es que al sombrear una variable, el compilador no se quejará si cambia su tipo. Por ejemplo, digamos que nuestro programa realiza una conversión de tipo entre los tipos <code>u64</code> y <code>felt252</code>.</p>
 <pre><code class="language-rust">use debug::PrintTrait;
 use traits::Into;
 fn main() {
@@ -689,10 +624,8 @@ fn main() {
     let x = x.into(); // converts x to a felt.
     x.print()
 }</code></pre>
-<p>The first <code>x</code> variable has a <code>u64</code> type while the second <code>x</code> variable has a <code>felt252</code> type.
-Shadowing thus spares us from having to come up with different names, such as <code>x_u64</code>
-and <code>x_felt252</code>; instead, we can reuse the simpler <code>x</code> name. However, if we try to use
-<code>mut</code> for this, as shown here, we’ll get a compile-time error:</p>
+<p>LEl primer variable <code>x</code> tiene un tipo <code>u64</code>, mientras que la segunda variable <code>x</code> tiene un tipo <code>felt252</code>.
+Por lo tanto, el shadowing nos ahorra tener que inventar diferentes nombres, como <code>x_u64</code> y <code>x_felt252</code>; en su lugar, podemos reutilizar el nombre más simple <code>x</code>. Sin embargo, si intentamos usar <code>mut</code> para esto, como se muestra aquí, obtendremos un error en tiempo de compilación:</p>
 <pre><code class="language-rust">use debug::PrintTrait;
 use traits::Into;
 fn main() {
@@ -701,7 +634,7 @@ fn main() {
     x = x.into();
     x.print()
 }</code></pre>
-<p>The error says we’re were expecting a <code>u64</code> (the original type) but we got a different type:</p>
+<p>El error dice que se esperaba un <code>u64</code> (el tipo original) pero se obtuvo un tipo diferente:</p>
 <pre><code class="language-console">❯ cairo-run src/lib.cairo
 error: Unexpected argument type. Expected: &quot;core::integer::u64&quot;, found: &quot;core::felt252&quot;.
  --&gt; lib.cairo:6:9
@@ -710,14 +643,11 @@ error: Unexpected argument type. Expected: &quot;core::integer::u64&quot;, found
 
 Error: failed to compile: src/lib.cairo
 </code></pre>
-<p>Now that we’ve explored how variables work, let’s look at more data types they
-can have.</p>
+<p>Ahora que hemos explorado cómo funcionan las variables, veamos otros tipos de datos que pueden tener.</p>
 <div style="break-before: page; page-break-before: always;"></div><h2 id="data-types"><a class="header" href="#data-types">Data Types</a></h2>
-<p>Every value in Cairo is of a certain <em>data type</em>, which tells Cairo what kind of
-data is being specified so it knows how to work with that data. This section covers two subsets of data types: scalars and compounds.</p>
-<p>Keep in mind that Cairo is a <em>statically typed</em> language, which means that it
-must know the types of all variables at compile time. The compiler can usually infer the desired type based on the value and its usage. In cases
-when many types are possible, we can use a cast method where we specify the desired output type.</p>
+<h2 id="tipos-de-datos"><a class="header" href="#tipos-de-datos">Tipos de datos</a></h2>
+<p>Cada valor en Cairo tiene un cierto <em>tipo de dato</em>, lo que le dice a Cairo qué tipo de datos se están especificando para que sepa cómo trabajar con esos datos. Esta sección cubre dos subconjuntos de tipos de datos: escalares y compuestos.</p>
+<p>Tenga en cuenta que Cairo es un lenguaje <em>de tipado estático</em>, lo que significa que debe conocer los tipos de todas las variables en tiempo de compilación. El compilador suele inferir el tipo deseado en función del valor y su uso. En casos en que pueden ser posibles varios tipos, podemos utilizar un método de conversión donde especificamos el tipo de salida deseado.</p>
 <pre><code class="language-Rust">use traits::TryInto;
 use option::OptionTrait;
 fn main(){
@@ -725,27 +655,22 @@ fn main(){
     let y:u32 = x.try_into().unwrap();
 }
 </code></pre>
-<p>You’ll see different type annotations for other data types.</p>
-<h3 id="scalar-types"><a class="header" href="#scalar-types">Scalar Types</a></h3>
-<p>A <em>scalar</em> type represents a single value. Cairo has three primary scalar types:
-felts, integers, and booleans. You may recognize
-these from other programming languages. Let’s jump into how they work in Cairo.</p>
-<h4 id="felt-type"><a class="header" href="#felt-type">Felt Type</a></h4>
-<p>In Cairo, if you don't specify the type of a variable or argument, its type defaults to a field element, represented by the keyword <code>felt252</code>. In the context of Cairo, when we say “a field element” we mean an integer in the range <code>0 &lt;= x &lt; P</code>,
-where <code>P</code> is a very large prime number currently equal to <code>P = 2^{251} + 17 * 2^{192}+1</code>. When adding, subtracting, or multiplying, if the result falls outside the specified range of the prime number, an overflow occurs, and an appropriate multiple of P is added or subtracted to bring the result back within the range (i.e., the result is computed modulo P).</p>
-<p>The most important difference between integers and field elements is division: Division of field elements (and therefore division in Cairo) is unlike regular CPUs division, where
-integer division <code>x / y</code> is defined as <code>[x/y]</code> where the integer part of the quotient is returned (so you get <code>7 / 3 = 2</code>) and it may or may not satisfy the equation <code>(x / y) * y == x</code>,
-depending on the divisibility of <code>x</code> by <code>y</code>.</p>
-<p>In Cairo, the result of <code>x/y</code> is defined to always satisfy the equation <code>(x / y) * y == x</code>. If y divides x as integers, you will get the expected result in Cairo (for example <code>6 / 2</code>
-will indeed result in <code>3</code>).
-But when y does not divide x, you may get a surprising result: For example, since <code>2 * ((P+1)/2) = P+1 ≡ 1 mod[P]</code>, the value of <code>1 / 2</code> in Cairo is <code>(P+1)/2</code> (and not 0 or 0.5), as it satisfies the above equation.</p>
-<h4 id="integer-types"><a class="header" href="#integer-types">Integer Types</a></h4>
-<p>The felt252 type is a fundamental type that serves as the basis for creating all types in the core library.
-However, it is highly recommended for programmers to use the integer types instead of the <code>felt252</code> type whenever possible, as the <code>integer</code> types come with added security features that provide extra protection against potential vulnerabilities in the code, such as overflow checks. By using these integer types, programmers can ensure that their programs are more secure and less susceptible to attacks or other security threats.
-An <em>integer</em> is a number without a fractional component. This type declaration indicates the number of bits the programmer can use to store the integer.
-Table 3-1 shows
-the built-in integer types in Cairo. We can use any of these variants to declare
-the type of an integer value.</p>
+<p>Verá diferentes anotaciones de tipo para otros tipos de datos.</p>
+<h3 id="tipos-escalares"><a class="header" href="#tipos-escalares">Tipos escalares</a></h3>
+<p>Un tipo <em>scalar</em> representa un único valor. Cairo tiene tres tipos escalares primarios:
+fieltros, enteros y booleanos. Puede que reconozca de otros lenguajes de programación. Veamos cómo funcionan en Cairo.</p>
+<h4 id="tipo-felt"><a class="header" href="#tipo-felt">Tipo Felt</a></h4>
+<p>En Cairo, si no especificas el tipo de una variable o argumento, su tipo por defecto es un elemento de campo, representado por la palabra clave <code>felt252</code>. En el contexto de Cairo, cuando decimos &quot;un elemento de campo&quot; nos referimos a un entero en el rango <code>0 &lt;= x &lt; P</code>, donde <code>P</code> es un número primo muy grande actualmente igual a <code>P = 2^{251} + 17 * 2^{192}+1</code>. Al sumar, restar o multiplicar, si el resultado queda fuera del rango especificado del número primo, se produce un desbordamiento y se suma o resta un múltiplo apropiado de P para que el resultado vuelva a estar dentro del rango (es decir, el resultado se calcula módulo P).</p>
+<p>La diferencia más importante entre los números enteros y los elementos de campo es la división: La división de elementos de campo (y, por tanto, la división en Cairo) es distinta de la división normal de las CPU, en la que
+la división entera <code>x / y</code> se define como <code>[x/y]</code> donde se devuelve la parte entera del cociente (por lo que se obtiene <code>7 / 3 = 2</code>) y puede o no satisfacer la ecuación <code>(x / y) * y == x</code>, dependiendo de la divisibilidad de <code>x</code> por <code>y</code>.</p>
+<p>En Cairo, el resultado de <code>x/y</code> está definido para satisfacer siempre la ecuación <code>(x / y) * y == x</code>. Si <code>y</code> divide a <code>x</code> entre enteros, obtendrás el resultado esperado en Cairo (por ejemplo <code>6 / 2</code> dará como resultado <code>3</code>).
+Pero cuando <code>y</code> no divide a <code>x</code>, puedes obtener un resultado sorprendente: Por ejemplo, como <code>2 * ((P+1)/2) = P+1 ≡ 1 mod[P]</code>, el valor de <code>1 / 2</code> en Cairo es <code>(P+1)/2</code> (y no 0 ó 0,5), ya que satisface la ecuación anterior.</p>
+<h4 id="tipos-enteros"><a class="header" href="#tipos-enteros">Tipos enteros</a></h4>
+<p>El tipo felt252 es un tipo fundamental que sirve como base para la creación de todos los tipos en la librería central.
+Sin embargo, se recomienda encarecidamente a los programadores que utilicen los tipos enteros en lugar del tipo <code>felt252</code> siempre que sea posible, ya que los tipos <code>integer</code> vienen con características de seguridad añadidas que proporcionan protección extra contra posibles vulnerabilidades en el código, como comprobaciones de desbordamiento. Utilizando estos tipos de enteros, los programadores pueden asegurarse de que sus programas son más seguros y menos susceptibles a ataques u otras amenazas de seguridad.</p>
+<p>Un <em>integer</em> es un número sin componente fraccionario. Esta declaración de tipo indica el número de bits que el programador puede utilizar para almacenar el entero.</p>
+<p>La Tabla 3-1 muestra los tipos enteros incorporados en Cairo. Podemos usar cualquiera de estas variantes para declarar
+el tipo de un valor entero.</p>
 <p><span class="caption">Table 3-1: Integer Types in Cairo</span></p>
 <div class="table-wrapper"><table><thead><tr><th>Length</th><th>Unsigned</th></tr></thead><tbody>
 <tr><td>8-bit</td><td><code>u8</code></td></tr>
@@ -757,8 +682,8 @@ the type of an integer value.</p>
 <tr><td>32-bit</td><td><code>usize</code></td></tr>
 </tbody></table>
 </div>
-<p>Each variant has an explicit size. Note that for now, the <code>usize</code> type is just an alias for <code>u32</code>; however, it might be useful when in the future Cairo can be compiled to MLIR.
-As variables are unsigned, they can't contain a negative number. This code will cause the program to panic:</p>
+<p>Cada variante tiene un tamaño explícito. Tenga en cuenta que por ahora, el tipo <code>usize</code> es sólo un alias para <code>u32</code>; sin embargo, podría ser útil cuando en el futuro Cairo pueda ser compilado a MLIR.
+Como las variables son sin signo, no pueden contener un número negativo. Este código hará que el programa entre en pánico:</p>
 <pre><code class="language-rust">fn sub_u8s(x: u8, y: u8) -&gt; u8 {
     x - y
 }
@@ -766,9 +691,9 @@ As variables are unsigned, they can't contain a negative number. This code will 
 fn main() {
     sub_u8s(1,3);
 }</code></pre>
-<p>You can write integer literals in any of the forms shown in Table 3-2. Note
-that number literals that can be multiple numeric types allow a type suffix,
-such as <code>57_u8</code>, to designate the type.</p>
+<p>Puede escribir literales enteros en cualquiera de las formas mostradas en la Tabla 3-2. Observe
+que los literales numéricos que pueden ser múltiples tipos numéricos permiten un sufijo de tipo
+como <code>57_u8</code>, para designar el tipo.</p>
 <p><span class="caption">Table 3-2: Integer Literals in Cairo</span></p>
 <div class="table-wrapper"><table><thead><tr><th>Numeric literals</th><th>Example</th></tr></thead><tbody>
 <tr><td>Decimal</td><td><code>98222</code></td></tr>
@@ -777,13 +702,10 @@ such as <code>57_u8</code>, to designate the type.</p>
 <tr><td>Binary</td><td><code>0b01</code></td></tr>
 </tbody></table>
 </div>
-<p>So how do you know which type of integer to use? Try to estimate the max value your int can have and choose the good size.
-The primary situation in which you’d use <code>usize</code> is when indexing some sort of collection.</p>
-<h4 id="numeric-operations"><a class="header" href="#numeric-operations">Numeric Operations</a></h4>
-<p>Cairo supports the basic mathematical operations you’d expect for all the integer
-types: addition, subtraction, multiplication, division, and remainder (u256 doesn't support division and remainder yet). Integer
-division truncates toward zero to the nearest integer. The following code shows
-how you’d use each numeric operation in a <code>let</code> statement:</p>
+<p>Entonces, ¿cómo saber qué tipo de entero utilizar? Intenta estimar el valor máximo que puede tener tu int y elige un buen tamaño.
+La principal situación en la que usarías <code>usize</code> es al indexar algún tipo de colección.</p>
+<h4 id="operaciones-numéricas"><a class="header" href="#operaciones-numéricas">Operaciones numéricas</a></h4>
+<p>Cairo soporta las operaciones matemáticas básicas que esperarías para todos los tipos de enteros: suma, resta, multiplicación y resto (u256 no soporta división y resto todavía). Entero trunca hacia cero al entero más cercano. El siguiente código muestra cómo utilizar cada operación numérica en una sentencia <code>let</code>:</p>
 <pre><code class="language-rust">fn main() {
      // addition
     let sum = 5_u128 + 10_u128;
@@ -801,8 +723,7 @@ how you’d use each numeric operation in a <code>let</code> statement:</p>
     // remainder
     let remainder = 43_u128 % 5_u128; // result is 3
 }</code></pre>
-<p>Each expression in these statements uses a mathematical operator and evaluates
-to a single value, which is then bound to a variable.</p>
+<p>Cada expresión de estas sentencias utiliza un operador matemático y se evalúa a un único valor, que se asigna a una variable.</p>
 <!-- TODO: Appendix operator -->
 <!-- [Appendix B][appendix_b] ignore contains a list of all operators that Cairo provides. -->
 <h4 id="the-boolean-type"><a class="header" href="#the-boolean-type">The Boolean Type</a></h4>
@@ -2144,7 +2065,7 @@ blocks</span></p>
 <p>There’s no reason to separate these methods into multiple <code>trait</code> and <code>impl</code> blocks here,
 but this is valid syntax. We’ll see a case in which multiple blocks are
 useful in <a href="ch07-00-generic-types-and-traits.html">Chapter 7</a>, where we discuss generic types and traits.</p>
-<h2 id="summary-1"><a class="header" href="#summary-1">Summary</a></h2>
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
 <p>Structs let you create custom types that are meaningful for your domain. By
 using structs, you can keep associated pieces of data connected to each other
 and name each piece to make your code clear. In <code>trait</code> and <code>impl</code> blocks, you can define

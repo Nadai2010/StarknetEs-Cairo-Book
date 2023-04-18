@@ -144,126 +144,127 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="hello-scarb"><a class="header" href="#hello-scarb">Hello, Scarb</a></h1>
-<p>Scarb is the Cairo package manager and heavily inspired by <a href="https://doc.rust-lang.org/cargo/">Cargo</a>, Rust’s build system and package manager.</p>
-<p>Scarb handles a lot of tasks for you, such as building your code (either pure Cairo or Starknet contracts), downloading the libraries your code depends on, and building those libraries.</p>
-<p>If we were to build the 'Hello, world!' project using Scarb, only the part of Scarb that handles building the code would be utilized, since the program doesn't require any external dependencies. As you write more complex Cairo programs, you’ll add dependencies, and if you start a project using Scarb, adding dependencies will be much easier to do.</p>
-<p>Let's start by installing Scarb.</p>
-<h2 id="installing-scarb"><a class="header" href="#installing-scarb">Installing Scarb</a></h2>
-<h3 id="requirements"><a class="header" href="#requirements">Requirements</a></h3>
-<p>Scarb requires a Git executable to be available in the <code>PATH</code> environment variable.</p>
-<h3 id="installation"><a class="header" href="#installation">Installation</a></h3>
-<p>As for now, Scarb needs manual installation with the following steps:</p>
+                        <h1 id="hola-scarb"><a class="header" href="#hola-scarb">Hola, Scarb</a></h1>
+<p>Scarb es el gestor de paquetes de Cairo y está fuertemente inspirado en <a href="https://doc.rust-lang.org/cargo/">Cargo</a>, el sistema de construcción y gestor de paquetes de Rust.</p>
+<p>Scarb maneja muchas tareas por ti, como construir tu código (ya sea Cairo puro o contratos Starknet), descargar las librerías de las que depende tu código, y construir esas librerías.</p>
+<p>Si fuéramos a construir el proyecto <code>Hello, world!</code> usando Scarb, sólo la parte de Scarb que maneja la construcción del código sería utilizada, ya que el programa no requiere ninguna dependencia externa. A medida que escriba programas Cairo más complejos, agregará dependencias, y si inicia un proyecto utilizando Scarb, agregar dependencias será mucho más fácil de hacer.</p>
+<p>Empecemos instalando Scarb.</p>
+<h2 id="instalando-scarb"><a class="header" href="#instalando-scarb">Instalando Scarb</a></h2>
+<h3 id="requisitos"><a class="header" href="#requisitos">Requisitos</a></h3>
+<p>Scarb requiere un ejecutable Git disponible en la variable de entorno <code>PATH</code>.</p>
+<h3 id="instalación"><a class="header" href="#instalación">Instalación</a></h3>
+<p>Por ahora, Scarb necesita instalación manual con los siguientes pasos:</p>
 <ul>
 <li>
-<p>Download the release archive matching your operating system and CPU architecture, from <a href="https://github.com/software-mansion/scarb/releases">Scarb releases on GitHub</a></p>
+<p>Descargue el archivo de versiones correspondiente a su sistema operativo y arquitectura de CPU desde <a href="https://github.com/software-mansion/scarb/releases">Scarb releases on GitHub</a></p>
 </li>
 <li>
-<p>Extract it to a location where you would like to have Scarb installed, e.g. <code>~/scarb</code></p>
+<p>Extráigalo a una ubicación en la que desee tener Scarb instalado, por ejemplo. <code>~/scarb</code></p>
 </li>
 <li>
-<p>Add path to the <code>scarb/bin</code> directory to your <code>PATH</code> environment variable.</p>
-<p>This depend on what shell you are using. Let’s take the example of <a href="https://ohmyz.sh/">zsh</a> and you have extracted Scarb to <code>~/scarb</code>:</p>
+<p>Añada la ruta al directorio <code>scarb/bin</code> a su variable de entorno <code>PATH</code>.</p>
+<p>Esto depende del shell que esté utilizando. Tomemos el ejemplo de <a href="https://ohmyz.sh/">zsh</a> y has extraido Scarb a <code>~/scarb</code>:</p>
 <ul>
-<li>Open <code>~/.zshrc</code> file in your favorite editor</li>
-<li>Add the following line to the end of the file: <code>export PATH=&quot;$PATH:~/scarb/bin&quot;</code></li>
+<li>Abra el archivo <code>~/.zshrc</code> en su editor favorito
+-Añada la siguiente línea al final del archivo: <code>export PATH=&quot;$PATH:~/scarb/bin&quot;</code></li>
 </ul>
 </li>
 <li>
-<p>Verify installation by running the following command in new terminal session, it should print both Scarb and Cairo language versions, e.g:</p>
+<p>Verifique la instalación ejecutando el siguiente comando en una nueva sesión de terminal, debería imprimir las versiones en Scarb y Cairo, por ejemplo:</p>
 <pre><code class="language-bash">$ scarb --version
 scarb 0.1.0 (289137c24 2023-03-28)
 cairo: 1.0.0-alpha.6
 </code></pre>
 </li>
 </ul>
-<h3 id="creating-a-project-with-scarb"><a class="header" href="#creating-a-project-with-scarb">Creating a Project with Scarb</a></h3>
-<p>Let’s create a new project using Scarb and look at how it differs from our original “Hello, world!” project.</p>
-<p>Navigate back to your projects directory (or wherever you decided to store your code). Then run the following:</p>
+<h3 id="creando-un-proyecto-con-scarb"><a class="header" href="#creando-un-proyecto-con-scarb">Creando un Proyecto con Scarb</a></h3>
+<p>Vamos a crear un nuevo proyecto utilizando Scarb y ver en qué se diferencia de nuestro proyecto original “Hello, world!”.</p>
+<p>Navegue de nuevo a su directorio de proyectos (o donde haya decidido almacenar su código). Luego ejecute lo siguiente:</p>
 <pre><code class="language-bash">$ scarb new hello_scarb
 </code></pre>
-<p>It creates a new directory and project called hello_scarb. We’ve named our project hello_scarb, and Scarb creates its files in a directory of the same name.</p>
-<p>Go into the hello_scarb directory with the command <code>cd hello_scarb</code>. You’ll see that Scarb has generated two files and one directory for us: a <code>Scarb.toml</code> file and a src directory with a <code>lib.cairo</code> file inside.</p>
-<p>It has also initialized a new Git repository along with a <code>.gitignore</code> file</p>
+<p>Crea un nuevo directorio y proyecto llamado hello_scarb. Hemos llamado a nuestro proyecto hello_scarb, y Scarb crea sus archivos en un directorio con el mismo nombre.</p>
+<p>Entre en el directorio hello_scarb con el comando <code>cd hello_scarb</code>.Verás que Scarb ha generado dos archivos y un directorio para nosotros: un archivo <code>Scarb.toml</code> y un directorio src con un archivo <code>lib.cairo</code> dentro.</p>
+<p>También ha inicializado un nuevo repositorio Git junto con un archivo <code>.gitignore</code>.</p>
 <blockquote>
-<p>Note: Git is a common version control system. You can stop using version control system by using the <code>--vcs</code> flag.
-Run <code>scarb new -help</code> to see the available options.</p>
+<p>Nota: Git es un sistema de control de versiones común. Puede dejar de usar el sistema de control de versiones 
+usando la bandera <code>--vcs</code>.
+Ejecute <code>scarb new -help</code> para ver las opciones disponibles.</p>
 </blockquote>
-<p>Open <em>Scarb.toml</em> in your text editor of choice. It should look similar to the code in Listing 1-2.</p>
+<p>Abra <em>Scarb.toml</em> en su editor de texto preferido. Debería parecerse al código del Listado 1-2.</p>
 <p><span class="filename">Filename: Scarb.toml</span></p>
 <pre><code class="language-toml">[package]
 name = &quot;hello_scarb&quot;
 version = &quot;0.1.0&quot;
 
-# See more keys and their definitions at https://docs.swmansion.com/scarb/docs/reference/manifest
+# Vea más claves y sus definiciones en https://docs.swmansion.com/scarb/docs/reference/manifest
 
 [dependencies]
 # foo = { path = &quot;vendor/foo&quot; }
 </code></pre>
 <p><span class="caption">Listing 1-2: Contents of Scarb.toml generated by <code>scarb new</code></span></p>
-<p>This file is in the <a href="https://toml.io/">TOML</a> (Tom’s Obvious, Minimal Language) format, which is Scarb’s configuration format.</p>
-<p>The first line, <code>[package]</code>, is a section heading that indicates that the following statements are configuring a package. As we add more information to this file, we’ll add other sections.</p>
-<p>The next two lines set the configuration information Scarb needs to compile your program: the name and the version of Scarb to use.</p>
-<p>The last line, <code>[dependencies]</code>, is the start of a section for you to list any of your project’s dependencies. In Cairo, packages of code are referred to as crates. We won’t need any other crates for this project.</p>
-<p>The other file created by Scarb is <code>src/lib.cairo</code>, let's delete all the content and put in the following content, we will explain the reason later.</p>
+<p>Este archivo se encuentra en formato <a href="https://toml.io/">TOML</a> (Tom’s Obvious, Minimal Language), que es el formato de configuración de Scarb.</p>
+<p>La primera línea, <code>[package]</code>, es un encabezado de sección que indica que las siguientes sentencias están configurando un paquete. A medida que agreguemos más información a este archivo, agregaremos otras secciones.</p>
+<p>Las siguientes dos líneas establecen la información de configuración que Scarb necesita para compilar su programa: el nombre y la versión de Scarb a utilizar.</p>
+<p>La última línea, <code>[dependencies]</code>, es el comienzo de una sección para que puedas listar cualquiera de las dependencias de tu proyecto. En Cairo, los paquetes de código se conocen como crates. No necesitaremos ninguna otra crate para este proyecto.</p>
+<p>El otro archivo creado por Scarb es <code>src/lib.cairo</code>, borremos todo el contenido y pongamos el siguiente contenido, explicaremos la razón más adelante.</p>
 <pre><code class="language-rust">mod hello_scarb;</code></pre>
-<p>Then create a new file called <code>src/hello_scarb.cairo</code> and put the following code in it:</p>
+<p>A continuación, cree un nuevo archivo llamado <code>src/hello_scarb.cairo</code> y ponle el siguiente código:</p>
 <p><span class="filename">Filename: src/hello_scarb.cairo</span></p>
 <pre><code class="language-rust">use debug::PrintTrait;
 fn main() {
     'Hello, Scarb!'.print();
 }</code></pre>
-<p>We have just created a file called <code>lib.cairo</code>, which contains a module declaration referencing another module named &quot;hello_scarb&quot;, as well as the file <code>hello_scarb.cairo</code>,containing the implementation details of the &quot;hello_scarb&quot; module.</p>
-<p>Scarb requires your source files to be located within the src directory.</p>
-<p>The top-level project directory is reserved for README files, license information, configuration files, and any other non-code-related content.
-Scarb ensures a designated location for all project components, maintaining a structured organization.</p>
-<p>If you started a project that doesn’t use Scarb, as we did with the “Hello, world!” project, you can convert it to a project that does use Scarb. Move the project code into the src directory and create an appropriate <code>Scarb.toml</code> file.</p>
-<h3 id="building-a-scarb-project"><a class="header" href="#building-a-scarb-project">Building a Scarb Project</a></h3>
-<p>From your hello_scarb directory, build your project by entering the following command:</p>
+<p>Acabamos de crear un archivo llamado <code>lib.cairo</code>, que contiene una declaración de módulo que hace referencia a otro módulo llamado &quot;hello_scarb&quot;, así como el archivo <code>hello_scarb.cairo</code>, que contiene los detalles de implementación del módulo &quot;hello_scarb&quot;.</p>
+<p>Scarb requiere que sus archivos fuente se encuentren dentro del directorio src.</p>
+<p>El directorio de proyecto de nivel superior está reservado para los archivos README, información de licencia, archivos de configuración, y cualquier otro contenido no relacionado con el código.
+Scarb asegura una ubicación designada para todos los componentes del proyecto, manteniendo una organización estructurada.</p>
+<p>Si ha iniciado un proyecto que no utiliza Scarb, como hicimos con el proyecto “Hello, world!”, puede convertirlo en un proyecto que utilice Scarb. Mueva el código del proyecto al directorio src y cree un archivo <code>Scarb.toml</code> apropiado.</p>
+<h3 id="creación-de-un-proyecto-scarb"><a class="header" href="#creación-de-un-proyecto-scarb">Creación de un proyecto Scarb</a></h3>
+<p>Desde su directorio hello_scarb, construya su proyecto introduciendo el siguiente comando:</p>
 <pre><code class="language-bash">$ scarb build
    Compiling hello_scarb v0.1.0 (file:///projects/Scarb.toml)
     Finished release target(s) in 0 seconds
 </code></pre>
-<p>This command creates a <code>sierra</code> file in <code>target/release</code>, let's ignore the <code>sierra</code> file for now.</p>
-<p>If you have installed Cairo correctly, you should be able to run and see the following output:</p>
+<p>Este comando crea un archivo <code>sierra</code> en <code>target/release</code>, ignoremos el archivo <code>sierra</code> por ahora.</p>
+<p>Si has instalado Cairo correctamente, deberías ser capaz de ejecutarlo y ver la siguiente salida:</p>
 <pre><code class="language-bash">$ cairo-run src/lib.cairo
 [DEBUG] Hello, Scarb!                   (raw: 5735816763073854913753904210465)
 
 Run completed successfully, returning []
 </code></pre>
 <blockquote>
-<p>Note: You will notice here that we didn't use a Scarb command, but rather a command from the Cairo binaries directly.
-As Scarb doesn't have a command to execute Cairo code, yet we have to use the <code>cairo-run</code> command directly.
-We will use this command in the rest of the tutorial, but we will also use Scarb commands to initialize projects.</p>
+<p>Nota: Notarás aquí que no usamos un comando de Scarb, sino un comando de los binarios de Cairo directamente.
+Como Scarb no tiene un comando para ejecutar código de Cairo, tenemos que usar el comando <code>cairo-run</code> directamente.
+Usaremos este comando en el resto del tutorial, pero también usaremos comandos de Scarb para inicializar proyectos.</p>
 </blockquote>
-<h3 id="defining-custom-scripts"><a class="header" href="#defining-custom-scripts">Defining Custom Scripts</a></h3>
-<p>We can define scarb scripts in <code>Scarb.toml</code> file, which can be used to execute custom shell scripts.
-Add the following line to your <code>Scarb.toml</code> file:</p>
+<h3 id="definición-de-scripts-personalizados"><a class="header" href="#definición-de-scripts-personalizados">Definición de scripts personalizados</a></h3>
+<p>Podemos definir scripts scarb en el archivo <code>Scarb.toml</code>, que puede ser usado para ejecutar scripts shell personalizados.</p>
+<p>Añada la siguiente línea a su fichero <code>Scarb.toml</code>:</p>
 <pre><code class="language-toml">[scripts]
 run-lib = &quot;cairo-run src/lib.cairo&quot;
 </code></pre>
-<p>Now you can run the following command to run the project:</p>
+<p>Ahora puede ejecutar el siguiente comando para ejecutar el proyecto:</p>
 <pre><code class="language-bash">$ scarb run run-lib
 [DEBUG] Hello, Scarb!                   (raw: 5735816763073854913753904210465)
 
 Run completed successfully, returning []
 </code></pre>
-<p>Using <code>scarb run</code> is a convenient way to run custom shell scripts that can be useful to run files and test your project.</p>
-<p>Let’s recap what we’ve learned so far about Scarb:</p>
+<p>Usar <code>scarb run</code> es una forma conveniente de ejecutar scripts de shell personalizados que pueden ser útiles para ejecutar archivos y probar su proyecto.</p>
+<p>Recapitulemos lo que hemos aprendido hasta ahora sobre Scarb:</p>
 <ul>
-<li>We can create a project using <code>scarb new</code>.</li>
-<li>We can build a project using <code>scarb build</code> to generate the compiled Sierra code.</li>
-<li>We can define custom scripts in <code>Scarb.toml</code> and call them with the <code>scarb run</code> command.</li>
+<li>Podemos crear un proyecto usando <code>scarb new</code>.</li>
+<li>Podemos construir un proyecto usando <code>scarb build</code> para generar el código Sierra compilado.</li>
+<li>Podemos definir scripts personalizados en <code>Scarb.toml</code> y llamarlos con el comando <code>scarb run</code>.</li>
 </ul>
-<p>An additional advantage of using Scarb is that the commands are the same no matter which operating system you’re working on. So, at this point, we’ll no longer provide specific instructions for Linux and macOS versus Windows.</p>
-<h1 id="summary"><a class="header" href="#summary">Summary</a></h1>
-<p>You’re already off to a great start on your Cairo journey! In this chapter, you’ve learned how to:</p>
+<p>Una ventaja adicional de usar Scarb es que los comandos son los mismos sin importar el sistema operativo en el que estemos trabajando. Así que, en este punto, ya no proporcionaremos instrucciones específicas para Linux y macOS frente a Windows.</p>
+<h1 id="resumen"><a class="header" href="#resumen">Resumen</a></h1>
+<p>Ya has empezado con buen pie tu viaje en Cairo. En este capítulo, has aprendido cómo:</p>
 <ul>
-<li>Install the latest stable version of Cairo</li>
-<li>Write and run a “Hello, world!” program using <code>cairo-run</code> directly</li>
-<li>Create and run a new project using the conventions of Scarb</li>
+<li>Instalar la última versión estable de Cairo</li>
+<li>Escribir y ejecutar un programa &quot; Hello, world!&quot; usando <code>cairo-run</code> directamente</li>
+<li>Crear y ejecutar un nuevo proyecto usando las convenciones de Scarb</li>
 </ul>
-<p>This is a great time to build a more substantial program to get used to reading and writing Cairo code.</p>
+<p>Este es un buen momento para construir un programa más sustancial para acostumbrarte a leer y escribir código de Cairo.</p>
 
                     </main>
 
