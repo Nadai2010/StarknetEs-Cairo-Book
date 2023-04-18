@@ -1,0 +1,11 @@
+En 2020, StarkWare lanzó Cairo 0, un lenguaje de programación Turing completo que admite cálculo verificable. Cairo comenzó como un lenguaje ensamblador y gradualmente se volvió más expresivo. La curva de aprendizaje fue inicialmente pronunciada, ya que Cairo 0.x era un lenguaje de bajo nivel que no abstraía por completo las primitivas criptográficas subyacentes requeridas para construir una prueba para la ejecución de un programa.
+
+Con el lanzamiento de Cairo 1, la experiencia del desarrollador ha mejorado considerablemente, abstrayendo el modelo de memoria inmutable subyacente de la arquitectura de Cairo siempre que sea posible. Inspirado en Rust, Cairo 1 ha sido construido para ayudarte a crear programas comprobables sin conocimientos específicos de su arquitectura subyacente, para que puedas concentrarte en el programa en sí, aumentando la seguridad general de los programas de Cairo. Alimentado por una máquina virtual Rust, la ejecución de los programas de Cairo es ahora extremadamente rápida, lo que te permite construir una amplia suite de pruebas sin comprometer el rendimiento.
+
+Los desarrolladores de blockchain que desean implementar contratos en Starknet utilizarán el lenguaje de programación Cairo para codificar sus contratos inteligentes. Esto permite al sistema operativo Starknet generar trazas de ejecución para transacciones que deben ser demostradas por un probador, que luego se verifica en Ethereum L1 antes de actualizar la raíz del estado de Starknet.
+
+Sin embargo, Cairo no es solo para desarrolladores de blockchain. Como lenguaje de programación de propósito general, se puede utilizar para cualquier cálculo que se beneficie de ser demostrado en una computadora y verificado en otras máquinas con requisitos de hardware más bajos.
+
+Este libro está diseñado para desarrolladores con una comprensión básica de los conceptos de programación. Es un texto amigable y accesible destinado a ayudarte a mejorar tus conocimientos de Cairo, pero también a ayudarte a desarrollar tus habilidades de programación en general. ¡Así que sumérgete y prepárate para aprender todo lo que hay que saber sobre Cairo!
+
+- La comunidad de Cairo

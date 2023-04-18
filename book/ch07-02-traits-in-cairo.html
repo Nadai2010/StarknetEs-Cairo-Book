@@ -1,0 +1,331 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Traits en Cairo - El lenguaje de programación Cairo </title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var html = document.querySelector('html');
+            var sidebar = null;
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="title-page.html">El lenguaje de programación Cairo</a></li><li class="chapter-item expanded affix "><a href="ch00-01-foreword.html">Prólogo</a></li><li class="chapter-item expanded affix "><a href="ch00-00-introduction.html">Introducción</a></li><li class="chapter-item expanded "><a href="ch01-00-getting-started.html"><strong aria-hidden="true">1.</strong> Cómo empezar</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch01-01-installation.html"><strong aria-hidden="true">1.1.</strong> Instalación</a></li><li class="chapter-item expanded "><a href="ch01-02-hello-world.html"><strong aria-hidden="true">1.2.</strong> Hola, Mundo!</a></li><li class="chapter-item expanded "><a href="ch01-03-hello-scarb.html"><strong aria-hidden="true">1.3.</strong> Hola, Scarb!</a></li></ol></li><li class="chapter-item expanded "><a href="ch02-00-common-programming-concepts.html"><strong aria-hidden="true">2.</strong> Conceptos comunes de programación</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch02-01-variables-and-mutability.html"><strong aria-hidden="true">2.1.</strong> Variables y mutabilidad</a></li><li class="chapter-item expanded "><a href="ch02-02-data-types.html"><strong aria-hidden="true">2.2.</strong> Tipos de datos</a></li><li class="chapter-item expanded "><a href="ch02-03-functions.html"><strong aria-hidden="true">2.3.</strong> Funciones</a></li><li class="chapter-item expanded "><a href="ch02-04-comments.html"><strong aria-hidden="true">2.4.</strong> Comentarios</a></li><li class="chapter-item expanded "><a href="ch02-05-control-flow.html"><strong aria-hidden="true">2.5.</strong> Flujo de contro</a></li></ol></li><li class="chapter-item expanded "><a href="ch03-00-understanding-ownership.html"><strong aria-hidden="true">3.</strong> Comprender Ownership</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch03-01-what-is-ownership.html"><strong aria-hidden="true">3.1.</strong> ¿Qué es Ownership?</a></li><li class="chapter-item expanded "><a href="ch03-02-references-and-snapshots.html"><strong aria-hidden="true">3.2.</strong> Referencias e instantáneas</a></li></ol></li><li class="chapter-item expanded "><a href="ch04-00-using-structs-to-structure-related-data.html"><strong aria-hidden="true">4.</strong>  Uso de estructuras para estructurar datos relacionados</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch04-01-defining-and-instantiating-structs.html"><strong aria-hidden="true">4.1.</strong> Definición e instanciación de estructuras</a></li><li class="chapter-item expanded "><a href="ch04-02-an-example-program-using-structs.html"><strong aria-hidden="true">4.2.</strong> Un programa de ejemplo usando estructuras</a></li><li class="chapter-item expanded "><a href="ch04-03-method-syntax.html"><strong aria-hidden="true">4.3.</strong> Sintaxis de métodos</a></li></ol></li><li class="chapter-item expanded "><a href="ch05-00-enums-and-pattern-matching.html"><strong aria-hidden="true">5.</strong> Enums y Concordancia de Patrones</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch05-01-enums.html"><strong aria-hidden="true">5.1.</strong> Enums</a></li><li class="chapter-item expanded "><a href="ch05-02-the-match-control-flow-construct.html"><strong aria-hidden="true">5.2.</strong> La construcción del flujo de control de coincidencias</a></li></ol></li><li class="chapter-item expanded "><a href="ch06-00-managing-cairo-projects-with-packages-crates-and-modules.html"><strong aria-hidden="true">6.</strong> Gestionando Proyectos Cairo con Paquetes, Crates y Módulos</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch06-01-packages-and-crates.html"><strong aria-hidden="true">6.1.</strong> Paquetes y Crates</a></li><li class="chapter-item expanded "><a href="ch06-02-defining-modules-to-control-scope.html"><strong aria-hidden="true">6.2.</strong> Definición de módulos para controlar el alcance</a></li><li class="chapter-item expanded "><a href="ch06-03-paths-for-referring-to-an-item-in-the-module-tree.html"><strong aria-hidden="true">6.3.</strong> Rutas para referirse a un elemento en el Arbol de Módulos</a></li></ol></li><li class="chapter-item expanded "><a href="ch07-00-generic-types.html"><strong aria-hidden="true">7.</strong> Tipos de datos Genéricos</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch07-01-generic-data-types.html"><strong aria-hidden="true">7.1.</strong> Funciones genéricas</a></li><li class="chapter-item expanded "><a href="ch07-02-traits-in-cairo.html" class="active"><strong aria-hidden="true">7.2.</strong> Traits en Cairo</a></li></ol></li><li class="chapter-item expanded "><a href="ch09-00-testing-cairo-programs.html"><strong aria-hidden="true">8.</strong> Probando programas de Cairo</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch09-01-how-to-write-tests.html"><strong aria-hidden="true">8.1.</strong> Cómo escribir Tests</a></li><li class="chapter-item expanded "><a href="ch09-02-test-organization.html"><strong aria-hidden="true">8.2.</strong> Organización de Testing</a></li></ol></li><li class="chapter-item expanded "><a href="appendix-00.html"><strong aria-hidden="true">9.</strong> Apéndice</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="appendix-04-useful-development-tools.html"><strong aria-hidden="true">9.1.</strong> A - Herramientas de desarrollo útiles</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">El lenguaje de programación Cairo </h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="traits-in-cairo"><a class="header" href="#traits-in-cairo">Traits in Cairo</a></h1>
+<p>Traits specify functionality blueprints that can be implemented. The blueprint specification includes a set of function signatures containing type annotations for the parameters and return value. This sets a standard to implement the specific functionality.</p>
+<h2 id="defining-a-trait"><a class="header" href="#defining-a-trait">Defining a Trait</a></h2>
+<p>To define a trait, you use the keyword <code>trait</code> followed by the name of the trait in <code>PascalCase</code> then the function signatures in a pair of curly braces.</p>
+<p>For example, let's say that we have multiple structs representing shapes. We want our application to be able to perform geometry operations on these shapes, So we define a trait <code>ShapeGeometry</code> that contains a blueprint to implement geometry operations on a shape like this,</p>
+<pre><code class="language-rust">trait ShapeGeometry {
+    fn boundary( self: Rectangle ) -&gt; u64;
+    fn area( self: Rectangle ) -&gt; u64;
+}</code></pre>
+<p>Here our trait <code>ShapeGeometry</code> declares signatures for two methods <code>boundary</code> and <code>area</code>. When implemented, both these functions should return a <code>u64</code> and accept parameters as specified by the trait.</p>
+<h2 id="implementing-a-trait"><a class="header" href="#implementing-a-trait">Implementing a Trait</a></h2>
+<p>A trait can be implemented using <code>impl</code> keyword with the name of your implementation followed by <code>of</code> then the name of trait being implemented. Here's an example implementing <code>ShapeGeometry</code> trait.</p>
+<pre><code class="language-rust">impl RectangleGeometry of ShapeGeometry {
+	fn boundary( self: Rectangle ) -&gt; u64 {
+        2_u64 * (self.height + self.width)
+    }
+	fn area( self: Rectangle ) -&gt; u64 {
+		self.height * self.width
+	}
+}</code></pre>
+<p>In the code above, <code>RectangleGeometry</code> implements the trait <code>ShapeGeometry</code> defining what the methods <code>boundary</code> and <code>area</code> should do. Note the the function parameters and return value types are identical to the trait specification.</p>
+<h2 id="parameter-self"><a class="header" href="#parameter-self">Parameter <code>self</code></a></h2>
+<p>In the example above, <code>self</code> is a special parameter. When a parameter with name <code>self</code> is used, the implemented functions are also <a href="ch04-03-method-syntax.html#defining-methods">attached to the instances of the type as methods</a>. Here's an illustration,</p>
+<p>When the <code>ShapeGeometry</code> trait is implemented, the function <code>area</code> from the <code>ShapeGeometry</code> trait can be called in two ways:</p>
+<pre><code class="language-rust">let rect = Rectangle { ... }; // Rectangle instantiation
+
+// First way, as a method on the struct instance
+let area1 = rect.area();
+// Second way, from the implementation
+let area2 = RectangleGeometry::area(rect);
+// `area1` has same value as `area2`
+area1.print();
+area2.print();</code></pre>
+<p>And the implementation of the <code>area</code> method will be accessed via the <code>self</code> parameter.</p>
+<h2 id="traits-with-generic-types"><a class="header" href="#traits-with-generic-types">Traits with generic types</a></h2>
+<p>Usually we want to write a trait when we want multiple types to implement a functionality in a standard way. However, in the example above the signatures are static and cannot be used for multiple types. To do this, we use generic types when defining traits.</p>
+<p>In the example below, we use generic type <code>T</code> and our method signatures can use this alias which can be provided during implementation.</p>
+<pre><code class="language-rust">use debug::PrintTrait;
+
+// Here T is an alias type which will be provided buring implementation
+trait ShapeGeometry&lt;T&gt; {
+    fn boundary( self: T ) -&gt; u64;
+    fn area( self: T ) -&gt; u64;
+}
+
+// Implementation RectangleGeometry passes in &lt;Rectangle&gt;
+// to implement the trait for that type
+impl RectangleGeometry of ShapeGeometry::&lt;Rectangle&gt; {
+    fn boundary( self: Rectangle ) -&gt; u64 {
+        2_u64 * (self.height + self.width)
+    }
+    fn area( self: Rectangle ) -&gt; u64 {
+        self.height * self.width
+    }
+}
+
+// We might have another struct Circle
+// which can use the same trait spec
+impl CircleGeometry of ShapeGeometry::&lt;Circle&gt; {
+    fn boundary( self: Circle ) -&gt; u64 {
+        (2_u64 * 314_u64 * self.radius) / 100_u64
+    }
+    fn area( self: Circle ) -&gt; u64 {
+       (314_u64 * self.radius * self.radius) / 100_u64
+    }
+}
+
+fn main() {
+    let rect = Rectangle { height: 5_u128, width: 7_u128 };
+    rect.area().print(); // 35
+    rect.boundary().print(); // 24
+
+    let circ = Circle { radius: 5_u128 };
+    circ.area().print(); // 78
+    circ.boundary().print(); // 31
+}</code></pre>
+<h2 id="managing-and-using-external-trait-implementations"><a class="header" href="#managing-and-using-external-trait-implementations">Managing and using external trait implementations</a></h2>
+<p>To use traits methods, you need to make sure the correct traits/implementation(s) are imported. In the code above we imported <code>PrintTrait</code> from <code>debug</code> with <code>use debug::PrintTrait;</code> to use <code>print()</code> methods.</p>
+<p>In some cases you might need to import not only the trait but also the implementation if they are declared in separate modules.
+If <code>CircleGeometry</code> was in a separate module/file <code>circle</code> then to use <code>boundary</code> on <code>circ: Circle</code>, we'd need to import <code>CircleGeometry</code> in addition to <code>ShapeGeometry</code>.</p>
+<p>If the code was organised into modules like this,</p>
+<pre><code class="language-rust">use debug::PrintTrait;
+
+// struct Circle { ... } and struct Rectangle { ... }
+
+mod geometry {
+    use super::Rectangle;
+    trait ShapeGeometry&lt;T&gt; {
+        // ...
+    }
+
+    impl RectangleGeometry of ShapeGeometry::&lt;Rectangle&gt; {
+        // ...
+    }
+}
+
+// Could be in a different file
+mod circle {
+    use super::geometry::ShapeGeometry;
+    use super::Circle;
+    impl CircleGeometry of ShapeGeometry::&lt;Circle&gt; {
+        // ...
+    }
+}
+
+fn main() {
+    let rect = Rectangle { height: 5_u64, width: 7_u64 };
+    let circ = Circle { radius: 5_u64 };
+    // Fails with this error
+    // Method `area` not found on... Did you import the correct trait and impl?
+    rect.area().print();
+    circ.area().print();
+}</code></pre>
+<p>To make it work, in addition to,</p>
+<pre><code class="language-rust">use geometry::ShapeGeometry;</code></pre>
+<p>you might also need to use <code>CircleGeometry</code>,</p>
+<pre><code class="language-rust">use circle::CircleGeometry</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch07-01-generic-data-types.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next" href="ch09-00-testing-cairo-programs.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch07-01-generic-data-types.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next" href="ch09-00-testing-cairo-programs.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,404 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Variables y mutabilidad - El lenguaje de programación Cairo </title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var html = document.querySelector('html');
+            var sidebar = null;
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="title-page.html">El lenguaje de programación Cairo</a></li><li class="chapter-item expanded affix "><a href="ch00-01-foreword.html">Prólogo</a></li><li class="chapter-item expanded affix "><a href="ch00-00-introduction.html">Introducción</a></li><li class="chapter-item expanded "><a href="ch01-00-getting-started.html"><strong aria-hidden="true">1.</strong> Cómo empezar</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch01-01-installation.html"><strong aria-hidden="true">1.1.</strong> Instalación</a></li><li class="chapter-item expanded "><a href="ch01-02-hello-world.html"><strong aria-hidden="true">1.2.</strong> Hola, Mundo!</a></li><li class="chapter-item expanded "><a href="ch01-03-hello-scarb.html"><strong aria-hidden="true">1.3.</strong> Hola, Scarb!</a></li></ol></li><li class="chapter-item expanded "><a href="ch02-00-common-programming-concepts.html"><strong aria-hidden="true">2.</strong> Conceptos comunes de programación</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch02-01-variables-and-mutability.html" class="active"><strong aria-hidden="true">2.1.</strong> Variables y mutabilidad</a></li><li class="chapter-item expanded "><a href="ch02-02-data-types.html"><strong aria-hidden="true">2.2.</strong> Tipos de datos</a></li><li class="chapter-item expanded "><a href="ch02-03-functions.html"><strong aria-hidden="true">2.3.</strong> Funciones</a></li><li class="chapter-item expanded "><a href="ch02-04-comments.html"><strong aria-hidden="true">2.4.</strong> Comentarios</a></li><li class="chapter-item expanded "><a href="ch02-05-control-flow.html"><strong aria-hidden="true">2.5.</strong> Flujo de contro</a></li></ol></li><li class="chapter-item expanded "><a href="ch03-00-understanding-ownership.html"><strong aria-hidden="true">3.</strong> Comprender Ownership</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch03-01-what-is-ownership.html"><strong aria-hidden="true">3.1.</strong> ¿Qué es Ownership?</a></li><li class="chapter-item expanded "><a href="ch03-02-references-and-snapshots.html"><strong aria-hidden="true">3.2.</strong> Referencias e instantáneas</a></li></ol></li><li class="chapter-item expanded "><a href="ch04-00-using-structs-to-structure-related-data.html"><strong aria-hidden="true">4.</strong>  Uso de estructuras para estructurar datos relacionados</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch04-01-defining-and-instantiating-structs.html"><strong aria-hidden="true">4.1.</strong> Definición e instanciación de estructuras</a></li><li class="chapter-item expanded "><a href="ch04-02-an-example-program-using-structs.html"><strong aria-hidden="true">4.2.</strong> Un programa de ejemplo usando estructuras</a></li><li class="chapter-item expanded "><a href="ch04-03-method-syntax.html"><strong aria-hidden="true">4.3.</strong> Sintaxis de métodos</a></li></ol></li><li class="chapter-item expanded "><a href="ch05-00-enums-and-pattern-matching.html"><strong aria-hidden="true">5.</strong> Enums y Concordancia de Patrones</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch05-01-enums.html"><strong aria-hidden="true">5.1.</strong> Enums</a></li><li class="chapter-item expanded "><a href="ch05-02-the-match-control-flow-construct.html"><strong aria-hidden="true">5.2.</strong> La construcción del flujo de control de coincidencias</a></li></ol></li><li class="chapter-item expanded "><a href="ch06-00-managing-cairo-projects-with-packages-crates-and-modules.html"><strong aria-hidden="true">6.</strong> Gestionando Proyectos Cairo con Paquetes, Crates y Módulos</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch06-01-packages-and-crates.html"><strong aria-hidden="true">6.1.</strong> Paquetes y Crates</a></li><li class="chapter-item expanded "><a href="ch06-02-defining-modules-to-control-scope.html"><strong aria-hidden="true">6.2.</strong> Definición de módulos para controlar el alcance</a></li><li class="chapter-item expanded "><a href="ch06-03-paths-for-referring-to-an-item-in-the-module-tree.html"><strong aria-hidden="true">6.3.</strong> Rutas para referirse a un elemento en el Arbol de Módulos</a></li></ol></li><li class="chapter-item expanded "><a href="ch07-00-generic-types.html"><strong aria-hidden="true">7.</strong> Tipos de datos Genéricos</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch07-01-generic-data-types.html"><strong aria-hidden="true">7.1.</strong> Funciones genéricas</a></li><li class="chapter-item expanded "><a href="ch07-02-traits-in-cairo.html"><strong aria-hidden="true">7.2.</strong> Traits en Cairo</a></li></ol></li><li class="chapter-item expanded "><a href="ch09-00-testing-cairo-programs.html"><strong aria-hidden="true">8.</strong> Probando programas de Cairo</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch09-01-how-to-write-tests.html"><strong aria-hidden="true">8.1.</strong> Cómo escribir Tests</a></li><li class="chapter-item expanded "><a href="ch09-02-test-organization.html"><strong aria-hidden="true">8.2.</strong> Organización de Testing</a></li></ol></li><li class="chapter-item expanded "><a href="appendix-00.html"><strong aria-hidden="true">9.</strong> Apéndice</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="appendix-04-useful-development-tools.html"><strong aria-hidden="true">9.1.</strong> A - Herramientas de desarrollo útiles</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">El lenguaje de programación Cairo </h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="variables-and-mutability"><a class="header" href="#variables-and-mutability">Variables and Mutability</a></h2>
+<p>Cairo uses an immutable memory model, meaning that once a memory cell is written to,
+it can't be overwritten but only read from. To reflect this immutable memory model,
+variables in Cairo are immutable by default.
+However, the language abstracts this model and gives you the option to make your
+variables mutable. Let’s explore how and why Cairo enforces immutability, and how
+you can make your variables mutable.</p>
+<p>When a variable is immutable, once a value is bound to a name, you can’t change
+that value. To illustrate this, generate a new project called <em>variables</em> in
+your <em>cairo_projects</em> directory by using <code>scarb new variables</code>.</p>
+<p>Then, in your new <em>variables</em> directory, open <em>src/lib.cairo</em> and replace its
+code with the following code, which won’t compile just yet:</p>
+<p><span class="filename">Filename: src/lib.cairo</span></p>
+<pre><code class="language-rust">use debug::PrintTrait;
+fn main() {
+    let x = 5;
+    x.print();
+    x = 6;
+    x.print();
+}</code></pre>
+<p>Save and run the program using <code>cairo-run src/lib.cairo</code>. You should receive an error message
+regarding an immutability error, as shown in this output:</p>
+<pre><code class="language-console">error: Cannot assign to an immutable variable.
+ --&gt; lib.cairo:5:5
+    x = 6;
+    ^***^
+
+Error: failed to compile: src/lib.cairo
+</code></pre>
+<p>This example shows how the compiler helps you find errors in your programs.
+Compiler errors can be frustrating, but really they only mean your program
+isn’t safely doing what you want it to do yet; they do <em>not</em> mean that you’re
+not a good programmer! Experienced Caironautes still get compiler errors.</p>
+<p>You received the error message <code>Cannot assign to an immutable variable.</code>
+because you tried to assign a second value to the immutable <code>x</code> variable.</p>
+<p>It’s important that we get compile-time errors when we attempt to change a
+value that’s designated as immutable because this specific situation can lead to
+bugs. If one part of our code operates on the assumption that a value will
+never change and another part of our code changes that value, it’s possible
+that the first part of the code won’t do what it was designed to do. The cause
+of this kind of bug can be difficult to track down after the fact, especially
+when the second piece of code changes the value only <em>sometimes</em>. The Cairo
+compiler guarantees that when you state that a value won’t change, it really
+won’t change, so you don’t have to keep track of it yourself. Your code is thus
+easier to reason through.</p>
+<p>But mutability can be very useful, and can make code more convenient to write.
+Although variables are immutable by default, you can make them mutable by
+adding <code>mut</code> in front of the variable name. Adding <code>mut</code> also conveys
+intent to future readers of the code by indicating that other parts of the code
+will be changing this variable’s value.</p>
+<p>However, you might be wondering at this point what exactly happens when a variable
+is declared as <code>mut</code>, as we previously mentioned that Cairo's memory is immutable.
+The answer is that Cairo's memory is immutable, but the memory address the variable points
+to can be changed. Upon examining the low-level Cairo Assembly code, it becomes clear that
+variable mutation is implemented as syntactic sugar, which translates mutation operations
+into a series of steps equivalent to variable shadowing. The only difference is that at the Cairo
+level, the variable is not redeclared so its type cannot change.</p>
+<p>For example, let’s change <em>src/lib.cairo</em> to the following:</p>
+<p><span class="filename">Filename: src/lib.cairo</span></p>
+<pre><code class="language-rust">use debug::PrintTrait;
+fn main() {
+    let mut x = 5;
+    x.print();
+    x = 6;
+    x.print();
+}</code></pre>
+<p>When we run the program now, we get this:</p>
+<pre><code class="language-console">❯ cairo-run src/lib.cairo
+[DEBUG]	                              	(raw: 5)
+
+[DEBUG]	                              	(raw: 6)
+
+Run completed successfully, returning []
+</code></pre>
+<p>We’re allowed to change the value bound to <code>x</code> from <code>5</code> to <code>6</code> when <code>mut</code> is
+used. Ultimately, deciding whether to use mutability or not is up to you and
+depends on what you think is clearest in that particular situation.</p>
+<h3 id="constants"><a class="header" href="#constants">Constants</a></h3>
+<p>Like immutable variables, <em>constants</em> are values that are bound to a name and
+are not allowed to change, but there are a few differences between constants
+and variables.</p>
+<p>First, you aren’t allowed to use <code>mut</code> with constants. Constants aren’t just
+immutable by default—they’re always immutable. You declare constants using the
+<code>const</code> keyword instead of the <code>let</code> keyword, and the type of the value <em>must</em>
+be annotated. We’ll cover types and type annotations in the next section,
+<a href="ch03-02-data-types.html#data-types">“Data Types”</a><!-- ignore -->, so don’t worry about the details
+right now. Just know that you must always annotate the type.</p>
+<p>Constants can only be declared in the global scope, which makes
+them useful for values that many parts of code need to know about.</p>
+<p>The last difference is that constants may be set only to a constant expression,
+not the result of a value that could only be computed at runtime. Only literal constants
+are currently supported.</p>
+<p>Here’s an example of a constant declaration:</p>
+<pre><code class="language-rust">const ONE_HOUR_IN_SECONDS: u32 = 3600_u32;</code></pre>
+<p>Cairo's naming convention for constants is to use all uppercase with
+underscores between words.</p>
+<p>Constants are valid for the entire time a program runs, within the scope in
+which they were declared. This property makes constants useful for values in
+your application domain that multiple parts of the program might need to know
+about, such as the maximum number of points any player of a game is allowed to
+earn, or the speed of light.</p>
+<p>Naming hardcoded values used throughout your program as constants is useful in
+conveying the meaning of that value to future maintainers of the code. It also
+helps to have only one place in your code you would need to change if the
+hardcoded value needed to be updated in the future.</p>
+<h3 id="shadowing"><a class="header" href="#shadowing">Shadowing</a></h3>
+<p>Variable shadowing refers to the declaration of a
+new variable with the same name as a previous variable. Caironautes say that the
+first variable is <em>shadowed</em> by the second, which means that the second
+variable is what the compiler will see when you use the name of the variable.
+In effect, the second variable overshadows the first, taking any uses of the
+variable name to itself until either it itself is shadowed or the scope ends.
+We can shadow a variable by using the same variable’s name and repeating the
+use of the <code>let</code> keyword as follows:</p>
+<p><span class="filename">Filename: src/lib.cairo</span></p>
+<pre><code class="language-swift">use debug::PrintTrait;
+fn main() {
+    let x = 5;
+    let x = x + 1;
+    {
+        let x = x * 2;
+        'Inner scope x value is:'.print();
+        x.print()
+    }
+    'Outer scope x value is:'.print();
+    x.print();
+}
+</code></pre>
+<p>This program first binds <code>x</code> to a value of <code>5</code>. Then it creates a new variable
+<code>x</code> by repeating <code>let x =</code>, taking the original value and adding <code>1</code> so the
+value of <code>x</code> is then <code>6</code>. Then, within an inner scope created with the curly
+brackets, the third <code>let</code> statement also shadows <code>x</code> and creates a new
+variable, multiplying the previous value by <code>2</code> to give <code>x</code> a value of <code>12</code>.
+When that scope is over, the inner shadowing ends and <code>x</code> returns to being <code>6</code>.
+When we run this program, it will output the following:</p>
+<pre><code class="language-console">cairo-run src/lib.cairo
+[DEBUG]	Inner scope x value is:        	(raw: 7033328135641142205392067879065573688897582790068499258)
+
+[DEBUG]
+                                      	(raw: 12)
+
+[DEBUG]	Outer scope x value is:        	(raw: 7610641743409771490723378239576163509623951327599620922)
+
+[DEBUG]	                              	(raw: 6)
+
+Run completed successfully, returning []
+</code></pre>
+<p>Shadowing is different from marking a variable as <code>mut</code> because we’ll get a
+compile-time error if we accidentally try to reassign to this variable without
+using the <code>let</code> keyword. By using <code>let</code>, we can perform a few transformations
+on a value but have the variable be immutable after those transformations have
+been completed.</p>
+<p>Another distinction between <code>mut</code> and shadowing is that when we use the <code>let</code> keyword again,
+we are effectively creating a new variable, which allows us to change the type of the
+value while reusing the same name. As mentioned before, variable shadowing and mutable variables
+are equivalent at the lower level.
+The only difference is that by shadowing a variable, the compiler will not complaing
+if you change its type. For example, say our program performs a type conversion between the
+<code>u64</code> and <code>felt252</code> types.</p>
+<pre><code class="language-rust">use debug::PrintTrait;
+use traits::Into;
+fn main() {
+    let x = 2_u64;
+    x.print();
+    let x = x.into(); // converts x to a felt.
+    x.print()
+}</code></pre>
+<p>The first <code>x</code> variable has a <code>u64</code> type while the second <code>x</code> variable has a <code>felt252</code> type.
+Shadowing thus spares us from having to come up with different names, such as <code>x_u64</code>
+and <code>x_felt252</code>; instead, we can reuse the simpler <code>x</code> name. However, if we try to use
+<code>mut</code> for this, as shown here, we’ll get a compile-time error:</p>
+<pre><code class="language-rust">use debug::PrintTrait;
+use traits::Into;
+fn main() {
+    let mut x = 2_u64;
+    x.print();
+    x = x.into();
+    x.print()
+}</code></pre>
+<p>The error says we’re were expecting a <code>u64</code> (the original type) but we got a different type:</p>
+<pre><code class="language-console">❯ cairo-run src/lib.cairo
+error: Unexpected argument type. Expected: &quot;core::integer::u64&quot;, found: &quot;core::felt252&quot;.
+ --&gt; lib.cairo:6:9
+    x = x.into();
+        ^******^
+
+Error: failed to compile: src/lib.cairo
+</code></pre>
+<p>Now that we’ve explored how variables work, let’s look at more data types they
+can have.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch02-00-common-programming-concepts.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next" href="ch02-02-data-types.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch02-00-common-programming-concepts.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next" href="ch02-02-data-types.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
