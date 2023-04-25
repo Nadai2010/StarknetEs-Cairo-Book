@@ -1,13 +1,9 @@
-## Functions
+## Funciones
 
-Functions are prevalent in Cairo code. You’ve already seen one of the most
-important functions in the language: the `main` function, which is the entry
-point of many programs. You’ve also seen the `fn` keyword, which allows you to
-declare new functions.
+Las funciones son frecuentes en el código de Cairo. Ya has visto una de las funciones más importantes del lenguaje: la función `main`, que es el punto de entrada de muchos programas. También has visto la palabra clave `fn`, que te permite declarar nuevas funciones.
 
-Cairo code uses *snake case* as the conventional style for function and variable
-names, in which all letters are lowercase and underscores separate words.
-Here’s a program that contains an example function definition:
+El código de Cairo usa *snake case* como estilo convencional para los nombres de funciones y variables, en el que todas las letras están en minúsculas y los guiones bajos separan las palabras.
+Aquí hay un programa que contiene un ejemplo de definición de función:
 
 
 ```rust
@@ -23,20 +19,13 @@ fn main() {
 }
 ```
 
-We define a function in Cairo by entering `fn` followed by a function name and a
-set of parentheses. The curly brackets tell the compiler where the function
-body begins and ends.
+Definimos una función en Cairo introduciendo `fn` seguido de un nombre de función y un
+conjunto de paréntesis. Las llaves indican al compilador dónde empieza y termina el cuerpo de la función.
 
-We can call any function we’ve defined by entering its name followed by a set
-of parentheses. Because `another_function` is defined in the program, it can be
-called from inside the `main` function. Note that we defined `another_function`
-*before* the `main` function in the source code; we could have defined it after
-as well. Cairo doesn’t care where you define your functions, only that they’re
-defined somewhere in a scope that can be seen by the caller.
+Podemos llamar a cualquier función que hayamos definido introduciendo su nombre seguido de un conjunto de paréntesis. Como `another_function` está definida en el programa, puede ser llamada desde dentro de la función `main`. Ten en cuenta que hemos definido "another_function" *antes* de la función `main` en el código fuente; también podríamos haberla definido después. A Cairo no le importa dónde definas tus funciones, sólo que estén definidas en algún lugar en un ámbito que pueda ser visto por quien las llama.
 
-Let’s start a new project with Scarb named *functions* to explore functions
-further. Place the `another_function` example in *src/lib.cairo* and run it. You
-should see the following output:
+Empecemos un nuevo proyecto con Scarb llamado *functions* para explorar las funciones. Coloque el ejemplo `another_function` en *src/lib.cairo* y ejecútelo. Usted
+Debería ver la siguiente salida:
 
 ```console
 $ cairo-run src/lib.cairo
@@ -44,21 +33,18 @@ $ cairo-run src/lib.cairo
 [DEBUG] Another function.            (raw: 22265147635379277118623944509513687592494)
 ```
 
-The lines execute in the order in which they appear in the `main` function.
-First the “Hello, world!” message prints, and then `another_function` is called
-and its message is printed.
+Las líneas se ejecutan en el orden en que aparecen en la función `main`.
+Primero se imprime el mensaje " Hello, world!", y luego se llama a `another_function` y se imprime su mensaje.
 
-### Parameters
+### Parámetros
 
-We can define functions to have *parameters*, which are special variables that
-are part of a function’s signature. When a function has parameters, you can
-provide it with concrete values for those parameters. Technically, the concrete
-values are called *arguments*, but in casual conversation, people tend to use
-the words *parameter* and *argument* interchangeably for either the variables
-in a function’s definition or the concrete values passed in when you call a
-function.
+Podemos definir funciones para que tengan *parámetros*, que son variables especiales que forman parte de la firma de una función. Cuando una función tiene parámetros, puede proporcionarle valores concretos para esos parámetros. Técnicamente, los valores
+se llaman *argumentos*, pero en una conversación informal, la gente tiende a usar
+las palabras *parámetro* y *argumento* indistintamente para las variables
+en la definición de una función o los valores concretos pasados cuando se llama a una
+función.
 
-In this version of `another_function` we add a parameter:
+En esta versión de `another_function` añadimos un parámetro:
 
 ```rust
 use debug::PrintTrait;
@@ -72,25 +58,25 @@ fn another_function(x: felt252) {
 }
 ```
 
-Try running this program; you should get the following output:
+Intente ejecutar este programa; debería obtener la siguiente salida:
 
 ```console
 $ cairo-run src/lib.cairo
 [DEBUG]                                 (raw: 5)
 ```
 
-The declaration of `another_function` has one parameter named `x`. The type of
-`x` is specified as `felt252`. When we pass `5` in to `another_function`, the
-`.print()` function outputs `5` in the console.
+La declaración de `another_function` tiene un parámetro llamado `x`. El tipo de
+`x` se especifica como `felt252`. Cuando pasamos `5` a `another_function`, la función
+`print()` muestra `5` en la consola.
 
-In function signatures, you *must* declare the type of each parameter. This is
-a deliberate decision in Cairo’s design: requiring type annotations in function
-definitions means the compiler almost never needs you to use them elsewhere in
-the code to figure out what type you mean. The compiler is also able to give
-more helpful error messages if it knows what types the function expects.
+En las firmas de función, *debes* declarar el tipo de cada parámetro. Esta es
+una decisión deliberada en el diseño de Cairo: requerir anotaciones de tipo en las
+significa que el compilador casi nunca necesita usarlas en otra parte del código
+el código para averiguar a qué tipo se refiere. El compilador también es capaz de dar
+mensajes de error más útiles si sabe qué tipos espera la función.
 
-When defining multiple parameters, separate the parameter declarations with
-commas, like this:
+Cuando defina múltiples parámetros, separe las declaraciones de parámetros con
+comas, así:
 
 ```rust
 use debug::PrintTrait;

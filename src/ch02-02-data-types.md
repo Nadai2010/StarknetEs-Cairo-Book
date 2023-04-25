@@ -1,5 +1,3 @@
-## Data Types
-
 ## Tipos de datos
 
 Cada valor en Cairo tiene un cierto _tipo de dato_, lo que le dice a Cairo qué tipo de datos se están especificando para que sepa cómo trabajar con esos datos. Esta sección cubre dos subconjuntos de tipos de datos: escalares y compuestos.
@@ -126,7 +124,7 @@ fn main() {
 
 [//]: # "TODO: Control de flujo"
 
-La principal forma de utilizar valores booleanos es a través de condicionales, como una expresión `if` expresión. Cubriremos cómo funcionan las expresiones `if` en Cairo en la sección. [“Control de flujo”][control-de-flujo-flow]<!-- ignore --> 
+La principal forma de utilizar valores booleanos es a través de condicionales, como una expresión `if` expresión. Cubriremos cómo funcionan las expresiones `if` en Cairo en la sección. [“Control de flujo”][control-de-flujo]<!-- ignore --> 
 
 #### El tipo de Short String
 
@@ -209,16 +207,16 @@ fn main() {
 }
 ```
 
-#### The Array Type
+#### El tipo Array
 
-Another way to have a collection of multiple values is with an _array_. Unlike
-a tuple, every element of an array must have the same type. You can create and use array methods by importing the `array::ArrayTrait` trait.
+Otra forma de tener una colección de múltiples valores es con un _array_. A diferencia de
+cada elemento de un array debe tener el mismo tipo. Puedes crear y utilizar métodos de array importando el trait `array::ArrayTrait`.
 
-An important thing to note is that arrays are append-only. This means that you can only add elements to the end of an array.
-Arrays are, in fact, queues whose values can't be popped nor modified.
-This has to do with the fact that once a memory slot is written to, it cannot be overwritten, but only read from it.
+Una cosa importante a tener en cuenta es que los arrays son append-only. Esto significa que sólo puedes añadir elementos al final de un array.
+Los arrays son, de hecho, colas cuyos valores no se pueden saltar ni modificar.
+Esto tiene que ver con el hecho de que una vez que se escribe en un espacio de memoria, no se puede sobrescribir, sino sólo leer de él.
 
-Here is an example of creation of an array with 3 elements:
+He aquí un ejemplo de creación de un array con 3 elementos:
 
 ```rust
 use array::ArrayTrait;
@@ -231,7 +229,7 @@ fn main() {
 }
 ```
 
-It is possible to remove an element from the front of an array by calling the `pop_front()` method:
+Es posible eliminar un elemento de la parte frontal de un array llamando al método `pop_front()`:
 
 ```rust
 
@@ -251,23 +249,23 @@ fn main() {
 }
 ```
 
-The above code will print `10` as we remove the first element that was added.
+El código anterior imprimirá `10` cuando eliminemos el primer elemento añadido.
 
-You can pass the expected type of items inside the array when instantiating the array like this
+Puedes pasar el tipo esperado de elementos dentro del array al instanciar el array así
 
 ```rust,
 let mut arr = ArrayTrait::<u128>::new();
 ```
 
-##### Accessing Array Elements
+##### Acceso a los elementos de una matriz
 
-To access array elements, you can use `get()` or `at()` array methods that return different types. Using `arr.at(index)` is equivalent to using the subscripting operator `arr[index]`.
+Para acceder a los elementos de un array, puedes utilizar los métodos `get()` o `at()` que devuelven diferentes tipos. Utilizar `arr.at(index)` es equivalente a utilizar el operador de subíndice `arr[index]`.
 
-The `get` function returns an `Option<Box<@T>>`, which means it returns an option to a Box type (Cairo's smart-pointer type) containing a snapshot to the element at the specified index if that element exists in the array. If the element doesn't exist, `get` returns `None`. This method is useful when you expect to access indices that may not be within the array's bounds and want to handle such cases gracefully without panics. Snapshots will be explained in more detail in the [References and Snapshots](ch03-02-references-and-snapshots.md) chapter.
+La función `get` devuelve una `Option<Box<@T>>`, lo que significa que devuelve una opción a un tipo Box (el tipo smart-pointer de Cairo) que contiene una instantánea al elemento en el índice especificado si ese elemento existe en el array. Si el elemento no existe, `get` devuelve `None`. Este método es útil cuando esperas acceder a índices que pueden no estar dentro de los límites del array y quieres manejar tales casos con gracia sin pánicos. Las instantáneas se explicarán con más detalle en el capítulo [Referencias y Snapshots](ch03-02-references-and-snapshots.md).
 
-The `at` function, on the other hand, directly returns a snapshot to the element at the specified index using the `unbox()` operator to extract the value stored in a box. If the index is out of bounds, a panic error occurs. You should only use at when you want the program to panic if the provided index is out of the array's bounds, which can prevent unexpected behavior.
+La función `at`, por otro lado, devuelve directamente una instantánea al elemento en el índice especificado utilizando el operador `unbox()` para extraer el valor almacenado en una caja. Si el índice está fuera de los límites, se produce un error de pánico. Sólo debe utilizar at cuando desee que el programa entre en pánico si el índice proporcionado está fuera de los límites del array, lo que puede evitar comportamientos inesperados.
 
-In summary, use `at` when you want to panic on out-of-bounds access attempts, and use `get` when you prefer to handle such cases gracefully without panicking.
+En resumen, usa `at` cuando quieras que el programa entre en pánico ante intentos de acceso fuera de los límites, y usa `get` cuando prefieras manejar estos casos con gracia sin entrar en pánico.
 
 ```rust
 fn main() {
@@ -280,9 +278,7 @@ fn main() {
 }
 ```
 
-In this example, the variable named `first` will get the value `0` because that
-is the value at index `0` in the array. The variable named `second` will get
-the value `1` from index `1` in the array.
+En este ejemplo, la variable llamada `first` obtendrá el valor `0` porque es el valor del índice `0` del array. La variable llamada `second` obtendrá el valor `1` del índice `1` del array.
 
 ```rust
 use array::ArrayTrait;
@@ -304,6 +300,7 @@ fn main() -> u128 {
 }
 ```
 
-The above example shows how we can do an error management by using the `get` instead of the `at` method.
+El ejemplo anterior muestra cómo podemos hacer una gestión de errores utilizando el método `get` en lugar del método `at`.
 
-[control-flow]: ch02-05-control-flow.html
+[control-de-flujo]: ch02-05-control-flow.html
+

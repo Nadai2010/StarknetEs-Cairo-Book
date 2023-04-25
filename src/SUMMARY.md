@@ -19,13 +19,13 @@
   - [Tipos de datos](ch02-02-data-types.md)
   - [Funciones](ch02-03-functions.md)
   - [Comentarios](ch02-04-comments.md)
-  - [Flujo de contro](ch02-05-control-flow.md)
+  - [Flujo de control](ch02-05-control-flow.md)
 
 ## Comprender Ownership
 
 - [Comprender Ownership](ch03-00-understanding-ownership.md)
   - [¿Qué es Ownership?](ch03-01-what-is-ownership.md)
-  - [Referencias e instantáneas](ch03-02-references-and-snapshots.md)
+  - [Referencias y Snapshots](ch03-02-references-and-snapshots.md)
 
 ## Uso de estructuras para estructurar datos relacionados
 
