@@ -112,11 +112,9 @@ Cada expresión de estas sentencias utiliza un operador matemático y se evalúa
 <!-- TODO: Appendix operator -->
 <!-- [Appendix B][appendix_b] ignore contains a list of all operators that Cairo provides. -->
 
-#### The Boolean Type
+#### El tipo Booleano
 
-As in most other programming languages, a Boolean type in Cairo has two possible
-values: `true` and `false`. Booleans are one byte in size. The Boolean type in
-Cairo is specified using `bool`. For example:
+Como en la mayoría de los lenguajes de programación, un tipo booleano en Cairo tiene dos posibles valores: `true` y `false`. Los booleanos tienen un byte de tamaño. El tipo booleano en Cairo se especifica usando `bool`. Por ejemplo:
 
 ```rust
 fn main() {
@@ -126,31 +124,28 @@ fn main() {
 }
 ```
 
-[//]: # "TODO: control flow section"
+[//]: # "TODO: Control de flujo"
 
-The main way to use Boolean values is through conditionals, such as an `if`
-expression. We’ll cover how `if` expressions work in Cairo in the [“Control
-Flow”][control-flow]<!-- ignore --> section.
+La principal forma de utilizar valores booleanos es a través de condicionales, como una expresión `if` expresión. Cubriremos cómo funcionan las expresiones `if` en Cairo en la sección. [“Control de flujo”][control-de-flujo-flow]<!-- ignore --> 
 
-#### The Short String Type
+#### El tipo de Short String
 
-Cairo doesn't have a native type for strings, but you can store characters forming what we call a "short string" inside `felt252`s. Here are
-some examples of declaring values by puting them beteen single quotes:
+Cairo no tiene un tipo nativo para strings, pero puedes almacenar caracteres formando lo que llamamos un "short string" dentro de `felt252`. Aquí hay algunos ejemplos de declaración de valores entre comillas simples:
 
 ```rust
 let my_first_char = 'C';
 let my_first_string = 'Hello world';
 ```
 
-### Type casting
+### Conversión de Tipos
 
-In Cairo, you can convert values between common scalar types and `felt252` using the `try_into` and `into` methods provided by the `TryInto` and `Into` traits, respectively.
+En Cairo, puedes convertir valores entre tipos escalares comunes y `felt252` usando los métodos `try_into` e `into` proporcionados por los rasgos `TryInto` e `Into`, respectivamente.
 
-The `try_into` method allows for safe type casting when the target type might not fit the source value. Keep in mind that `try_into` returns an `Option<T>` type, which you'll need to unwrap to access the new value.
+El método `try_into` permite una conversión de tipos segura cuando el tipo de destino puede no encajar con el valor de origen. Ten en cuenta que `try_into` devuelve un tipo `Option<T>`, que tendrás que desenvolver para acceder al nuevo valor.
 
-On the other hand, the `into` method can be used for type casting when success is guaranteed, such as when the destination type is smaller than the source type.
+Por otro lado, el método `into` se puede utilizar para la conversión de tipos cuando el éxito está garantizado, como cuando el tipo de destino es más pequeño que el tipo de origen.
 
-To perform the conversion, call `var.into()` or `var.try_into()` on the source value to cast it to another type. The new variable's type must be explicitly defined, as demonstrated in the example below.
+Para realizar la conversión, llame a `var.into()` o `var.try_into()` sobre el valor fuente para convertirlo a otro tipo. El tipo de la nueva variable debe definirse explícitamente, como se muestra en el siguiente ejemplo.
 
 ```rust
 use traits::TryInto;
@@ -171,21 +166,16 @@ fn main(){
 }
 ```
 
-### Compound Types
+### Tipos compuestos
 
-_Compound types_ can group multiple values into one type. Cairo has two
-primitive compound types: tuples and arrays.
+_Los tipos compuestos_ pueden agrupar varios valores en un tipo. Cairo tiene dos
+tipos compuestos primitivos: Tuplas y Matrices.
 
-#### The Tuple Type
+#### El tipo tupla
 
-A _tuple_ is a general way of grouping together a number of values with a
-variety of types into one compound type. Tuples have a fixed length: once
-declared, they cannot grow or shrink in size.
+Una _tupla_ es una forma general de agrupar un número de valores con una variedad de tipos en un tipo compuesto. Las tuplas tienen una longitud fija: una vez declaradas, no pueden aumentar ni disminuir de tamaño.
 
-We create a tuple by writing a comma-separated list of values inside
-parentheses. Each position in the tuple has a type, and the types of the
-different values in the tuple don’t have to be the same. We’ve added optional
-type annotations in this example:
+Se crea una tupla escribiendo una lista de valores separados por comas entre paréntesis. Cada posición de la tupla tiene un tipo, y los tipos de los distintos valores de la tupla no tienen por qué ser iguales. Hemos añadido anotaciones opcionales de tipo en este ejemplo:
 
 ```rust
 fn main() {
@@ -193,9 +183,7 @@ fn main() {
 }
 ```
 
-The variable `tup` binds to the entire tuple because a tuple is considered a
-single compound element. To get the individual values out of a tuple, we can
-use pattern matching to destructure a tuple value, like this:
+La variable `tup` se vincula a toda la tupla porque una tupla se considera un único elemento compuesto. Para obtener los valores individuales de una tupla, podemos utilizar la concordancia de patrones para desestructurar un valor de tupla, así:
 
 ```rust
 use debug::PrintTrait;
@@ -210,14 +198,10 @@ fn main() {
 }
 ```
 
-This program first creates a tuple and binds it to the variable `tup`. It then
-uses a pattern with `let` to take `tup` and turn it into three separate
-variables, `x`, `y`, and `z`. This is called _destructuring_ because it breaks
-the single tuple into three parts. Finally, the program prints `y is six` as the value of
-`y` is `6`.
+Este programa crea primero una tupla y la asocia a la variable `tup`. A continuación, utiliza un patrón con `let` para tomar `tup` y convertirla en tres variables separadas, `x`, `y`, y `z`. Esto se llama _desestructuración_ porque divide la tupla en tres partes. Finalmente, el programa imprime `y es seis` ya que el valor de `y` es `6`.
 
-We can also declare the tuple with value and name at the same time.
-For example:
+También podemos declarar la tupla con valor y nombre al mismo tiempo.
+Por ejemplo:
 
 ```rust
 fn main() {
