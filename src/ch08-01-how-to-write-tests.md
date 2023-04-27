@@ -1,20 +1,20 @@
-# How To Write Tests
+# Cómo escribir Test
 
-## The Anatomy of a Test Function
+## La Anatomía de una Función de Testing
 
-Tests are Cairo functions that verify that the non-test code is functioning in the expected manner. The bodies of test functions typically perform these three actions:
+Las pruebas son funciones en Cairo que verifican que el código no relacionado con las pruebas está funcionando de la manera esperada. Los cuerpos de las funciones de prueba típicamente realizan estas tres acciones:
 
-- Set up any needed data or state.
-- Run the code you want to test.
-- Assert the results are what you expect.
+- Configuran cualquier dato o estado necesario.
+- Ejecutan el código que se desea probar.
+- Verifican que los resultados sean los esperados.
 
-Let’s look at the features Cairo provides specifically for writing tests that take these actions, which include the `test` attribute, the `assert` function, and and the `should_panic` attribute.
+Veamos las características específicas que Cairo proporciona para escribir pruebas que realizan estas acciones, que incluyen el atributo `test`, la función `assert` y el atributo `should_panic`.
 
-### The Anatomy of a Test Function
+### La anatomía de una función de prueba
 
-At its simplest, a test in Cairo is a function that’s annotated with the `test` attribute. Attributes are metadata about pieces of Cairo code; one example is the derive attribute we used with structs in Chapter 4. To change a function into a test function, add `#[test]` on the line before `fn`. When you run your tests with the `cairo-test` command, Cairo builds a test runner binary that runs the annotated functions and reports on whether each test function passes or fails.
+En su forma más simple, una prueba en Cairo es una función que está anotada con el atributo `test`. Los atributos son metadatos sobre piezas de código en Cairo; un ejemplo es el atributo `derive` que usamos con estructuras en el capítulo 4. Para convertir una función en una función de prueba, agrega `#[test]` en la línea antes de `fn`. Cuando se ejecutan las pruebas con el comando `cairo-test`, Cairo construye un binario de ejecución de pruebas que ejecuta las funciones anotadas y reporta si cada función de prueba pasa o falla.
 
-Let's create a new project called `adder` that will add two numbers using Scarb with the command `scarb new adder`:
+Creemos un nuevo proyecto llamado `adder` que sumará dos números usando Scarb con el comando `scarb new adder`: "
 
 ```shell
 adder
@@ -23,24 +23,23 @@ adder
 └── src
     └── lib.cairo
 ```
-
 <!-- TODO: remove when Scarb test work -->
 
-> Note: You will notice here a `cairo_project.toml` file.
-> This is the configuration file for "vanilla" Cairo projects (i.e. not managed by Scarb),
-> which is required to run the `cairo-test .` command to run the code of the crate.
-> It is required until Scarb implements this feature. The content of the file is:
+> Nota: Aquí notarás un archivo `cairo_project.toml`.
+> Este es el archivo de configuración para proyectos Cairo "vanilla" (es decir, no administrados por Scarb),
+> que se requiere para ejecutar el comando `cairo-test .` para ejecutar el código del crate.
+> Es necesario hasta que Scarb implemente esta característica. El contenido del archivo es:
 >
 > ```toml
 > [crate_roots]
 > adder = "src"
 > ```
 >
-> and indicates that the crate named "adder" is located in the `src` directory.
+> e indica que el crate llamado "adder" se encuentra en el directorio `src`.
 
-In _lib.cairo_, let's add a first test, as shown in Listing 8-1.
+En _lib.cairo_, agreguemos una primera prueba, como se muestra en el Listado 8-1.
 
-<span class="filename">Filename: lib.cairo</span>
+<span class="filename">Nombre de archivo: lib.cairo</span>
 
 ```rust
 #[cfg(test)]
@@ -53,13 +52,13 @@ mod tests {
 }
 ```
 
-Listing 8-1: A test module and function
+Listado 8-1: Un módulo y función de prueba
 
-For now, let’s ignore the top two lines and focus on the function. Note the `#[test]` annotation: this attribute indicates this is a test function, so the test runner knows to treat this function as a test. We might also have non-test functions in the tests module to help set up common scenarios or perform common operations, so we always need to indicate which functions are tests.
+Por ahora, ignoraremos las dos primeras líneas y nos centraremos en la función. Observa la anotación `#[test]`: este atributo indica que esta es una función de prueba, por lo que el runner de pruebas sabe que debe tratar esta función como una prueba. También podríamos tener funciones que no son de prueba en el módulo de pruebas para ayudar a configurar escenarios comunes o realizar operaciones comunes, por lo que siempre debemos indicar qué funciones son pruebas.
 
-The example function body uses the `assert` function, which contains the result of adding 2 and 2, equals 4. This assertion serves as an example of the format for a typical test. Let’s run it to see that this test passes.
+El cuerpo de la función de ejemplo utiliza la función `assert`, que comprueba que el resultado de sumar 2 y 2 es igual a 4. Esta afirmación sirve como ejemplo del formato de una prueba típica. Ejecutémoslo para ver que esta prueba pasa.
 
-The `cairo-test .` command runs all tests in our project, as shown in Listing 8-2.
+El comando `cairo-test .` ejecuta todas las pruebas en nuestro proyecto, como se muestra en el Listado 8-2.
 
 ```shell
 $ cairo-test .
@@ -68,15 +67,15 @@ test adder::lib::tests::it_works ... ok
 test result: ok. 1 passed; 0 failed; 0 ignored; 0 filtered out;
 ```
 
-Listing 8-2: The output from running a test
+"Listado 8-2: La salida al ejecutar una prueba
 
-`cairo-test` compiled and ran the test. We see the line `running 1 tests`. The next line shows the name of the generated test function, called `it_works`, and that the result of running that test is `ok`. The overall summary `test result: ok.` means that all the tests passed, and the portion that reads `1 passed; 0 failed` totals the number of tests that passed or failed.
+`cairo-test` compiló y ejecutó la prueba. Vemos la línea `running 1 tests`. La siguiente línea muestra el nombre de la función de prueba generada, llamada `it_works`, y que el resultado de ejecutar esa prueba es `ok`. El resumen general `test result: ok.` significa que todas las pruebas pasaron, y la porción que lee `1 passed; 0 failed` totaliza el número de pruebas que pasaron o fallaron.
 
-It’s possible to mark a test as ignored so it doesn’t run in a particular instance; we’ll cover that in the [Ignoring Some Tests Unless Specifically Requested](#ignoring-some-tests-unless-specifically-requested) section later in this chapter. Because we haven’t done that here, the summary shows `0 ignored`. We can also pass an argument to the `cairo-test` command to run only a test whose name matches a string; this is called filtering and we’ll cover that in the [Running Single Tests](#running-single-tests) section. We also haven’t filtered the tests being run, so the end of the summary shows `0 filtered out`.
+Es posible marcar una prueba como ignorada para que no se ejecute en una instancia particular; cubriremos eso en la sección [Ignorando algunas pruebas a menos que se soliciten específicamente](#ignoring-some-tests-unless-specifically-requested) más adelante en este capítulo. Debido a que no hemos hecho eso aquí, el resumen muestra `0 ignoradas`. También podemos pasar un argumento al comando `cairo-test` para ejecutar solo una prueba cuyo nombre coincida con una cadena; esto se llama filtrado y lo cubriremos en la sección [Ejecución de pruebas individuales](#running-single-tests). Tampoco hemos filtrado las pruebas que se ejecutan, por lo que el final del resumen muestra `0 filtradas`.
 
-Let’s start to customize the test to our own needs. First change the name of the `it_works` function to a different name, such as `exploration`, like so:
+Comencemos a personalizar la prueba según nuestras necesidades. Primero, cambie el nombre de la función `it_works` a un nombre diferente, como `exploration`, así:
 
-<span class="filename">Filename: lib.cairo</span>
+<span class="filename">Nombre de archivo: lib.cairo</span>"
 
 ```rust
 #[cfg(test)]
@@ -89,7 +88,7 @@ mod tests {
 }
 ```
 
-Then run `cairo-test  -- --path src` again. The output now shows `exploration` instead of `it_works`:
+Luego vuelva a ejecutar `cairo-test  -- --path src`. La salida ahora muestra `exploration` en lugar de `it_works`:
 
 ```shell
 $ cairo-test .
@@ -98,7 +97,7 @@ test adder::lib::tests::exploration ... ok
 test result: ok. 1 passed; 0 failed; 0 ignored; 0 filtered out;
 ```
 
-Now we’ll add another test, but this time we’ll make a test that fails! Tests fail when something in the test function panics. Each test is run in a new thread, and when the main thread sees that a test thread has died, the test is marked as failed. Enter the new test as a function named `another`, so your _src/lib.cairo_ file looks like Listing 8-3.
+Ahora agregaremos otra prueba, ¡pero esta vez haremos una prueba que falla! Las pruebas fallan cuando algo en la función de prueba causa un pánico. Cada prueba se ejecuta en un hilo nuevo y cuando el hilo principal ve que un hilo de prueba ha muerto, la prueba se marca como fallida. Agregue la nueva prueba como una función llamada `another`, de modo que su archivo _src/lib.cairo_ se vea como en el Listado 8-3.
 
 ```rust
 #[cfg(test)]
@@ -111,7 +110,7 @@ mod tests{
 }
 ```
 
-Listing 8-3: Adding a second test that will fail
+Lista 8-3: Agregando una segunda prueba que fallará.
 
 ```shell
 $ cairo-test .
@@ -123,21 +122,21 @@ failures:
 Error: test result: FAILED. 1 passed; 1 failed; 0 ignored
 ```
 
-Listing 8-4: Test results when one test passes and one test fails
+Listing 8-4: Resultados de las pruebas cuando una pasa y otra falla
 
-Instead of `ok`, the line `adder::lib::tests::another` shows `fail`. A new section appears between the individual results and the summary. It displays the detailed reason for each test failure. In this case, we get the details that `another` failed because it panicked with `[1725643816656041371866211894343434536761780588 ('Make this test fail'), ]` in the _src/lib.cairo_ file.
+En lugar de `ok`, la línea `adder::lib::tests::another` muestra `fail`. Aparece una nueva sección entre los resultados individuales y el resumen. Muestra la razón detallada de cada falla de prueba. En este caso, obtenemos los detalles de que `another` falló porque falló con un pánico con `[1725643816656041371866211894343434536761780588 ('Make this test fail'), ]` en el archivo _src/lib.cairo_.
 
-The summary line displays at the end: overall, our test result is `FAILED`. We had one test pass and one test fail.
+La línea de resumen se muestra al final: en general, nuestro resultado de prueba es `FAILED`. Tuvimos una prueba que pasó y otra que falló.
 
-Now that you’ve seen what the test results look like in different scenarios, let’s look at some functions that are useful in tests.
+Ahora que ha visto cómo son los resultados de las pruebas en diferentes escenarios, veamos algunas funciones que son útiles en las pruebas.
 
-## Checking Results with the assert function
+## Verificar resultados con la función assert
 
-The `assert` function, provided by Cairo, is useful when you want to ensure that some condition in a test evaluates to `true`. We give the `assert` function a first argument that evaluates to a Boolean. If the value is `true`, nothing happens and the test passes. If the value is `false`, the assert function calls `panic()` to cause the test to fail with a message we defined as the second argument of the `assert` function. Using the `assert` function helps us check that our code is functioning in the way we intend.
+La función `assert`, proporcionada por Cairo, es útil cuando desea asegurarse de que alguna condición en una prueba se evalúe como verdadera. Le damos a la función `assert` un primer argumento que se evalúa como un valor booleano. Si el valor es `true`, no sucede nada y la prueba pasa. Si el valor es `false`, la función `assert` llama a `panic()` para hacer que la prueba falle con un mensaje que definimos como segundo argumento de la función `assert`. Usar la función `assert` nos ayuda a verificar que nuestro código funciona de la manera que pretendemos.
 
-In [Chapter 4, Listing 5-15](ch04-03-method-syntax.md#multiple-impl-blocks), we used a `Rectangle` struct and a `can_hold` method, which are repeated here in Listing 8-5. Let’s put this code in the _src/lib.cairo_ file, then write some tests for it using the `assert` function.
+En [Capítulo 4, Lista 5-15](ch04-03-method-syntax.md#multiple-impl-blocks), usamos una estructura `Rectangle` y un método `can_hold`, que se repiten aquí en la Lista 8-5. Colocaremos este código en el archivo _src/lib.cairo_, luego escribiremos algunas pruebas para él usando la función `assert`.
 
-<span class="filename">Filename: lib.cairo</span>
+<span class="filename">Nombre de archivo: lib.cairo</span>
 
 ```rust
 trait RectangleTrait {
@@ -155,11 +154,11 @@ impl RectangleImpl of RectangleTrait {
 }
 ```
 
-Listing 8-5: Using the `Rectangle` struct and its `can_hold` method from Chapter 5
+Lista 8-5: Uso de la estructura `Rectangle` y su método `can_hold` del Capítulo 5
 
-The `can_hold` method returns a `Boolean`, which means it’s a perfect use case for the assert function. In Listing 8-6, we write a test that exercises the `can_hold` method by creating a `Rectangle` instance that has a width of `8_u64` and a height of `7_u64` and asserting that it can hold another `Rectangle` instance that has a width of `5_u64` and a height of `1_u64`.
+El método `can_hold` devuelve un valor booleano, lo que significa que es un caso de uso perfecto para la función `assert`. En el Listado 8-6, escribimos una prueba que ejerce el método `can_hold` creando una instancia de `Rectangle` que tiene un ancho de `8_u64` y una altura de `7_u64` y asegurando que puede contener otra instancia de `Rectangle` que tiene un ancho de `5_u64` y una altura de `1_u64`.
 
-<span class="filename">Filename: lib.cairo</span>
+<span class="filename">Nombre de archivo: lib.cairo</span>
 
 ```rust
 #[cfg(test)]
@@ -183,11 +182,11 @@ mod tests {
 }
 ```
 
-Listing 8-6: A test for `can_hold` that checks whether a larger rectangle can indeed hold a smaller rectangle
+Lista 8-6: Un test para `can_hold` que verifica si un rectángulo más grande realmente puede contener un rectángulo más pequeño
 
-Note that we’ve added two new lines inside the tests module: `use super::Rectangle;` and `use super::RectangleTrait;`. The tests module is a regular module that follows the usual visibility rules. Because the tests module is an inner module, we need to bring the code under test in the outer module into the scope of the inner module.
+Note que hemos agregado dos nuevas líneas dentro del módulo de pruebas: `use super::Rectangle;` y `use super::RectangleTrait;`. El módulo de pruebas es un módulo regular que sigue las reglas normales de visibilidad. Debido a que el módulo de pruebas es un módulo interno, necesitamos traer el código bajo prueba en el módulo externo al ámbito del módulo interno.
 
-We’ve named our test `larger_can_hold_smaller`, and we’ve created the two `Rectangle` instances that we need. Then we called the assert function and passed it the result of calling `larger.can_hold(@smaller)`. This expression is supposed to return `true`, so our test should pass. Let’s find out!
+Hemos nombrado nuestro test `larger_can_hold_smaller`, y hemos creado los dos instancias de `Rectangle` que necesitamos. Luego llamamos a la función assert y le pasamos el resultado de llamar a `larger.can_hold(@smaller)`. Esta expresión se supone que devuelve `true`, por lo que nuestra prueba debería pasar. ¡Descubramoslo!
 
 ```shell
 $ cairo-test .
@@ -196,9 +195,9 @@ test adder::lib::tests::larger_can_hold_smaller ... ok
 test result: ok. 1 passed; 0 failed; 0 ignored; 0 filtered out;
 ```
 
-It does pass! Let’s add another test, this time asserting that a smaller rectangle cannot hold a larger rectangle:
+¡Pasó la prueba! Ahora agreguemos otra prueba, esta vez afirmamos que un rectángulo más pequeño no puede contener un rectángulo más grande:
 
-<span class="filename">Filename: lib.cairo</span>
+<span class="filename">Nombre de archivo: lib.cairo</span>
 
 ```rust
 #[cfg(test)]
@@ -227,7 +226,7 @@ mod tests {
 }
 ```
 
-Because the correct result of the `can_hold` function in this case is `false`, we need to negate that result before we pass it to the assert function. As a result, our test will pass if `can_hold` returns false:
+Como el resultado correcto de la función `can_hold` en este caso es `false`, debemos negar ese resultado antes de pasarlo a la función `assert`. Como resultado, nuestro test pasará si `can_hold` devuelve false:
 
 ```shell
 $ cairo-test .
@@ -237,7 +236,7 @@ $ cairo-test .
     test result: ok. 2 passed; 0 failed; 0 ignored; 0 filtered out;
 ```
 
-Two tests that pass! Now let’s see what happens to our test results when we introduce a bug in our code. We’ll change the implementation of the `can_hold` method by replacing the greater-than sign with a less-than sign when it compares the widths:
+¡Dos pruebas que pasan! Ahora veamos qué sucede con los resultados de nuestras pruebas cuando introducimos un error en nuestro código. Cambiaremos la implementación del método `can_hold` reemplazando el signo mayor que (`>`) por un signo menor que (`<`) cuando compara los anchos:
 
 ```rust
 // --snip--
@@ -248,7 +247,7 @@ impl RectangleImpl of RectangleTrait {
 }
 ```
 
-Running the tests now produces the following:
+Ejecutando los test ahora produce lo siguiente:
 
 ```shell
 $ cairo-test .
@@ -261,17 +260,17 @@ failures:
 Error: test result: FAILED. 1 passed; 1 failed; 0 ignored
 ```
 
-Our tests caught the bug! Because `larger.width` is `8_u64` and `smaller.width` is `5_u64`, the comparison of the widths in `can_hold` now returns `false`: `8_u64` is not less than `5_u64`.
+Nuestros tests detectaron el error! Debido a que `larger.width` es `8_u64` y `smaller.width` es `5_u64`, la comparación de anchuras en `can_hold` ahora devuelve `false`: `8_u64` no es menor que `5_u64`.
 
-## Checking for Panics with `should_panic`
+## Comprobando los pánicos con `should_panic`
 
-In addition to checking return values, it’s important to check that our code handles error conditions as we expect. For example, consider the Guess type in Listing 8-8. Other code that uses `Guess` depends on the guarantee that `Guess` instances will contain only values between `1_u64` and `100_u64`. We can write a test that ensures that attempting to create a `Guess` instance with a value outside that range panics.
+Además de verificar los valores de retorno, es importante verificar que nuestro código maneje las condiciones de error como esperamos. Por ejemplo, consideremos el tipo Guess en el Listing 8-8. Otro código que usa `Guess` depende de la garantía de que las instancias de `Guess` contengan solo valores entre `1_u64` y `100_u64`. Podemos escribir un test que asegure que al intentar crear una instancia de `Guess` con un valor fuera de ese rango, el programa entra en pánico.
 
-We do this by adding the attribute `should_panic` to our test function. The test passes if the code inside the function panics; the test fails if the code inside the function doesn’t panic.
+Lo hacemos agregando el atributo `should_panic` a nuestra función de prueba. La prueba pasa si el código dentro de la función entra en pánico; la prueba falla si el código dentro de la función no entra en pánico.
 
-Listing 8-8 shows a test that checks that the error conditions of `GuessTrait::new` happen when we expect them to.
+El Listing 8-8 muestra una prueba que verifica que las condiciones de error de `GuessTrait::new` ocurren cuando esperamos que sucedan.
 
-<span class="filename">Filename: lib.cairo</span>
+<span class="filename">Nombre de archivo: lib.cairo</span>
 
 ```rust
 use array::ArrayTrait;
@@ -309,9 +308,11 @@ mod tests {
 }
 ```
 
-Listing 8-8: Testing that a condition will cause a panic
+Listing 8-8: Probando que una condición causará un pánico
 
-We place the `#[should_panic]` attribute after the `#[test]` attribute and before the test function it applies to. Let’s look at the result when this test passes:
+Colocamos el atributo `#[should_panic]` después del atributo `#[test]` y antes de la función de prueba a la que se aplica. Veamos el resultado cuando esta prueba pasa: 
+
+<span class="filename">Nombre de archivo: lib.cairo</span>
 
 ```shell
 $ cairo-test .
@@ -337,7 +338,7 @@ impl GuessImpl of GuessTrait {
 }
 ```
 
-When we run the test in Listing 8-8, it will fail:
+Cuando ejecutamos la prueba en el Listado 8-8, fallará:
 
 ```shell
 $ cairo-test .
@@ -348,11 +349,11 @@ failures:
 Error: test result: FAILED. 0 passed; 1 failed; 0 ignored
 ```
 
-We don’t get a very helpful message in this case, but when we look at the test function, we see that it’s annotated with `#[should_panic]`. The failure we got means that the code in the test function did not cause a panic.
+En este caso, no obtenemos un mensaje muy útil, pero cuando miramos la función de prueba, vemos que está anotada con `#[should_panic]`. La falla que obtuvimos significa que el código en la función de prueba no causó un pánico.
 
-Tests that use `should_panic` can be imprecise. A `should_panic` test would pass even if the test panics for a different reason from the one we were expecting. To make `should_panic` tests more precise, we can add an optional expected parameter to the `should_panic` attribute. The test harness will make sure that the failure message contains the provided text. For example, consider the modified code for `Guess` in Listing 8-9 where the new function panics with different messages depending on whether the value is too small or too large.
+Las pruebas que usan `should_panic` pueden ser imprecisas. Una prueba con `should_panic` pasaría incluso si la prueba produce un pánico por una razón diferente a la que esperábamos. Para hacer que las pruebas con `should_panic` sean más precisas, podemos agregar un parámetro opcional `expected` al atributo `should_panic`. El sistema de pruebas se asegurará de que el mensaje de error contenga el texto proporcionado. Por ejemplo, considere el código modificado para `Guess` en el Listado 8-9, donde la nueva función genera un pánico con mensajes diferentes dependiendo de si el valor es demasiado pequeño o demasiado grande.  
 
-<span class="filename">Filename: lib.cairo</span>
+<span class="filename">Nombre del archivo: lib.cairo</span>
 
 ```rust
 // --snip--
@@ -385,11 +386,11 @@ mod tests {
 }
 ```
 
-Listing 8-9: Testing for a panic with a panic message containing the error message string
+Listado 8-9: Prueba para una excepción con un mensaje de excepción que contiene la cadena del mensaje de error
 
-This test will pass because the value we put in the `should_panic` attribute’s expected parameter is the array of string of the message that the `Guess::new` function panics with. We need to specify the entire panic message that we expect.
+Esta prueba pasará porque el valor que ponemos en el parámetro esperado del atributo `should_panic` es la matriz de cadenas del mensaje con el que la función `Guess::new` genera la excepción. Necesitamos especificar el mensaje completo de la excepción que esperamos.
 
-To see what happens when a `should_panic` test with an expected message fails, let’s again introduce a bug into our code by swapping the bodies of the if `value < 1_u64` and the else if `value > 100_u64` blocks:
+Para ver qué sucede cuando una prueba `should_panic` con un mensaje esperado falla, introduzcamos de nuevo un error en nuestro código cambiando los cuerpos de los bloques if `value < 1_u64` y else if `value > 100_u64`:
 
 ```rust
 if value < 1_u64 {
@@ -403,7 +404,7 @@ if value < 1_u64 {
 }
 ```
 
-This time when we run the `should_panic` test, it will fail:
+Esta vez, cuando ejecutamos la prueba `should_panic`, fallará:
 
 ```shell
 $ cairo-test .
@@ -415,15 +416,15 @@ failures:
 Error: test result: FAILED. 0 passed; 1 failed; 0 ignored
 ```
 
-The failure message indicates that this test did indeed panic as we expected, but the panic message did not include the expected string. The panic message that we did get in this case was `Guess must be >= 1`. Now we can start figuring out where our bug is!
+El mensaje de fallo indica que este test realmente causó un pánico como esperábamos, pero el mensaje de pánico no incluyó la cadena esperada. El mensaje de pánico que obtuvimos en este caso fue `Guess must be >= 1`. ¡Ahora podemos comenzar a descubrir dónde está nuestro error!
 
-## Running Single Tests
+## Ejecución de pruebas individuales
 
-Sometimes, running a full test suite can take a long time. If you’re working on code in a particular area, you might want to run only the tests pertaining to that code. You can choose which tests to run by passing `cairo-test` the name of the test you want to run as an argument.
+A veces, ejecutar un conjunto completo de pruebas puede llevar mucho tiempo. Si está trabajando en código en un área particular, es posible que desee ejecutar solo las pruebas relacionadas con ese código. Puede elegir qué pruebas ejecutar pasando el nombre de la prueba que desea ejecutar como argumento a `cairo-test`.
 
-To demonstrate how to run a single test, we’ll first create two tests functions, as shown in Listing 8-10, and choose which ones to run.
+Para demostrar cómo ejecutar una sola prueba, primero crearemos dos funciones de prueba, como se muestra en el Listado 8-10, y elegiremos cuáles ejecutar.
 
-<span class="filename">Filename: src/lib.cairo</span>
+<span class="filename">Nombre de archivo: src/lib.cairo</span>
 
 ```rust
 #[cfg(test)]
@@ -442,9 +443,9 @@ mod tests {
 }
 ```
 
-Listing 8-10: Two tests with two different names
+Listado 8-10: Dos pruebas con dos nombres diferentes
 
-We can pass the name of any test function to `cairo-test` to run only that test using the `-f` flag:
+Podemos pasar el nombre de cualquier función de prueba a `cairo-test` para ejecutar solo esa prueba usando la bandera `-f`:
 
 ```shell
 $ cairo-test . -f add_two_and_two
@@ -453,15 +454,15 @@ test adder::lib::tests::add_two_and_two ... ok
 test result: ok. 1 passed; 0 failed; 0 ignored; 1 filtered out;
 ```
 
-Only the test with the name `add_two_and_two` ran; the other test didn’t match that name. The test output lets us know we had one more test that didn’t run by displaying 1 filtered out at the end.
+Solo se ejecutó la prueba con el nombre `add_two_and_two`; la otra prueba no coincidía con ese nombre. La salida de la prueba nos indica que tuvimos una prueba más que no se ejecutó al mostrar "1 filtrado" al final.
 
-We can also specify part of a test name, and any test whose name contains that value will be run.
+También podemos especificar parte del nombre de una prueba y se ejecutarán todas las pruebas cuyo nombre contenga ese valor.
 
-## Ignoring Some Tests Unless Specifically Requested
+## Ignorar algunas pruebas a menos que se soliciten específicamente
 
-Sometimes a few specific tests can be very time-consuming to execute, so you might want to exclude them during most runs of `cairo-test`. Rather than listing as arguments all tests you do want to run, you can instead annotate the time-consuming tests using the `ignore` attribute to exclude them, as shown here:
+A veces, algunas pruebas específicas pueden ser muy lentas de ejecutar, por lo que es posible que desee excluirlos durante la mayoría de las ejecuciones de `cairo-test`. En lugar de enumerar como argumentos todas las pruebas que desea ejecutar, puede anotar las pruebas que consumen mucho tiempo utilizando el atributo `ignore` para excluirlos, como se muestra aquí:
 
-<span class="filename">Filename: src/lib.cairo</span>
+<span class="filename">Nombre de archivo: src/lib.cairo</span>
 
 ```rust
 #[cfg(test)]
@@ -480,7 +481,7 @@ mod tests {
 }
 ```
 
-After `#[test]` we add the `#[ignore]` line to the test we want to exclude. Now when we run our tests, `it_works` runs, but `expensive_test` doesn’t:
+Después de `#[test]` agregamos la línea `#[ignore]` al test que queremos excluir. Ahora, cuando ejecutamos nuestros tests, `it_works` se ejecuta pero `expensive_test` no lo hace:
 
 ```shell
 $ cairo-test .
@@ -490,6 +491,6 @@ test adder::lib::tests::it_works ... ok
 test result: ok. 1 passed; 0 failed; 1 ignored; 0 filtered out;
 ```
 
-The `expensive_test` function is listed as ignored.
+La función `expensive_test` está listada como ignorada.
 
-When you’re at a point where it makes sense to check the results of the ignored tests and you have time to wait for the results, you can run `cairo-test --include-ignored` to run all tests whether they’re ignored or not.
+Cuando esté en un punto en el que tenga sentido verificar los resultados de las pruebas ignoradas y tenga tiempo para esperar los resultados, puede ejecutar `cairo-test --include-ignored` para ejecutar todas las pruebas, ya sea que estén ignoradas o no.

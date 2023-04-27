@@ -1,22 +1,22 @@
-# Testing Organization
+# Organización de Test
 
-We'll think about tests in terms of two main categories: unit tests and integration tests. Unit tests are small and more focused, testing one module in isolation at a time, and can test private functions. Integration tests use your code in the same way any other external code would, using only the public interface and potentially exercising multiple modules per test.
+Pensaremos en las pruebas en términos de dos categorías principales: pruebas unitarias y pruebas de integración. Las pruebas unitarias son pequeñas y más enfocadas, probando un módulo a la vez en aislamiento, y pueden probar funciones privadas. Las pruebas de integración utilizan su código de la misma manera que cualquier otro código externo, utilizando solo la interfaz pública y potencialmente ejercitando varios módulos por prueba.
 
-Writing both kinds of tests is important to ensure that the pieces of your library are doing what you expect them to, separately and together.
+Escribir ambos tipos de pruebas es importante para asegurarse de que las piezas de su biblioteca estén haciendo lo que se espera de ellas, tanto separadas como juntas.
 
-## Unit Tests
+## Test Unitarios
 
-The purpose of unit tests is to test each unit of code in isolation from the rest of the code to quickly pinpoint where code is and isn’t working as expected. You’ll put unit tests in the `src` directory in each file with the code that they’re testing.
+El propósito de las pruebas unitarias es probar cada unidad de código en aislamiento del resto del código para identificar rápidamente dónde el código funciona y dónde no lo hace como se esperaba. Colocará las pruebas unitarias en el directorio `src` en cada archivo con el código que están probando.
 
-The convention is to create a module named tests in each file to contain the test functions and to annotate the module with `cfg(test)`.
+La convención es crear un módulo llamado `tests` en cada archivo para contener las funciones de prueba y anotar el módulo con `cfg(test)`.
 
-### The Tests Module and `#[cfg(test)]`
+### El Módulo de Test y `#[cfg(test)]`
 
-The `#[cfg(test)]` annotation on the tests module tells Cairo to compile and run the test code only when you run `cairo-test`, not when you run `cairo-run`. This saves compile time when you only want to build the library and saves space in the resulting compiled artifact because the tests are not included. You’ll see that because integration tests go in a different directory, they don’t need the `#[cfg(test)]` annotation. However, because unit tests go in the same files as the code, you’ll use `#[cfg(test)]` to specify that they shouldn’t be included in the compiled result.
+La anotación `#[cfg(test)]` en el módulo de pruebas indica a Cairo que compile y ejecute el código de prueba solo cuando se ejecuta `cairo-test`, no cuando se ejecuta `cairo-run`. Esto ahorra tiempo de compilación cuando solo desea compilar la biblioteca y ahorra espacio en el artefacto compilado resultante porque las pruebas no están incluidas. Verá que debido a que las pruebas de integración van en un directorio diferente, no necesitan la anotación `#[cfg(test)]`. Sin embargo, debido a que las pruebas unitarias van en los mismos archivos que el código, usará `#[cfg(test)]` para especificar que no deben incluirse en el resultado compilado.
 
-Recall that when we created the new `adder` project in the first section of this chapter, we wrote this first test:
+Recuerde que cuando creamos el nuevo proyecto `adder` en la primera sección de este capítulo, escribimos esta primera prueba:
 
-<span class="filename">Filename: lib.cairo</span>
+<span class="filename">Nombre de archivo: lib.cairo</span>
 
 ```rust
 #[cfg(test)]
@@ -29,13 +29,13 @@ mod tests {
 }
 ```
 
-The attribute `cfg` stands for configuration and tells Cairo that the following item should only be included given a certain configuration option. In this case, the configuration option is `test`, which is provided by Cairo for compiling and running tests. By using the `cfg` attribute, Cairo compiles our test code only if we actively run the tests with `cairo-test`. This includes any helper functions that might be within this module, in addition to the functions annotated with `#[test]`.
+El atributo `cfg` significa "configuración" y le indica a Cairo que el siguiente elemento solo debe incluirse dado una cierta opción de configuración. En este caso, la opción de configuración es `test`, que es proporcionada por Cairo para compilar y ejecutar pruebas. Al usar el atributo `cfg`, Cairo compila nuestro código de prueba solo si ejecutamos activamente las pruebas con `cairo-test`. Esto incluye cualquier función de ayuda que pueda estar dentro de este módulo, además de las funciones anotadas con `#[test]`.
 
-## Integration Tests
+## Test de Integración
 
-Integration tests use your library in the same way any other code would. Their purpose is to test whether many parts of your library work together correctly. Units of code that work correctly on their own could have problems when integrated, so test coverage of the integrated code is important as well. To create integration tests, you first need a `tests` directory.
+Las pruebas de integración usan su biblioteca de la misma manera que cualquier otro código. Su propósito es probar si muchas partes de su biblioteca funcionan correctamente juntas. Las unidades de código que funcionan correctamente por sí mismas podrían tener problemas cuando se integran, por lo que también es importante tener cobertura de prueba del código integrado. Para crear pruebas de integración, primero necesita un directorio de `tests`.
 
-### The `tests` Directory
+### Directorio `tests`
 
 ```shell
 adder
@@ -48,9 +48,9 @@ adder
     └── integration_test.cairo
 ```
 
-<!-- TODO: remove when Scarb test work -->
+<!-- TODO: eliminar cuando las pruebas de Scarab funcionen -->
 
-> To successfully run your tests with `cairo-test` you will need to update your `cairo_project.toml` file to add the declaration of your `tests` crate.
+> Para ejecutar correctamente tus pruebas con `cairo-test`, deberás actualizar tu archivo `cairo_project.toml` para agregar la declaración de tu crate `tests`.
 >
 > ```rust
 > [crate_roots]
@@ -58,18 +58,18 @@ adder
 > tests = "tests"
 > ```
 
-Each test file is compiled as its own separate crate, that's why whenever you add a new test file you must add it to your _tests/lib.cairo_.
+Cada archivo de prueba se compila como una entidad separada, por eso cada vez que agregas un nuevo archivo de prueba debes agregarlo a tu archivo _tests/lib.cairo_.
 
-<span class="filename">Filename: tests/lib.cairo</span>
+<span class="filename">Nombre de archivo: tests/lib.cairo</span>
 
 ```rust
 #[cfg(tests)]
 mod integration_tests;
 ```
 
-Enter the code in Listing 11-13 into the _tests/integration_test.cairo_ file:
+Ingrese el código del Listado 11-13 en el archivo _tests/integration_test.cairo_:
 
-<span class="filename">Filename: tests/integration_test.cairo</span>
+<span class="filename">Nombre de archivo: tests/integration_test.cairo</span>
 
 ```rust
 use adder::main;
@@ -80,7 +80,7 @@ fn internal() {
 }
 ```
 
-Each file in the tests directory is a separate crate, so we need to bring our library into each test crate’s scope. For that reason we add `use adder::main` at the top of the code, which we didn’t need in the unit tests.
+Cada archivo en el directorio de pruebas es una creación separada, por lo que debemos incluir nuestra biblioteca en el alcance de cada creación de prueba. Por esa razón, agregamos `use adder::main` en la parte superior del código, lo cual no necesitábamos en las pruebas unitarias.
 
 ```shell
 $ cairo-test tests/
@@ -89,4 +89,4 @@ test tests::tests_integration::it_adds_two ... ok
 test result: ok. 1 passed; 0 failed; 0 ignored; 0 filtered out;
 ```
 
-The result of the tests is the same as what we've been seeing: one line for each test.
+El resultado de las pruebas es el mismo que hemos estado viendo: una línea por cada prueba.
