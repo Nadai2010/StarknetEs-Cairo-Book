@@ -1,12 +1,12 @@
-## Control Flow
+## Control de flujo
 
-The ability to run some code depending on whether a condition is true and to run some code repeatedly while a condition is true are basic building blocks in most programming languages. The most common constructs that let you control the flow of execution of Cairo code are if expressions and loops.
+La capacidad de ejecutar cierto código dependiendo de si una condición es verdadera y de ejecutar código repetidamente mientras una condición es verdadera son bloques de construcción básicos en la mayoría de los lenguajes de programación. Las construcciones más comunes que le permiten controlar el flujo de ejecución del código en Cairo son las expresiones if y los bucles.
 
-### `if` Expressions
+### Expresiones `if`
 
-An if expression allows you to branch your code depending on conditions. You provide a condition and then state, “If this condition is met, run this block of code. If the condition is not met, do not run this block of code.”
+Una expresión if le permite ramificar su código según condiciones. Proporciona una condición y luego establece: "Si se cumple esta condición, ejecute este bloque de código. Si no se cumple la condición, no ejecute este bloque de código".
 
-<span class="filename">Filename: main.cairo</span>
+<span class="filename">Nombre de archivo: main.cairo</span>
 
 ```rust
 use debug::PrintTrait;
@@ -22,18 +22,18 @@ fn main() {
 }
 ```
 
-All `if` expressions start with the keyword `if`, followed by a condition. In this case, the condition checks whether or not the variable `number` has a value equal to 5. We place the block of code to execute if the condition is `true` immediately after the condition inside curly brackets.
+Todos las expresiones `if` comienzan con la palabra clave `if`, seguido de una condición. En este caso, la condición verifica si la variable `number` tiene un valor igual a 5. Colocamos el bloque de código a ejecutar si la condición es `true` inmediatamente después de la condición dentro de llaves.
 
-Optionally, we can also include an `else` expression, which we chose to do here, to give the program an alternative block of code to execute should the condition evaluate to `false`. If you don’t provide an `else` expression and the condition is `false`, the program will just skip the `if` block and move on to the next bit of code.
+Opcionalmente, también podemos incluir una expresión `else`, que elegimos hacer aquí, para dar al programa un bloque de código alternativo para ejecutar si la condición se evalúa como `false`. Si no proporciona una expresión `else` y la condición es `false`, el programa simplemente omitirá el bloque `if` y pasará al siguiente fragmento de código.
 
-Try running this code; you should see the following output:
+Intente ejecutar este código; debería ver la siguiente salida:
 
 ```console
 $ cairo-run main.cairo
 [DEBUG]	condition was false
 ```
 
-Let’s try changing the value of `number` to a value that makes the condition `true` to see what happens:
+Intentaré cambiar el valor de number por uno que haga que la condición sea verdadera para ver qué sucede:
 
 ```rust
     let number = 5;
@@ -44,18 +44,18 @@ $ cairo-run main.cairo
 condition was true
 ```
 
-It’s also worth noting that the condition in this code must be a bool. If the condition isn’t a bool, we’ll get an error.
+También vale la pena señalar que la condición en este código debe ser un bool. Si la condición no es un bool, obtendremos un error.
 
 ```console
 $ cairo-run main.cairo
 thread 'main' panicked at 'Failed to specialize: `enum_match<felt252>`. Error: Could not specialize libfunc `enum_match` with generic_args: [Type(ConcreteTypeId { id: 1, debug_name: None })]. Error: Provided generic argument is unsupported.', crates/cairo-lang-sierra-generator/src/utils.rs:256:9
 ```
 
-### Handling Multiple Conditions with `else if`
+### Manejando múltiples condiciones con `else if`
 
-You can use multiple conditions by combining if and else in an else if expression. For example:
+Puede usar múltiples condiciones combinando `if` y `else` en una expresión `else if`. Por ejemplo:
 
-<span class="filename">Filename: main.cairo</span>
+<span class="filename">Nombre del archivo: main.cairo</span>
 
 ```rust
 use debug::PrintTrait;
@@ -75,19 +75,19 @@ fn main() {
 }
 ```
 
-This program has four possible paths it can take. After running it, you should see the following output:
+Este programa tiene cuatro posibles caminos que puede seguir. Después de ejecutarlo, debería ver la siguiente salida:
 
 ```console
 [DEBUG]	number is 3
 ```
 
-When this program executes, it checks each `if` expression in turn and executes the first body for which the condition evaluates to `true`. Note that even though `number - 2 == 1` is `true`, we don’t see the output `number minus 2 is 1'.print()`, nor do we see the `number is not divisible by 4, 3, or 2` text from the `else` block. That’s because Cairo only executes the block for the first true condition, and once it finds one, it doesn’t even check the rest. Using too many `else if` expressions can clutter your code, so if you have more than one, you might want to refactor your code. Chapter 5 describes a powerful Cairo branching construct called `match` for these cases.
+Cuando este programa se ejecuta, verifica cada expresión `if` en orden y ejecuta el primer cuerpo para el cual la condición se evalúa como verdadera. Es importante destacar que aunque `number - 2 == 1` es verdadero, no vemos la salida `number minus 2 is 1'.print()`, ni tampoco vemos el texto `number is not divisible by 4, 3, or 2` del bloque `else`. Esto se debe a que Cairo solo ejecuta el bloque correspondiente a la primera condición verdadera que encuentra, y una vez que la encuentra, no verifica las demás. Usar demasiadas expresiones `else if` puede desordenar el código, por lo que si tienes más de una, es posible que desees refactorizar el código. El capítulo 5 describe una poderosa estructura de control de flujo de Cairo llamada `match` para estos casos.
 
-### Using `if` in a `let` statement
+### Usando `if` en una declaración `let`
 
-Because if is an expression, we can use it on the right side of a let statement to assign the outcome to a variable.
+Dado que `if` es una expresión, podemos usarla en el lado derecho de una declaración `let` para asignar el resultado a una variable.
 
-<span class="filename">Filename: main.cairo</span>
+<span class="filename">Nombre del archivo: main.cairo</span>
 
 ```rust
 use debug::PrintTrait;
@@ -107,4 +107,4 @@ $ cairo-run main.cairo
 [DEBUG]	condition was true
 ```
 
-The `number` variable will be bound to a value based on the outcome of the `if` expression. Which will be 5 here.
+La variable `number` quedará ligada a un valor basado en el resultado de la expresión `if`. En este caso, será 5.

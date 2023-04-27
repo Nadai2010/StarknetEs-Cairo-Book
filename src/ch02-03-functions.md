@@ -103,23 +103,14 @@ $ cairo-run src/lib.cairo
 
 Debido a que llamamos a la función con `5` como valor para `x` y `6` como valor para `y`, la salida del programa contiene esos valores.
 
-### Statements and Expressions
+### Sentencias y expresiones
 
-Function bodies are made up of a series of statements optionally ending in an
-expression. So far, the functions we’ve covered haven’t included an ending
-expression, but you have seen an expression as part of a statement. Because
-Cairo is an expression-based language, this is an important distinction to
-understand. Other languages don’t have the same distinctions, so let’s look at
-what statements and expressions are and how their differences affect the bodies
-of functions.
+Los cuerpos de las funciones están compuestos por una serie de sentencias que terminan opcionalmente en una expresión. Hasta ahora, las funciones que hemos cubierto no han incluido una expresión final, pero ya has visto una expresión como parte de una sentencia. Como Cairo es un lenguaje basado en expresiones, esta es una distinción importante que debemos entender. Otros lenguajes no tienen las mismas distinciones, así que veamos qué son las sentencias y expresiones y cómo sus diferencias afectan los cuerpos de las funciones.
 
-* **Statements** are instructions that perform some action and do not return
-  a value.
-* **Expressions** evaluate to a resultant value. Let’s look at some examples.
+* **Sentencias** son instrucciones que realizan alguna acción y no devuelven un valor.
+* **Expresiones** se evalúan para producir un valor resultante. Veamos algunos ejemplos.
 
-We’ve actually already used statements and expressions. Creating a variable and
-assigning a value to it with the `let` keyword is a statement. In Listing 3-1,
-`let y = 6;` is a statement.
+De hecho, ya hemos utilizado sentencias y expresiones. Crear una variable y asignarle un valor con la palabra clave `let` es una sentencia. En el Listado 3-1, `let y = 6;` es una sentencia.
 
 ```rust
 fn main() {
@@ -127,20 +118,18 @@ fn main() {
 }
 ```
 
-<span class="caption">Listing 3-1: A `main` function declaration containing one statement</span>
+<span class="caption">Listado 3-1: Una declaración de función `main` que contiene una sentencia</span>
 
-Function definitions are also statements; the entire preceding example is a
-statement in itself.
+Las definiciones de funciones también son sentencias; todo el ejemplo anterior es una sentencia en sí misma.
 
-Statements do not return values. Therefore, you can’t assign a `let` statement
-to another variable, as the following code tries to do; you’ll get an error:
+Las sentencias no devuelven valores. Por lo tanto, no se puede asignar una sentencia `let` a otra variable, como intenta hacer el siguiente código; se producirá un error:
 
 ```rust
 fn main() {
     let x = (let y = 6);
 }
 ```
-When you run this program, the error you’ll get looks like this:
+Cuando ejecutes este programa, el error que obtendrás se verá así:
 ```console
 $ cairo-run src/lib.cairo
 error: Missing token TerminalRParen.
@@ -163,20 +152,9 @@ error: Skipped tokens. Expected: statement.
     let x = (let y = 6);
 ```
 
-The `let y = 6` statement does not return a value, so there isn’t anything for
-`x` to bind to. This is different from what happens in other languages, such as
-C and Ruby, where the assignment returns the value of the assignment. In those
-languages, you can write `x = y = 6` and have both `x` and `y` have the value
-`6`; that is not the case in Cairo.
+La declaración `let y = 6` no devuelve un valor, por lo que no hay nada a lo que `x` pueda enlazar. Esto es diferente de lo que sucede en otros lenguajes, como C y Ruby, donde la asignación devuelve el valor de la asignación. En esos lenguajes, puedes escribir `x = y = 6` y tanto `x` como `y` tendrán el valor `6`; esto no es así en Cairo.
 
-Expressions evaluate to a value and make up most of the rest of the code that
-you’ll write in Cairo. Consider a math operation, such as `5 + 6`, which is an
-expression that evaluates to the value `11`. Expressions can be part of
-statements: in Listing 3-1, the `6` in the statement `let y = 6;` is an
-expression that evaluates to the value `6`. Calling a function is an
-expression. A new scope block created with
-curly brackets is an expression, for example:
-
+Las expresiones evalúan a un valor y componen la mayor parte del código que escribirás en Cairo. Considera una operación matemática, como `5 + 6`, que es una expresión que evalúa al valor `11`. Las expresiones pueden formar parte de las declaraciones: en el Listado 3-1, el `6` en la declaración `let y = 6;` es una expresión que evalúa al valor `6`. Llamar a una función es una expresión. Un bloque de ámbito nuevo creado con llaves es una expresión, por ejemplo:
 
 ```rust
 use debug::PrintTrait;
@@ -190,28 +168,17 @@ fn main() {
 }
 ```
 
-This expression:
+Esta expresión:
 ```rust
 {
     let x = 3;
     x + 1
 }
 ```
-is a block that, in this case, evaluates to `4`. That value gets bound to `y`
-as part of the `let` statement. Note that the `x + 1` line doesn’t have a
-semicolon at the end, which is unlike most of the lines you’ve seen so far.
-Expressions do not include ending semicolons. If you add a semicolon to the end
-of an expression, you turn it into a statement, and it will then not return a
-value. Keep this in mind as you explore function return values and expressions
-next.
-### Functions with Return Values
-Functions can return values to the code that calls them. We don’t name return
-values, but we must declare their type after an arrow (`->`). In Cairo, the
-return value of the function is synonymous with the value of the final
-expression in the block of the body of a function. You can return early from a
-function by using the `return` keyword and specifying a value, but most
-functions return the last expression implicitly. Here’s an example of a
-function that returns a value:
+Este bloque de código, en este caso, se evalúa como 4. Ese valor se asigna a y como parte de la declaración let. Ten en cuenta que la línea x + 1 no tiene un punto y coma al final, lo que es diferente a la mayoría de las líneas que has visto hasta ahora. Las expresiones no incluyen un punto y coma al final. Si agregas un punto y coma al final de una expresión, la conviertes en una declaración, y en ese caso no se devolverá ningún valor. Tenlo en cuenta mientras exploras los valores de retorno de las funciones y las expresiones a continuación.
+
+### Funciones con valores de retorno
+Las funciones pueden devolver valores al código que las llama. No nombramos los valores de retorno, pero debemos declarar su tipo después de una flecha (`->`). En Cairo, el valor de retorno de la función es sinónimo del valor de la última expresión en el bloque del cuerpo de una función. Puede salir temprano de una función usando la palabra clave `return` y especificando un valor, pero la mayoría de las funciones devuelven la última expresión implícitamente. Aquí hay un ejemplo de una función que devuelve un valor:
 
 ```rust
 use debug::PrintTrait;
@@ -225,26 +192,18 @@ fn main() {
     x.print();
 }
 ```
-There are no function calls, or even `let` statements in the `five`
-function—just the number `5` by itself. That’s a perfectly valid function in
-Cairo. Note that the function’s return type is specified too, as `-> u32`. Try
-running this code; the output should look like this:
+No hay llamadas a funciones ni declaraciones `let` en la función `five`, solo el número `5` por sí mismo. Esa es una función perfectamente válida en Cairo. Observa que se especifica el tipo de retorno de la función como `-> u32`. Intenta ejecutar este código; la salida debería verse así:
 ```console
 $ cairo-run src/lib.cairo
 [DEBUG]                                 (raw: 5)
 ```
-The `5` in `five` is the function’s return value, which is why the return type
-is `u32`. Let’s examine this in more detail. There are two important bits:
-first, the line `let x = five();` shows that we’re using the return value of a
-function to initialize a variable. Because the function `five` returns a `5`,
-that line is the same as the following:
+El `5` en `five` es el valor de retorno de la función, por eso el tipo de retorno es `u32`. Vamos a examinar esto con más detalle. Hay dos partes importantes: en primer lugar, la línea `let x = five();` muestra que estamos usando el valor de retorno de una función para inicializar una variable. Debido a que la función `five` devuelve un `5`, esa línea es lo mismo que:
 ```rust
 let x = 5;
 ```
-Second, the `five` function has no parameters and defines the type of the
-return value, but the body of the function is a lonely `5` with no semicolon
-because it’s an expression whose value we want to return.
-Let’s look at another example:
+Segundo, la función `five` no tiene parámetros y define el tipo del valor de retorno, pero el cuerpo de la función es simplemente `5` sin un punto y coma porque es una expresión cuyo valor queremos retornar.
+
+Veamos otro ejemplo:
 
 ```rust
 use debug::PrintTrait;
@@ -259,9 +218,7 @@ fn plus_one(x: u32) -> u32 {
     x + 1_u32
 }
 ```
-Running this code will print `[DEBUG]                    (raw: 6)`. But if we place a
-semicolon at the end of the line containing `x + 1`, changing it from an
-expression to a statement, we’ll get an error:
+Al ejecutar este código se imprimirá `[DEBUG]                    (raw: 6)`. Pero si agregamos un punto y coma al final de la línea que contiene `x + 1`, cambiándola de una expresión a una declaración, obtendremos un error:
 
 ```rust
 use debug::PrintTrait;
@@ -277,12 +234,8 @@ fn plus_one(x: u32) -> u32 {
 }
 ```
 
-Compiling this code produces an error, as follows:
+La compilación de este código produce un error, como se muestra a continuación:
 ```console
 error: Unexpected return type. Expected: "core::integer::u32", found: "()".
 ```
-The main error message, `Unexpected return type`, reveals the core issue with this
-code. The definition of the function `plus_one` says that it will return an
-`u32`, but statements don’t evaluate to a value, which is expressed by `()`,
-the unit type. Therefore, nothing is returned, which contradicts the function
-definition and results in an error.
+El mensaje principal de error, `Unexpected return type`, revela el problema principal con este código. La definición de la función `plus_one` dice que devolverá un `u32`, pero las sentencias no se evalúan a un valor, lo cual se expresa por `()`, el tipo unit. Por lo tanto, no se devuelve nada, lo que contradice la definición de la función y resulta en un error.

@@ -1,10 +1,10 @@
-# Enums
+# Enums y Coincidencia de Patrones
 
-Enums, short for "enumerations," are a way to define a custom data type that consists of a fixed set of named values, called _variants_. Enums are useful for representing a collection of related values where each value is distinct and has a specific meaning.
+Los enums, abreviatura de "enumeraciones", son una forma de definir un tipo de datos personalizado que consiste en un conjunto fijo de valores nombrados, llamados _variantes_. Los enums son útiles para representar una colección de valores relacionados donde cada valor es distinto y tiene un significado específico.
 
-## Enum Variants and Values
+## Variantes y Valores de Enum
 
-Here's a simple example of an enum:
+Aquí hay un ejemplo sencillo de un enum:
 
 ```rs
 #[derive(Drop)]
@@ -16,17 +16,16 @@ enum Direction {
 }
 ```
 
-Unlike other languages like Rust, every variant has a type. In this example, we've defined an enum called `Direction` with four variants: `North`, `East`, `South`, and `West`. The naming convention is to use PascalCase for enum variants. Each variant represents a distinct value of the Direction type and is associated with a unit type `()`. One variant can be instanciated using this syntax:
+A diferencia de otros lenguajes como Rust, cada variante tiene un tipo. En este ejemplo, hemos definido un enum llamado `Direction` con cuatro variantes: `North`, `East`, `South` y `West`. La convención de nomenclatura es utilizar PascalCase para las variantes del enum. Cada variante representa un valor distinto del tipo `Direction` y está asociada con un tipo unitario `()`. Una variante puede ser instanciada utilizando esta sintaxis:
 
 ```rs
 let direction = Direction::North(());
 ```
 
-It's easy to write code that acts differently depending on the variant of an enum instance, in this example to run specific code according to a Direction. You can learn more about it on the [The Match Control Flow Construct page](ch05-02-the-match-control-flow-construct.md).
+Es fácil escribir código que se comporte de manera diferente según la variante de una instancia de un enum, como en este ejemplo, donde se ejecuta un código específico según una dirección. Puedes obtener más información sobre esto en la página [The Match Control Flow Construct](ch05-02-the-match-control-flow-construct.md).
+## Enums combinados con tipos personalizados
 
-## Enums Combined with Custom Types
-
-Enums can also be used to store more interesting data associated with each variant. For example:
+Los enums también pueden ser utilizados para almacenar datos más interesantes asociados con cada variante. Por ejemplo:
 
 ```rs
 #[derive(Drop)]
@@ -37,17 +36,17 @@ enum Message {
 }
 ```
 
-In this example, the `Message` enum has three variants: `Quit`, `Echo` and `Move`, all with different types:
+En este ejemplo, el enum `Message` tiene tres variantes: `Quit`, `Echo` y `Move`, todas con tipos diferentes:
 
-- `Quit` has no data associated with it at all.
-- `Echo` includes a single felt.
-- `Move` includes two u128 values.
+- `Quit` no tiene datos asociados en absoluto.
+- `Echo` incluye un solo campo.
+- `Move` incluye dos valores u128.
 
-You could even use a Struct or another Enum you defined inside one of your Enum variants.
+Incluso puedes usar una estructura o otro enum que hayas definido dentro de una de las variantes de tu enum.
 
-## Trait Implementations for Enums
+## Implementaciones de Traits para Enums
 
-In Cairo, you can define traits and implement them for your custom enums. This allows you to define methods and behaviors associated with the enum. Here's an example of defining a trait and implementing it for the previous `Message` enum:
+En Cairo, puedes definir traits e implementarlos para tus enums personalizados. Esto te permite definir métodos y comportamientos asociados con el enum. Aquí hay un ejemplo de cómo definir un trait e implementarlo para el enum `Message` anterior:
 
 ```rs
 trait Processing {
@@ -71,18 +70,18 @@ impl ProcessingImpl of Processing {
 }
 ```
 
-In this example, we implemented the `Processing` trait for `Message`. Here is how it could be used to process a Quit message:
+En este ejemplo, implementamos el trait `Processing` para `Message`. Así es cómo podría ser utilizado para procesar un mensaje Quit:
 
 ```rust
 let msg: Message = Message::Quit(());
 msg.process();
 ```
 
-Running this code would print `quitting`.
+Al ejecutar este código se imprimiría `quitting`.
 
-## The Option Enum and Its Advantages
+## El Enum Option y sus ventajas
 
-The Option enum is a standard Cairo enum that represents the concept of an optional value. It has two variants: `Some: T` and `None: ()`. `Some: T ` indicates that there's a value of type `T`, while `None` represents the absence of a value.
+El enum Option es un enum estándar en Cairo que representa el concepto de un valor opcional. Tiene dos variantes: `Some: T` y `None: ()`. `Some: T` indica que hay un valor de tipo `T`, mientras que `None` representa la ausencia de un valor.
 
 ```rs
 enum Option<T> {
@@ -91,11 +90,11 @@ enum Option<T> {
 }
 ```
 
-The `Option` enum is helpful because it allows you to explicitly represent the possibility of a value being absent, making your code more expressive and easier to reason about. Using `Option` can also help prevent bugs caused by using uninitialized or unexpected `null` values.
+El enum `Option` es útil porque te permite representar explícitamente la posibilidad de que un valor esté ausente, lo que hace que tu código sea más expresivo y fácil de entender. Usar `Option` también puede ayudar a prevenir errores causados por el uso de valores `null` no inicializados o inesperados.
 
-To give you an example, here is a function which returns the index of the first element of an array with a given value, or None if the element is not present.
+Para darte un ejemplo, aquí hay una función que devuelve el índice del primer elemento de un arreglo con un valor dado, o `None` si el elemento no está presente.
 
-> Note: in the future it would be nice to replace this example by something simpler using a loop and without gas related code.
+> Nota: en el futuro sería bueno reemplazar este ejemplo con algo más simple que use un ciclo y sin código relacionado con el gas.
 
 ```rust
 use array::ArrayTrait;
@@ -149,4 +148,4 @@ fn test_increase_amount() {
 }
 ```
 
-Running this code would print `it worked`.
+Al ejecutar este código se imprimiría `it worked`.

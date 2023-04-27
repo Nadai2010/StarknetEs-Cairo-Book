@@ -1,12 +1,12 @@
 <div align="center">
-  <h1>El libro del lenguaje de programación Cairo</h1>
+  <h1>El libro dEl Lenguaje de Programación Cairo</h1>
   <h3> Alexandria </h3>
   <img src="assets/alexandria.jpg" height="400" width="400">
 </div>
 
 ## Descripción
 
-Este repositorio contiene el código fuente del libro "El lenguaje de programación Cairo", una documentación completa del lenguaje de programación Cairo 1. Esta documentación es su recurso de referencia para dominar Cairo, creado y mantenido por la comunidad Starknet. 
+Este repositorio contiene el código fuente del libro "El Lenguaje de Programación Cairo", una documentación completa dEl Lenguaje de Programación Cairo 1. Esta documentación es su recurso de referencia para dominar Cairo, creado y mantenido por la comunidad Starknet. 
 
 * Puede leer el libro orginal [en línea](https://cairo-book.github.io/).
 * Puede leer una traducción del libro original [en línea](https://nadai2010.github.io/StarknetEs-Cairo-Book/)

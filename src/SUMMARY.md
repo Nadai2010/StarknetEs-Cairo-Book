@@ -1,6 +1,6 @@
-# El lenguaje de programación Cairo
+# El Lenguaje de Programación Cairo
 
-[El lenguaje de programación Cairo](title-page.md)
+[El Lenguaje de Programación Cairo](title-page.md)
 [Prólogo](ch00-01-foreword.md)
 [Introducción](ch00-00-introduction.md)
 

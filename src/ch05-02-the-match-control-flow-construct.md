@@ -1,12 +1,10 @@
-# The Match Control Flow Construct
+# La construcción de control de flujo Match
 
-<!-- TODO : update mention of chapter 18 (on patterns and matching chapter) in paragraph below -->
+Cairo tiene una construcción de control de flujo extremadamente poderosa llamada `match` que te permite comparar un valor con una serie de patrones y luego ejecutar código basado en el patrón que coincide. Los patrones pueden estar compuestos por valores literales, nombres de variables, comodines y muchas otras cosas. El poder de `match` proviene de la expresividad de los patrones y del hecho de que el compilador confirma que se manejan todos los casos posibles.
 
-Cairo has an extremely powerful control flow construct called `match` that allows you to compare a value against a series of patterns and then execute code based on which pattern matches. Patterns can be made up of literal values, variable names, wildcards, and many other things. The power of match comes from the expressiveness of the patterns and the fact that the compiler confirms that all possible cases are handled.
+Piensa en una expresión `match` como una máquina clasificadora de monedas: las monedas se deslizan por una pista con agujeros de diferentes tamaños a lo largo de ella, y cada moneda cae por el primer agujero que encuentra en el que encaja. De la misma manera, los valores pasan por cada patrón en un `match`, y en el primer patrón en el que el valor "encaja", el valor cae en el bloque de código asociado para ser utilizado durante la ejecución.
 
-Think of a match expression as being like a coin-sorting machine: coins slide down a track with variously sized holes along it, and each coin falls through the first hole it encounters that it fits into. In the same way, values go through each pattern in a match, and at the first pattern the value “fits”, the value falls into the associated code block to be used during execution.
-
-Speaking of coins, let’s use them as an example using match! We can write a function that takes an unknown US coin and, in a similar way as the counting machine, determines which coin it is and and returns its value in cents, as shown in Listing 5-3.
+Hablando de monedas, ¡usemoslas como ejemplo con `match`! Podemos escribir una función que toma una moneda de EE. UU. desconocida y, de manera similar a la máquina de contar, determina qué moneda es y devuelve su valor en centavos, como se muestra en el Listado 5-3.
 
 ```rust
 enum Coin {
@@ -26,19 +24,19 @@ fn value_in_cents(coin: Coin) -> felt252 {
 }
 ```
 
-Listing 5-3: An enum and a match expression that has the variants of the enum as its patterns
+Listado 5-3: Un enum y una expresión `match` que tiene las variantes del enum como sus patrones.
 
-Let’s break down the `match` in the `value_in_cents` function. First we list the `match` keyword followed by an expression, which in this case is the value `coin`. This seems very similar to a conditional expression used with if, but there’s a big difference: with if, the condition needs to evaluate to a Boolean value, but here it can be any type. The type of coin in this example is the `Coin` enum that we defined on the first line.
+Desglosemos el `match` en la función `value_in_cents`. Primero enumeramos la palabra clave `match` seguida de una expresión, que en este caso es el valor `coin`. Esto parece muy similar a una expresión condicional utilizada con `if`, pero hay una gran diferencia: con `if`, la condición debe evaluarse a un valor booleano, pero aquí puede ser de cualquier tipo. El tipo de moneda en este ejemplo es el enum `Coin` que definimos en la primera línea.
 
-Next are the `match` arms. An arm has two parts: a pattern and some code. The first arm here has a pattern that is the value `Coin::Penny(_)` and then the `=>` operator that separates the pattern and the code to run. The code in this case is just the value `1`. Each arm is separated from the next with a comma.
+A continuación, están los brazos del `match`. Un brazo tiene dos partes: un patrón y algún código. El primer brazo aquí tiene un patrón que es el valor `Coin::Penny(_)` y luego el operador `=>` que separa el patrón y el código a ejecutar. El código en este caso es simplemente el valor `1`. Cada brazo está separado del siguiente con una coma.
 
-When the `match` expression executes, it compares the resultant value against the pattern of each arm, in order. If a pattern matches the value, the code associated with that pattern is executed. If that pattern doesn’t match the value, execution continues to the next arm, much as in a coin-sorting machine. We can have as many arms as we need: in the above example, our match has four arms.
+Cuando se ejecuta la expresión `match`, compara el valor resultante con el patrón de cada brazo, en orden. Si un patrón coincide con el valor, se ejecuta el código asociado con ese patrón. Si ese patrón no coincide con el valor, la ejecución continúa con el siguiente brazo, como en una máquina clasificadora de monedas. Podemos tener tantos brazos como necesitemos: en el ejemplo anterior, nuestro `match` tiene cuatro brazos.
 
-In Cairo, the order of the arms must follow the same order as the enum.
+En Cairo, el orden de los brazos debe seguir el mismo orden que el enum.
 
-The code associated with each arm is an expression, and the resultant value of the expression in the matching arm is the value that gets returned for the entire match expression.
+El código asociado con cada brazo es una expresión, y el valor resultante de la expresión en el brazo coincidente es el valor que se devuelve para toda la expresión `match`.
 
-We don’t typically use curly brackets if the match arm code is short, as it is in our example where each arm just returns a value. If you want to run multiple lines of code in a match arm, you must use curly brackets, with a comma following the arm. For example, the following code prints “Lucky penny!” every time the method is called with a `Coin::Penny(())`, but still returns the last value of the block, `1`:
+Normalmente no usamos llaves si el código del brazo del `match` es corto, como en nuestro ejemplo donde cada brazo simplemente devuelve un valor. Si desea ejecutar varias líneas de código en un brazo del `match`, debe usar llaves, con una coma después del brazo. Por ejemplo, el siguiente código imprime "¡Moneda de la suerte!" cada vez que se llama al método con una `Coin::Penny(())`, pero aún devuelve el último valor del bloque, `1`: 
 
 ```rust
 fn value_in_cents(coin: Coin) -> felt252 {
@@ -54,11 +52,11 @@ fn value_in_cents(coin: Coin) -> felt252 {
 }
 ```
 
-## Patterns That Bind to Values
+## Patrones que se vinculan con valores
 
-Another useful feature of match arms is that they can bind to the parts of the values that match the pattern. This is how we can extract values out of enum variants.
+Otra característica útil de los brazos de coincidencia es que pueden vincularse con las partes de los valores que coinciden con el patrón. Así es como podemos extraer valores de las variantes de una enum.
 
-As an example, let’s change one of our enum variants to hold data inside it. From 1999 through 2008, the United States minted quarters with different designs for each of the 50 states on one side. No other coins got state designs, so only quarters have this extra value. We can add this information to our `enum` by changing the `Quarter` variant to include a `UsState` value stored inside it, which we’ve done in Listing 5-4.
+Como ejemplo, cambiemos una de nuestras variantes de enum para que contenga datos en su interior. Desde 1999 hasta 2008, la Casa de la Moneda de los Estados Unidos acuñó monedas de 25 centavos con diseños diferentes para cada uno de los 50 estados en un lado. Ninguna otra moneda tenía diseños estatales, por lo que solo los cuartos tienen este valor adicional. Podemos agregar esta información a nuestra `enum` cambiando la variante `Quarter` para incluir un valor `UsState` almacenado en su interior, lo cual hemos hecho en la Lista 5-4.
 
 ```rust
 #[derive(Drop)]
@@ -76,11 +74,11 @@ enum Coin {
 }
 ```
 
-Listing 5-4: A `Coin` enum in which the `Quarter` variant also holds a `UsState` value
+Listado 5-4: Un enum `Coin` en el que la variante `Quarter` también tiene un valor `UsState`
 
-Let’s imagine that a friend is trying to collect all 50 state quarters. While we sort our loose change by coin type, we’ll also call out the name of the state associated with each quarter so that if it’s one our friend doesn’t have, they can add it to their collection.
+Imaginemos que un amigo está tratando de recolectar todas las 50 monedas de cuarto de estado. Mientras clasificamos nuestro cambio suelto por tipo de moneda, también llamaremos el nombre del estado asociado con cada cuarto para que si es uno que nuestro amigo no tiene, puedan agregarlo a su colección.
 
-In the match expression for this code, we add a variable called `state` to the pattern that matches values of the variant `Coin::Quarter`. When a `Coin::Quarter` matches, the `state` variable will bind to the value of that quarter’s state. Then we can use `state` in the code for that arm, like so:
+En la expresión `match` de este código, agregamos una variable llamada `state` al patrón que coincide con los valores de la variante `Coin::Quarter`. Cuando se hace una coincidencia de `Coin::Quarter`, la variable `state` se vinculará al valor del estado de ese cuarto. Luego podemos usar `state` en el código para ese brazo, así:
 
 ```rust
 fn value_in_cents(coin: Coin) -> felt252 {
@@ -96,7 +94,7 @@ fn value_in_cents(coin: Coin) -> felt252 {
 }
 ```
 
-To print the value of a variant of an enum in Cairo, we need to add an implementation for the `print` function for the `debug::PrintTrait`:
+Para imprimir el valor de una variante de un enum en Cairo, necesitamos agregar una implementación para la función `print` de `debug::PrintTrait`:
 
 ```rust
 impl UsStatePrintImpl of PrintTrait::<UsState> {
@@ -109,15 +107,15 @@ impl UsStatePrintImpl of PrintTrait::<UsState> {
 }
 ```
 
-If we were to call `value_in_cents(Coin::Quarter(UsState::Alaska(())))`, `coin` would be `Coin::Quarter(UsState::Alaska())`. When we compare that value with each of the match arms, none of them match until we reach `Coin::Quarter(state)`. At that point, the binding for state will be the value `UsState::Alaska()`. We can then use that binding in the `PrintTrait`, thus getting the inner state value out of the `Coin` enum variant for `Quarter`.
+Si llamáramos a `value_in_cents(Coin::Quarter(UsState::Alaska(())))`, `coin` sería `Coin::Quarter(UsState::Alaska())`. Cuando comparamos ese valor con cada uno de los brazos del `match`, ninguno coincide hasta que llegamos a `Coin::Quarter (state)`. En ese momento, la asignación para `state` será el valor `UsState::Alaska()`. Luego podemos usar esa asignación en el `PrintTrait`, obteniendo así el valor interno de estado fuera de la variante `Coin` para `Quarter`.
 
-## Matching with Options
+## Coincidencia Con Opciones
 
-In the previous section, we wanted to get the inner `T` value out of the `Some` case when using `Option<T>`; we can also handle `Option<T>` using `match`, as we did with the `Coin` enum! Instead of comparing coins, we’ll compare the variants of `Option<T>`, but the way the `match` expression works remains the same. You can use Options by importing the `option::OptionTrait` trait.
+En la sección anterior, queríamos obtener el valor interno `T` fuera del caso `Some` al usar `Option<T>`; ¡también podemos manejar `Option<T>` usando `match`, como lo hicimos con el `enum` `Coin`! En lugar de comparar monedas, compararemos las variantes de `Option<T>`, pero la forma en que funciona la expresión `match` sigue siendo la misma. Puedes usar opciones importando el trait `option::OptionTrait`.
 
-Let’s say we want to write a function that takes an `Option<u8>` and, if there’s a value inside, adds `1_u8` to that value. If there isn’t a value inside, the function should return the `None` value and not attempt to perform any operations.
+Digamos que queremos escribir una función que tome una `Option<u8>` y, si hay un valor dentro, agregue `1_u8` a ese valor. Si no hay un valor dentro, la función debería devolver el valor `None` y no intentar realizar ninguna operación.
 
-This function is very easy to write, thanks to match, and will look like Listing 5-5.
+Esta función es muy fácil de escribir, gracias a `match`, y se verá como en el listado 5-5.
 
 ```rust
 use option::OptionTrait;
@@ -139,9 +137,9 @@ fn main() {
 }
 ```
 
-Listing 5-5: A function that uses a match expression on an `Option<u8>`
+Listado 5-5: Una función que usa una expresión `match` en un `Option<u8>`
 
-Note that your arms must respect the same order as the enum defined in the `OptionTrait` of the core Cairo lib.
+Tenga en cuenta que los brazos (`arms`) deben respetar el mismo orden que el enum definido en `OptionTrait` de la librería central de Cairo.
 
 ```rust
     enum Option<T> {
@@ -150,34 +148,33 @@ Note that your arms must respect the same order as the enum defined in the `Opti
     }
 ```
 
-Let’s examine the first execution of `plus_one` in more detail. When we call `plus_one(five)`, the variable `x` in the body of `plus_one` will have the value `Some(5_u8)`. We then compare that against each match arm:
+Estudiemos con más detalle la primera ejecución de `plus_one`. Cuando llamamos a `plus_one(five)`, la variable `x` en el cuerpo de `plus_one` tendrá el valor `Some(5_u8)`. Luego, lo comparamos con cada rama del `match`:
 
 ```rust
     Option::Some(val) => Option::Some(val + 1_u8),
 ```
 
-The `Option::Some(5_u8)` value match the pattern `Option::Some(val)`? It does! We have the same variant. The `val` binds to the value contained in `Option::Some`, so `val` takes the value `5_u8`. The code in the match arm is then executed, so we add `1_u8` to the value of `val` and create a new `Option::Some` value with our total `6_u8` inside. Because the first arm matched, no other arms are compared.
+¿El valor `Option::Some(5_u8)` coincide con el patrón `Option::Some(val)`? ¡Sí! Tenemos la misma variante. `val` se vincula al valor contenido en `Option::Some`, por lo que `val` toma el valor `5_u8`. Luego se ejecuta el código en el brazo del `match`, por lo que agregamos `1_u8` al valor de `val` y creamos un nuevo valor `Option::Some` con nuestro total `6_u8` en su interior. Debido a que se ha realizado la primera coincidencia, no se comparan otros brazos.
 
-Now let’s consider the second call of `plus_one` in our main function, where `x` is `Option::None(())`. We enter the match and compare to the first arm:
+Ahora consideremos la segunda llamada de `plus_one` en nuestra función principal, donde `x` es `Option::None(())`. Entramos en el `match` y comparamos con el primer brazo:
 
 ```rust
     Option::Some(val) => Option::Some(val + 1_u8),
 ```
 
-The `Option::Some(5_u8)` value doesn’t match the pattern `Option::None`, so we continue to the next arm:
+El valor `Option::Some(5_u8)` no coincide con el patrón `Option::None`, así que continuamos con el siguiente brazo:
 
 ```rust
     Option::None(_) => Option::None(()),
 ```
 
-It matches! There’s no value to add to, so the program stops and returns the `Option::None(())` value on the right side of `=>`.
+¡Coincide! No hay valor al que agregar, por lo que el programa se detiene y devuelve el valor `Option::None(())` en el lado derecho de `=>`.
 
-Combining `match` and enums is useful in many situations. You’ll see this pattern a lot in Cairo code: `match` against an enum, bind a variable to the data inside, and then execute code based on it. It’s a bit tricky at first, but once you get used to it, you’ll wish you had it in all languages. It’s consistently a user favorite.
+Combinar `match` y enumeraciones es útil en muchas situaciones. Verás este patrón mucho en el código de Cairo: `match` contra una enumeración, enlaza una variable con los datos internos y luego ejecuta código basado en ella. Es un poco complicado al principio, pero una vez que te acostumbras, desearás tenerlo en todos los lenguajes. Es consistentemente favorito de los usuarios.
 
-## Matches Are Exhaustive
+## Los Matches Son Exhaustivos
 
-There’s one other aspect of match we need to discuss: the arms’ patterns must cover all possibilities. Consider this version of our `plus_one` function, which has a bug and won’t compile:
-
+Hay otro aspecto de los matches que necesitamos discutir: los patrones de los brazos deben cubrir todas las posibilidades. Considera esta versión de nuestra función `plus_one`, que tiene un error y no se compilará:
 ```bash
 $ cairo-run src/test.cairo
     error: Unsupported match. Currently, matches require one arm per variant,
@@ -188,13 +185,13 @@ $ cairo-run src/test.cairo
     Error: failed to compile: ./src/test.cairo
 ```
 
-Cairo knows that we didn’t cover every possible case, and even knows which pattern we forgot! Matches in Cairo are exhaustive: we must exhaust every last possibility in order for the code to be valid. Especially in the case of `Option<T>`, when Cairo prevents us from forgetting to explicitly handle the `None` case, it protects us from assuming that we have a value when we might have null, thus making the billion-dollar mistake discussed earlier impossible.
+Cairo sabe que no cubrimos todos los casos posibles, ¡e incluso sabe qué patrón olvidamos! Los matches en Cairo son exhaustivos: debemos cubrir todas las posibilidades para que el código sea válido. Especialmente en el caso de `Option<T>`, cuando Cairo nos impide olvidar manejar explícitamente el caso `None`, nos protege de asumir que tenemos un valor cuando podríamos tener nulo, lo que hace imposible el error de mil millones de dólares discutido anteriormente.
 
-## Match 0 and the \_ Placeholder
+## Match 0 y el Comodín \_
 
-Using enums, we can also take special actions for a few particular values, but for all other values take one default action. Currently only `0` and the `_`operator are supported.
+Usando enums, también podemos tomar acciones especiales para algunos valores particulares, pero para todos los demás valores tomar una acción predeterminada. Actualmente solo se admiten `0` y el operador `_`.
 
-Imagine we’re implementing a game where, you get a random number between 0 and 7. If you have 0, you win. For all other values you loose. Here's a match that implements that logic, with the number hardcoded rather than a random value.
+Imaginemos que estamos implementando un juego en el que obtienes un número aleatorio entre 0 y 7. Si tienes 0, ganas. Para todos los demás valores pierdes. Aquí hay un match que implementa esa lógica, con el número codificado en lugar de un valor aleatorio.
 
 ```rust
 fn did_i_win(nb: felt252) {
@@ -205,6 +202,6 @@ fn did_i_win(nb: felt252) {
 }
 ```
 
-The first arm, the pattern is the literal values 0. For the last arm that covers every other possible value, the pattern is the character `_`. This code compiles, even though we haven’t listed all the possible values a `felt252` can have, because the last pattern will match all values not specifically listed. This catch-all pattern meets the requirement that `match` must be exhaustive. Note that we have to put the catch-all arm last because the patterns are evaluated in order. If we put the catch-all arm earlier, the other arms would never run, so Cairo will warn us if we add arms after a catch-all!
+La primera armadura tiene un patrón de valores literales 0. Para la última armadura que cubre todos los demás posibles valores, el patrón es el carácter `_`. Este código se compila, aunque no hayamos listado todos los posibles valores que un `felt252` puede tener, ya que el último patrón coincidirá con todos los valores que no estén específicamente enumerados. Este patrón de captura de todo cumple con el requisito de que `match` debe ser exhaustivo. Tenga en cuenta que debemos poner la armadura de captura de todo al final porque los patrones se evalúan en orden. Si ponemos la armadura de captura de todo antes, las otras armaduras nunca se ejecutarán, por lo que Cairo nos advertirá si agregamos armaduras después de una de captura de todo.
 
-<!-- TODO : might need to link the end of this chapter to patterns and matching chapter -->
+<!-- TODO: puede que necesitemos enlazar el final de este capítulo con el capítulo de patrones y coincidencias -->

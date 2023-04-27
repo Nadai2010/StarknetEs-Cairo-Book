@@ -1,4 +1,4 @@
-# El lenguaje de programación Cairo
+# El Lenguaje de Programación Cairo
 
 Creado por la Comunidad Cairo y sus [colaboradores](https://github.com/cairo-book/cairo-book.github.io). Un agradecimiento especial a [Starkware](https://starkware.co/) a través de [OnlyDust](https://www.onlydust.xyz/), y [Voyager](https://voyager.online/) por apoyar la creación de este libro.
 

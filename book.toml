@@ -3,7 +3,7 @@ authors = ["Starknet community, with support from Starkware and Voyager"]
 language = "en"
 multilingual = false
 src = "src"
-title = "The Cairo Programming Language"
+title = "El Lenguaje de Programación Cairo"
 
 [output.html.playground]
 runnable = false

@@ -1,8 +1,8 @@
-# Comments
+# Comentarios
 
-In Cairo programs, you can include explanatory text within the code using comments. To create a comment, use the // syntax, after which any text on the same line will be ignored by the compiler.
+En programas de Cairo, puedes incluir texto explicativo dentro del código mediante comentarios. Para crear un comentario, usa la sintaxis //, después de lo cual cualquier texto en la misma línea será ignorado por el compilador.
 
-<span class="filename">Filename: comments.cairo</span>
+<span class="filename">Nombre de archivo: comments.cairo</span>
 
 ```rust
 fn main() -> felt252 {

@@ -1,39 +1,18 @@
-# Managing Cairo Projects with Packages, Crates and Modules
+# Gestión de proyectos Cairo con Paquetes, Crates y Módulos
 
-As you write large programs, organizing your code will become increasingly
-important. By grouping related functionality and separating code with distinct
-features, you’ll clarify where to find code that implements a particular
-feature and where to go to change how a feature works.
+A medida que escriba programas grandes, la organización de su código se volverá cada vez más importante. Al agrupar funcionalidades relacionadas y separar el código con características distintas, aclarará dónde encontrar el código que implementa una característica en particular y dónde ir para cambiar cómo funciona una característica.
 
-The programs we’ve written so far have been in one module in one file. As a
-project grows, you should organize code by splitting it into multiple modules
-and then multiple files. As a package grows, you can extract parts into
-separate crates that become external dependencies. This chapter covers all
-these techniques.
+Los programas que hemos escrito hasta ahora han estado en un módulo en un solo archivo. A medida que un proyecto crece, debe organizar el código dividiéndolo en múltiples módulos y luego en múltiples archivos. A medida que un paquete crece, puede extraer partes en Crates separados que se convierten en dependencias externas. Este capítulo cubre todas estas técnicas.
 
-We’ll also discuss encapsulating implementation details, which lets you reuse
-code at a higher level: once you’ve implemented an operation, other code can
-call your code without having to know how the
-implementation works.
+También discutiremos la encapsulación de detalles de implementación, lo que le permite reutilizar el código a un nivel superior: una vez que ha implementado una operación, otro código puede llamar a su código sin tener que saber cómo funciona la implementación.
 
-A related concept is scope: the nested context in which code is written has a
-set of names that are defined as “in scope.” When reading, writing, and
-compiling code, programmers and compilers need to know whether a particular
-name at a particular spot refers to a variable, function, struct, enum, module,
-constant, or other item and what that item means. You can create scopes and
-change which names are in or out of scope. You can’t have two items with the
-same name in the same scope.
+Un concepto relacionado es el ámbito: el contexto anidado en el que se escribe el código tiene un conjunto de nombres que se definen como "en ámbito". Al leer, escribir y compilar código, los programadores y compiladores deben saber si un nombre particular en un lugar particular se refiere a una variable, función, estructura, enumeración, módulo, constante u otro elemento y qué significa ese elemento. Puede crear ámbitos y cambiar qué nombres están dentro o fuera de ámbito. No puede tener dos elementos con el mismo nombre en el mismo ámbito.
 
-Cairo has a number of features that allow you to manage your code’s
-organization. These features, sometimes
-collectively referred to as the _module system_, include:
+Cairo tiene varias características que le permiten gestionar la organización de su código. Estas características, a veces denominadas colectivamente el _sistema de módulos_, incluyen:
 
-- **Packages:** A Scarb feature that lets you build, test, and share crates
-- **Crates:** A tree of modules that corresponds to a single compilation unit.
-  It has a root directory, and a root module defined at the file `lib.cairo` under this directory.
-- **Modules** and **use:** Let you control the organization and scope of items.
-- **Paths:** A way of naming an item, such as a struct, function, or module
+- **Paquetes:** Una característica de Scarb que le permite construir, probar y compartir Crates.
+- **Crates:** Un árbol de módulos que corresponde a una única unidad de compilación. Tiene un directorio raíz y un módulo raíz definido en el archivo `lib.cairo` bajo este directorio.
+- **Módulos** y **use:** le permiten controlar la organización y el ámbito de los elementos.
+- **Rutas:** una forma de nombrar un elemento, como una estructura, función o módulo.
 
-In this chapter, we’ll cover all these features, discuss how they interact, and
-explain how to use them to manage scope. By the end, you should have a solid
-understanding of the module system and be able to work with scopes like a pro!
+En este capítulo, cubriremos todas estas características, discutiremos cómo interactúan y explicaremos cómo usarlas para gestionar el ámbito. Al final, debería tener una comprensión sólida del sistema de módulos y ser capaz de trabajar con ámbitos como un profesional.

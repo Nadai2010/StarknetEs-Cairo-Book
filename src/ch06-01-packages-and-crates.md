@@ -1,21 +1,21 @@
-# Packages and Crates
+# Paquetes y Crates
 
-## What is a crate?
-A crate is the smallest amount of code that the Cairo compiler considers at a time. Even if you run `cairo-compile` rather than `scarb build` and pass a single source code file, the compiler considers that file to be a crate. Crates can contain modules, and the modules may be defined in other files that get compiled with the crate, as will be discussed in the subsequent sections.
+## ¿Qué es un Crate?
+Un crate es la cantidad más pequeña de código que el compilador de Cairo considera a la vez. Incluso si ejecuta `cairo-compile` en lugar de `scarb build` y pasa un solo archivo de código fuente, el compilador considera que ese archivo es un crate. Los crates pueden contener módulos, y los módulos pueden estar definidos en otros archivos que se compilan junto con el crate, como se discutirá en las secciones siguientes.
 
-## What is the crate root?
-The crate root is the `lib.cairo` source file that the Cairo compiler starts from and makes up the root module of your crate (we’ll explain modules in depth in the [“Defining Modules to Control Scope”](./ch06-02-defining-modules-to-control-scope.md) section).
+## ¿Qué es la Raíz del Crate?
+La raíz del crate es el archivo de origen `lib.cairo` desde el cual el compilador de Cairo comienza y forma el módulo raíz de su crate (explicaremos los módulos en profundidad en la sección ["Definición de módulos para controlar el alcance"](./ch06-02-defining-modules-to-control-scope.md)).
 
-## What is a package?
-A cairo package is a bundle of one or more crates with a Scarb.toml file that describes how to build those crates. This enables the splitting of code into smaller, reusable parts and facilitates more structured dependency management.
+## ¿Qué es un Paquete?
+Un paquete de Cairo es un conjunto de uno o más crates con un archivo Scarb.toml que describe cómo construir esos crates. Esto permite la división del código en partes más pequeñas y reutilizables, y facilita la gestión de dependencias más estructurada.
 
-## Creating a Package with Scarb
-You can create a new Cairo package using the scarb command-line tool. To create a new package, run the following command:
+## Creación de un Paquete con Scarb
+Puede crear un nuevo paquete de Cairo utilizando la herramienta de línea de comandos scarb. Para crear un nuevo paquete, ejecute el siguiente comando: "
 ```bash
 scarb new my_crate
 ```
 
-This command will generate a new package directory named my_crate with the following structure:
+Este comando generará un nuevo directorio de paquete llamado my_crate con la siguiente estructura:
 ```
 my_crate/
 ├── Scarb.toml
@@ -23,9 +23,9 @@ my_crate/
     └── lib.cairo
 ```
 
-- `src/` is the main directory where all the Cairo source files for the package will be stored.
-- `lib.cairo` is the default root module of the crate, which is also the main entry point of the package. By default, it is empty.
-- `Scarb.toml` is the package manifest file, which contains metadata and configuration options for the package, such as dependencies, package name, version, and authors. You can find documentation about it on the [scarb reference](https://docs.swmansion.com/scarb/docs/reference/manifest).
+- `src/` es el directorio principal donde se almacenarán todos los archivos de origen de Cairo para el paquete.
+- `lib.cairo` es el módulo raíz predeterminado del crate, que también es el punto de entrada principal del paquete. Por defecto, está vacío.
+- `Scarb.toml` es el archivo de manifiesto del paquete, que contiene metadatos y opciones de configuración para el paquete, como dependencias, nombre del paquete, versión y autores. Puede encontrar documentación al respecto en la [referencia de Scarb](https://docs.swmansion.com/scarb/docs/reference/manifest).
 
 ```toml
 [package]
@@ -36,4 +36,4 @@ version = "0.1.0"
 # foo = { path = "vendor/foo" }
 ```
 
-As you develop your package, you may want to organize your code into multiple Cairo source files. You can do this by creating additional `.cairo` files within the `src` directory or its subdirectories.
+A medida que desarrolla su paquete, es posible que desee organizar su código en varios archivos de origen de Cairo. Puede hacer esto creando archivos `.cairo` adicionales dentro del directorio `src` o sus subdirectorios.
