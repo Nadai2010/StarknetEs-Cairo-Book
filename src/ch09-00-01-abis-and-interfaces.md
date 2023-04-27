@@ -1,23 +1,23 @@
-# ABIs and Contract Interfaces
+# ABIs e Interfaces de Contrato
 
-Cross-contract interactions between smart contracts on a blockchain is a common practice which enables us build flexible contracts that can speak with each other.
+Las interacciones entre contratos inteligentes en una cadena de bloques, también conocidas como "cross-contract", son una práctica común que nos permite construir contratos flexibles que puedan comunicarse entre sí.
 
-Achieving this on Starknet, requires something we call an interface.
+Para lograr esto en Starknet, se requiere algo que llamamos una interfaz.
 
-## Interface
-An interface, is a list of a contract's function definitions without implementations. In other words, an interface specfies the function declarations (name, parameters, visibility and return value) contained in a smart contract without including the function body.
+## Interfaz
+Una interfaz es una lista de definiciones de funciones de un contrato sin implementaciones. En otras palabras, una interfaz especifica las declaraciones de función (nombre, parámetros, visibilidad y valor de retorno) contenidas en un contrato inteligente sin incluir el cuerpo de la función.
 
-Interfaces in Cairo are traits with the `[abi]` attribute. If you are new to traits, check out the dedicated chapter on [traits](./ch07-02-traits-in-cairo.md).
+Las interfaces en Cairo son rasgos con el atributo `[abi]`. Si eres nuevo en los rasgos, consulta el capítulo dedicado a [rasgos](./ch07-02-traits-in-cairo.md).
 
-For your Cairo code to qualify as an interface, it must meet the following requirements:
+Para que tu código de Cairo califique como una interfaz, debe cumplir con los siguientes requisitos:
 
-1. Must be appended with the `[abi]` attribute.
-2. Your interface functions should have no implementations.
-3. You must explicitly declare the function's decorator.
-4. Your interface should not declare a constructor.
-5. Your interface should not declare state variables.
+1. Debe estar marcado con el atributo `[abi]`.
+2. Las funciones de tu interfaz no deben tener implementaciones.
+3. Debes declarar explícitamente el decorador de la función.
+4. Tu interfaz no debe declarar un constructor.
+5. Tu interfaz no debe declarar variables de estado.
 
-Here's a sample interface for an ERC20 token contract:
+Aquí hay un ejemplo de una interfaz para un contrato de token ERC20:
 
 ```rust
 use starknet::ContractAddress;
@@ -53,13 +53,13 @@ trait IERC20 {
 }
 ```
 
-<span class="caption">Listing 9-1: A simple ERC20 Interface</span>
+<span class="caption">Listado 9-1: Una interfaz simple de ERC20</span>
 
 ## ABIs
-ABI stands for Application Binary Interface. ABIs gives a smart contract the ability to communicate and interact with external applications or other smart contracts. ABIs can be likened to APIs in traditional web development, which helps data flow between applications and servers.
+ABI significa Interfaz Binaria de Aplicaciones. Los ABI dan a un contrato inteligente la capacidad de comunicarse e interactuar con aplicaciones externas u otros contratos inteligentes. Los ABI se pueden comparar con las API en el desarrollo web tradicional, que ayudan al flujo de datos entre aplicaciones y servidores.
 
-While we write our smart contract logics in high-level Cairo, they are stored on the VM as executable bytecodes which are in binary formats. Since this bytecode is not human readable, it requires interpretation to be understood. This is where ABIs come into play, defining specific methods which can be called to a smart contract for execution.
+Si bien escribimos nuestras lógicas de contrato inteligente en Cairo de alto nivel, se almacenan en la VM como bytecodes ejecutables que están en formatos binarios. Dado que este bytecode no es legible por humanos, requiere interpretación para ser entendido. Aquí es donde entran en juego los ABI, definiendo métodos específicos que se pueden llamar a un contrato inteligente para su ejecución.
 
-Every contract on Starknet, has an Application Binary Interface (ABI), that defines how to encode and decode data when calling smart contract methods.
+Cada contrato en Starknet tiene una Interfaz Binaria de Aplicaciones (ABI) que define cómo codificar y decodificar datos al llamar a los métodos del contrato inteligente.
 
-In the next chapter, we are going to be looking into how we can call other smart contracts using a `Contract Dispatcher`, `Library Dispatcher`, and `System calls`.
+En el próximo capítulo, veremos cómo podemos llamar a otros contratos inteligentes utilizando un `Contract Dispatcher`, un `Library Dispatcher`, y `System calls`.

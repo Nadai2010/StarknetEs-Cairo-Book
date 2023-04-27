@@ -1,5 +1,5 @@
-# Starknet contracts: ABIs and cross-contract interactions
+# Contratos de Starknet: ABIs e interacciones entre contratos multicapa
 
-The ability of contracts to make interactions with other smart contracts on the blockchain, is a common pattern found in smart contract development.
+La capacidad de los contratos para interactuar con otros contratos inteligentes en la cadena de bloques es un patrón común en el desarrollo de contratos inteligentes.
 
-This chapter covers how cross-contract interactions between Starknet contracts can be achieved. Specifically, you'll learn about ABIs, contract interfaces, the contract and library dispatchers and their low-level system call equivalents!
+Este capítulo cubre cómo se pueden lograr interacciones entre contratos multicapa en Starknet. Específicamente, aprenderá sobre ABIs, interfaces de contrato, los despachadores de contratos y bibliotecas y sus equivalentes de llamadas al sistema de nivel inferior.

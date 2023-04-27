@@ -1,7 +1,7 @@
-# Starknet Smart Contracts
+# Contratos Inteligentes en Starknet
 
-All through the previous sections, you've mostly written programs with a `main` entrypoint. In the coming sections, you will learn to write and deploy Starknet contracts.
+En todas las secciones anteriores, principalmente ha escrito programas con un punto de entrada `main`. En las próximas secciones, aprenderá a escribir e implementar contratos inteligentes en Starknet.
 
-A Starknet contract in simple words, are programs that can run on the Starknet VM. Since they run on the VM, they have access to Starknet’s persistent state, can alter or modify variables in Starknet’s states, communicate with other contracts, and interact seamlessly with the underlying L1.
+Un contrato inteligente en Starknet en términos simples, es un programa que puede ejecutarse en la VM de Starknet. Dado que se ejecutan en la VM, tienen acceso al estado persistente de Starknet, pueden modificar variables en los estados de Starknet, comunicarse con otros contratos e interactuar sin problemas con la L1 subyacente.
 
-Starknet contracts are denoted by the #[contract] attribute. We'll dive deeper into this in the next sections.
+Los contratos inteligentes en Starknet se denotan por el atributo #[contract]. Profundizaremos más en esto en las próximas secciones.
