@@ -1,10 +1,10 @@
-# Generic Data Types
+# Tipos de datos genéricos
 
-We use generics to create definitions for item declarations, such as structs and functions, which we can then use with many different concrete data types. In Cairo we can use generics when defining functions, structs, enums, traits, implementations and methods! In this chapter we are going to take a look on how to effectively use generic types with all of them.
+Usamos genéricos para crear definiciones de declaraciones de elementos, como structs y funciones, que luego podemos usar con muchos tipos de datos concretos diferentes. ¡En Cairo podemos usar genéricos al definir funciones, structs, enums, traits, implementaciones y métodos! En este capítulo vamos a ver cómo usar efectivamente tipos genéricos con todos ellos.
 
-## Generic Functions
+## Funciones genéricas
 
-When defining a function that uses generics, we place the generics in the function signature, where we would usually specify the data types of the parameter and return value. For example, imagine we want to create a function which given two `Array` of items, will return the largest one. If we need to perform this operations for lists of different types, then we would have to redefine the function each time. Luckily we can implement the function once using generics and move on to other tasks.
+Al definir una función que utiliza genéricos, colocamos los genéricos en la firma de la función, donde normalmente especificaríamos los tipos de datos del parámetro y el valor de retorno. Por ejemplo, imaginemos que queremos crear una función que, dadas dos matrices (`Array`) de elementos, devolverá la más grande. Si necesitamos realizar esta operación para listas de diferentes tipos, tendríamos que redefinir la función cada vez. Afortunadamente, podemos implementar la función una vez usando genéricos y seguir adelante con otras tareas.
 
 ```rust
 // This code does not compile!
@@ -37,7 +37,7 @@ fn main() {
 }
 ```
 
-The `largest_list` function compares two lists of the same type and returns the one with more elements and drops the other. If you compile the previous code, you will notice that it will fail with an error saying that there are no traits defined for droping an array of a generic type. This happens because the compiler has no way to guarantee that an `Array<T>` is droppable when executing the `main` function. In order to drop an array of `T`, the compiler must first know how to drop `T`. This can be fixed by specifiying in the function signature of `largest_list` that `T` must implement the drop trait. The correct function definition of `largest_list` is as follows:
+La función `largest_list` compara dos listas del mismo tipo y devuelve aquella con más elementos y elimina la otra. Si se compila el código anterior, se notará que fallará con un error diciendo que no se han definido traits para eliminar un array de un tipo genérico. Esto sucede porque el compilador no tiene forma de garantizar que un `Array<T>` sea eliminable al ejecutar la función `main`. Para eliminar un array de `T`, el compilador primero debe saber cómo eliminar `T`. Esto se puede solucionar especificando en la firma de la función `largest_list` que `T` debe implementar el trait de eliminación. La definición correcta de la función `largest_list` es la siguiente:
 
 ```rust
 fn largest_list<T, impl TDrop: Drop<T>>(l1: Array<T>, l2: Array<T>) -> Array<T> {
@@ -49,13 +49,13 @@ fn largest_list<T, impl TDrop: Drop<T>>(l1: Array<T>, l2: Array<T>) -> Array<T> 
 }
 ```
 
-The new `largest_list` function includes in its definition the requirement that whatever generic type is placed there, it must be droppable. The `main` function remains unchanged, the compiler is smart enough to deduct which concrete type is being used and if it implements the `Drop` trait.
+La nueva función `largest_list` incluye en su definición el requisito de que cualquier tipo genérico que se coloque allí debe poder eliminarse. La función `main` sigue sin cambios, el compilador es lo suficientemente inteligente como para deducir qué tipo concreto se está utilizando y si implementa el rasgo `Drop`.
 
-### Constraints for Generic Types
+### Restricciones para tipos genéricos
 
-When defining generic types, it is useful to have information about them. Knowing which traits a generic type implements allow us to use them more effectively in a functions logic at the cost of constraining the generic types that can be used with the function. We saw an example of this previously by adding the `TDrop` implementation as part of the generic arguments of `largest_list`. While `TDrop` was added to satisfy the compilers requirements, we can also add constraints to benefit our function logic.
+Al definir tipos genéricos, es útil tener información sobre ellos. Saber qué rasgos implementa un tipo genérico nos permite usarlos de manera más efectiva en la lógica de una función a costa de limitar los tipos genéricos que se pueden usar con la función. Vimos un ejemplo de esto anteriormente al agregar la implementación de `TDrop` como parte de los argumentos genéricos de `largest_list`. Si bien `TDrop` se agregó para cumplir con los requisitos del compilador, también podemos agregar restricciones para beneficiar nuestra lógica de función.
 
-Imagine that we want, given a list of elements of some generic type `T`, find the smallest element among them. Initially, we know that for an element of type `T` to be comparable, it must implement the `PartialOrd` trait. The resulting function would be:
+Imaginemos que queremos, dado una lista de elementos de algún tipo genérico `T`, encontrar el elemento más pequeño entre ellos. Inicialmente, sabemos que para que un elemento de tipo `T` sea comparable, debe implementar el rasgo `PartialOrd`. La función resultante sería:
 
 ```rust
 // This code does not compile!
@@ -96,9 +96,9 @@ fn main()  {
 }
 ```
 
-The `smallest_element` function uses a generic type `T` that implements the `PartialOrd` trait, takes an snapshot of an `Array<T>` as a parameter and returns a copy of the smallest element. Because the parameter is of type `@Array<T>`, we no longer need to drop it at the end of the execution and so we don't require to implement the `Drop` trait for `T` as well. Why it does not compile then?
+La función `smallest_element` utiliza un tipo genérico `T` que implementa el rasgo `PartialOrd`, toma una instantánea de un `Array<T>` como parámetro y devuelve una copia del elemento más pequeño. Debido a que el parámetro es de tipo `@Array<T>`, ya no necesitamos soltarlo al final de la ejecución y por lo tanto no necesitamos implementar el rasgo `Drop` para `T` también. ¿Por qué entonces no compila?
 
-When indexing on `list`, the value results in a snap of the indexed element, unless `PartialOrd` is implemented for `@T` we need to desnap the element using `*`. The `*` operation requires a copy from `@T` to`T`, which means that `T` needs to implement the `Copy` trait. After copying an element of type `@T` to `T`, there are now variables with type `T` that need to be dropped, requiring for `T` to implement the `Drop` trait as well. We must then add both `Drop` and `Copy` traits implementation for the function to be correct. After updating the`smallest_element` function the resulting code would be:
+Cuando hacemos indexación en `list`, el valor resultante es una instantánea del elemento indexado, a menos que `PartialOrd` esté implementado para `@T` necesitamos deshacer la instantánea del elemento usando `*`. La operación `*` requiere una copia de `@T` a `T`, lo que significa que `T` necesita implementar el rasgo `Copy`. Después de copiar un elemento de tipo `@T` a `T`, ahora hay variables con tipo `T` que necesitan ser soltadas, lo que requiere que `T` implemente también el rasgo `Drop`. Debemos entonces agregar la implementación de los rasgos `Drop` y `Copy` para que la función sea correcta. Después de actualizar la función `smallest_element`, el código resultante sería:
 
 ```rs
 fn smallest_element<T, impl TPartialOrd: PartialOrd<T>, impl TCopy: Copy<T>, impl TDrop: Drop<T>>(list: @Array<T>) -> T {
@@ -116,9 +116,9 @@ fn smallest_element<T, impl TPartialOrd: PartialOrd<T>, impl TCopy: Copy<T>, imp
 }
 ```
 
-## Structs
+## Estructuras
 
-We can also define structs to use a generic type parameter for one or more fields using the `<>` syntax, similar to function definitions. First we declare the name of the type parameter inside the angle brackets just after the name of the struct. Then we use the generic type in the struct definition where we would otherwise specify concrete data types. The next code example shows the definition `Wallet<T>` which has a `balance` field of type `T`.
+También podemos definir estructuras que usen un parámetro de tipo genérico para uno o más campos usando la sintaxis `<>`, similar a las definiciones de funciones. Primero declaramos el nombre del parámetro de tipo dentro de los corchetes angulares justo después del nombre de la estructura. Luego usamos el tipo genérico en la definición de la estructura donde de otra manera especificaríamos tipos de datos concretos. El siguiente ejemplo de código muestra la definición de `Wallet<T>` que tiene un campo `balance` de tipo `T`.
 
 ```rust
 // This code does not compile!
@@ -134,7 +134,7 @@ fn main() {
 }
 ```
 
-Compiling the above code would error due to the `derive` macro not working well with generics. When using generic types is best to directly write the traits you want to use:
+La compilación del código anterior daría un error debido a que la macro `derive` no funciona bien con tipos genéricos. Cuando se usan tipos genéricos, es mejor escribir directamente los traits que se quieren utilizar:
 
 ```rust
 struct Wallet<T> {
@@ -148,9 +148,9 @@ fn main() {
 }
 ```
 
-We avoid using the `derive` macro for `Drop` implementation of `Wallet` and instead define our own `WalletDrop` implementation. Notice that we must define, just like functions, an additional generic type for `WalletDrop` saying that `T` implements the `Drop` trait as well. We are basically saying that the struct `Wallet<T>` is droppable as long as `T` is also droppable.
+Evitamos el uso de la macro `derive` para la implementación de `Drop` de `Wallet` y en su lugar definimos nuestra propia implementación de `WalletDrop`. Nótese que debemos definir, al igual que en las funciones, un tipo genérico adicional para `WalletDrop` diciendo que `T` también implementa el trait `Drop`. Básicamente estamos diciendo que la estructura `Wallet<T>` es dropeable siempre y cuando `T` también lo sea.
 
-Finally, if we want to add a field to `Wallet` representing its Cairo address and we want that field to be different than `T` but generic as well, we can simply add another generic type between the `<>`:
+Finalmente, si queremos agregar un campo a `Wallet` que represente su dirección de Cairo y queremos que ese campo sea diferente a `T` pero también genérico, simplemente podemos agregar otro tipo genérico entre los `<>`:
 
 ```rust
 struct Wallet<T, U> {
@@ -166,12 +166,11 @@ fn main() {
 }
 ```
 
-We add to `Wallet` struct definiton a new generic type `U` and then assign this type to the new field member `address`.
-Then we adapt the `WalletDrop` trait to work with the new generic type `U`. Notice that when initializing the struct inside `main` it automatically infers that `T` is a `u128` and `U` is a `felt252` and since they are both droppable, `Wallet` is droppable as well!
+Agregamos a la definición de la estructura `Wallet` un nuevo tipo genérico `U` y luego asignamos este tipo al nuevo miembro del campo `address`. Luego adaptamos el trait `WalletDrop` para que funcione con el nuevo tipo genérico `U`. ¡Observa que al inicializar la estructura dentro de `main`, automáticamente infiere que `T` es un `u128` y `U` es un `felt252` y como ambos son droppable, `Wallet` también lo es!
 
-## Enums
+## Enumeraciones
 
-As we did with structs, we can define enums to hold generic data types in their variants. For example the `Option<T>` enum provided by the Cairo core library:
+Como hicimos con las estructuras, podemos definir enumeraciones para contener tipos de datos genéricos en sus variantes. Por ejemplo, la enumeración `Option<T>` proporcionada por la biblioteca central de Cairo:
 
 ```rust
 enum Option<T> {
@@ -180,9 +179,9 @@ enum Option<T> {
 }
 ```
 
-The `Option<T>` enum is generic over a type `T` and has two variants: `Some`, which holds one value of type `T` and `None` that doesn't hold any value. By using the `Option<T>` enum, it is possible for us to express the abstract concept of an optional value and because the value has a generic type `T` we can use this abstraction with any type.
+El enum `Option<T>` es genérico sobre un tipo `T` y tiene dos variantes: `Some`, que contiene un valor de tipo `T`, y `None`, que no contiene ningún valor. Al utilizar el enum `Option<T>`, es posible expresar el concepto abstracto de un valor opcional y debido a que el valor tiene un tipo genérico `T`, podemos utilizar esta abstracción con cualquier tipo.
 
-Enums can use multiple generic types as well, like definition of the `Result<T, E>` enum that the core library provides:
+Los enums también pueden utilizar múltiples tipos genéricos, como la definición del enum `Result<T, E>` que proporciona la biblioteca estándar.
 
 ```rust
 enum Result<T, E> {
@@ -191,11 +190,11 @@ enum Result<T, E> {
 }
 ```
 
-The `Result<T, E>` enum is has two generic types, `T` and `E`, and two variants: `Ok` which holds the value of type `T` and `Err` which holds the value of type `E`. This definition makes it convenient to use the `Result` enum anywhere we have an operation that might succeed (by returning a value of type `T`) or fail (by returning a value of type `E`).
+El enum `Result<T, E>` tiene dos tipos genéricos, `T` y `E`, y dos variantes: `Ok` que tiene el valor de tipo `T` y `Err` que tiene el valor de tipo `E`. Esta definición hace que sea conveniente usar el enum `Result` en cualquier lugar donde tengamos una operación que pueda tener éxito (devolviendo un valor de tipo `T`) o fallar (devolviendo un valor de tipo `E`).
 
-## Generic Methods
+## Métodos Genéricos
 
-We can implement methods on structs and enums, and use the generic types in their definition, too. Using our previous definition of `Wallet<T>` struct, we define a `balance` method for it:
+También podemos implementar métodos en structs y enums, y usar los tipos genéricos en su definición. Utilizando nuestra definición anterior de la struct `Wallet<T>`, definimos un método `balance` para ella:
 
 ```rust
 struct Wallet<T> {
@@ -220,9 +219,9 @@ fn main() {
 }
 ```
 
-We first define `WalletTrait<T>` trait using a generic type `T` which defines a method that returns a snapshot of the field `address` from `Wallet`. Then we give an implementation for the trait in `WalletImpl<T>`. Note that you need to include a generic type in both definitions of the trait and the implementation.
+Primero definimos la clase `WalletTrait<T>` usando un tipo genérico `T` que define un método que devuelve una instantánea del campo `address` de `Wallet`. Luego, damos una implementación de la clase en `WalletImpl<T>`. Ten en cuenta que debes incluir un tipo genérico en ambas definiciones de la clase y la implementación.
 
-We can also specify constraints on generic types when defining methods on the type. We could, for example, implement methods only for `Wallet<u128>` instances rather than `Wallet<T>`. In the code example we define an implementation for wallets which have a concrete type of `u128` for the `balance` field.
+También podemos especificar restricciones en los tipos genéricos al definir métodos en la clase. Por ejemplo, podríamos implementar métodos solo para instancias de `Wallet<u128>` en lugar de `Wallet<T>`. En el ejemplo de código, definimos una implementación para carteras que tienen un tipo concreto de `u128` para el campo `balance`.
 
 ```rust
 trait WalletReceiveTrait {
@@ -244,9 +243,9 @@ fn main() {
 }
 ```
 
-The new method `receive` increments the size of the balance of any instance of a `Wallet<u128>`. Notice that we changed the `main` function making `w` a mutable variable in order for it to be able to update its balance. If we were to change the initialization of `w` by changing the type of `balance` the previous code wouldn't compile.
+El nuevo método `receive` incrementa el tamaño del saldo de cualquier instancia de una `Wallet<u128>`. Observe que se cambió la función `main` haciendo que `w` sea una variable mutable para que pueda actualizar su saldo. Si cambiáramos la inicialización de `w` cambiando el tipo de `balance`, el código anterior no se compilaría.
 
-Cairo allow us to define generic methods inside generic traits as well. Using the past implementation from `Wallet<U, V>` we are going to define a trait that picks two wallets of different generic types and create a new one with a generic type of each. First, lets rewrite the struct definiton:
+Cairo nos permite definir métodos genéricos dentro de traits genéricos también. Usando la implementación previa de `Wallet<U, V>`, vamos a definir un trait que tome dos wallets de diferentes tipos genéricos y cree uno nuevo con un tipo genérico de cada uno. Primero, reescribamos la definición de la estructura:
 
 ```rust
 struct Wallet<T, U> {
@@ -255,7 +254,7 @@ struct Wallet<T, U> {
 }
 ```
 
-Next we are going to naively define the mixup trait and implementation:
+A continuación vamos a definir de forma ingenua el trait y la implementación de `mixup`:
 
 ```rust
 // This does not compile!
@@ -270,7 +269,7 @@ impl WalletMixImpl<T1,  U1> of WalletMixTrait<T1, U1> {
 }
 ```
 
-We are creating a trait `WalletMixTrait<T1, U1>` with the `mixup<T2, U2>` methods which given an instance of `Wallet<T1, U1>` and `Wallet<T2, U2>` creates a new `Wallet<T1, U2>`. As `mixup` signature specify, both `self` and `other` are getting dropped at the end of the function, which is the reason for this code not to compile. If you have been following from the start until now you would know that we must add a requirement for all the generic types specifiying that they will implement the `Drop` trait in order for the compiler to know how to drop instances of `Wallet<T, U>`. The updated implementation is as follow:
+Estamos creando un trait `WalletMixTrait<T1, U1>` con el método `mixup<T2, U2>` que, dada una instancia de `Wallet<T1, U1>` y `Wallet<T2, U2>`, crea un nuevo `Wallet<T1, U2>`. Como especifica la firma de `mixup`, tanto `self` como `other` se están eliminando al final de la función, lo que hace que este código no se compile. Si has estado siguiendo desde el principio hasta ahora, sabrás que debemos agregar un requisito para todos los tipos genéricos especificando que implementarán el trait `Drop` para que el compilador sepa cómo eliminar las instancias de `Wallet<T, U>`. La implementación actualizada es la siguiente:
 
 ```rust
 trait WalletMixTrait<T1, U1> {
@@ -284,7 +283,7 @@ impl WalletMixImpl<T1, impl T1Drop: Drop<T1>,  U1, impl U1Drop: Drop<U1>> of Wal
 }
 ```
 
-We add the requirements for `T1` and `U1` to be droppable on `WalletMixImpl` declaration. Then we do the same for `T2` and `U2`, this time as part of `mixup` signature. We can now try the `mixup` function:
+Sí, agregamos los requisitos para que `T1` y `U1` sean droppables en la declaración de `WalletMixImpl`. Luego hacemos lo mismo para `T2` y `U2`, esta vez como parte de la firma de `mixup`. Ahora podemos probar la función `mixup`:
 
 ```rs
 fn main() {
@@ -298,4 +297,4 @@ fn main() {
 }
 ```
 
-We first create two instances: one of `Wallet<bool, u128>` and the other of `Wallet<felt252, u8>`. Then, we call `mixup` and create a new `Wallet<bool, u8>` instance.
+Primero creamos dos instancias: una de `Wallet<bool, u128>` y la otra de `Wallet<felt252, u8>`. Luego, llamamos a `mixup` y creamos una nueva instancia de `Wallet<bool, u8>`.

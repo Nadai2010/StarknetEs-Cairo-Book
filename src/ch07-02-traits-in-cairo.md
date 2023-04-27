@@ -1,12 +1,12 @@
-# Traits in Cairo
+# Traits en Cairo
 
-Traits specify functionality blueprints that can be implemented. The blueprint specification includes a set of function signatures containing type annotations for the parameters and return value. This sets a standard to implement the specific functionality.
+Los traits especifican plantillas de funcionalidad que pueden ser implementadas. La especificación de la plantilla incluye un conjunto de firmas de funciones que contienen anotaciones de tipos para los parámetros y el valor de retorno. Esto establece un estándar para implementar la funcionalidad específica.
 
-## Defining a Trait
+## Definiendo un Trait
 
-To define a trait, you use the keyword `trait` followed by the name of the trait in `PascalCase` then the function signatures in a pair of curly braces.
+Para definir un trait, se utiliza la palabra clave `trait` seguida del nombre del trait en `PascalCase` y luego las firmas de funciones dentro de un par de llaves.
 
-For example, let's say that we have multiple structs representing shapes. We want our application to be able to perform geometry operations on these shapes, So we define a trait `ShapeGeometry` that contains a blueprint to implement geometry operations on a shape like this,
+Por ejemplo, supongamos que tenemos múltiples estructuras que representan formas. Queremos que nuestra aplicación pueda realizar operaciones de geometría en estas formas, por lo que definimos un trait `ShapeGeometry` que contiene una plantilla para implementar operaciones de geometría en una forma de esta manera:
 
 ```rust
 trait ShapeGeometry {
@@ -15,11 +15,11 @@ trait ShapeGeometry {
 }
 ```
 
-Here our trait `ShapeGeometry` declares signatures for two methods `boundary` and `area`. When implemented, both these functions should return a `u64` and accept parameters as specified by the trait.
+Aquí nuestro trait `ShapeGeometry` declara las firmas de dos métodos `boundary` y `area`. Cuando se implementen, ambas funciones deben devolver un `u64` y aceptar parámetros tal como se especifica en el trait.
 
-## Implementing a Trait
+## Implementando un Trait
 
-A trait can be implemented using `impl` keyword with the name of your implementation followed by `of` then the name of trait being implemented. Here's an example implementing `ShapeGeometry` trait.
+Un trait puede ser implementado usando la palabra clave `impl` seguida del nombre de la implementación y la palabra `of`, seguida del nombre del trait que está siendo implementado. Aquí hay un ejemplo de cómo implementar el trait `ShapeGeometry`.
 
 ```rust
 impl RectangleGeometry of ShapeGeometry {
@@ -32,13 +32,13 @@ impl RectangleGeometry of ShapeGeometry {
 }
 ```
 
-In the code above, `RectangleGeometry` implements the trait `ShapeGeometry` defining what the methods `boundary` and `area` should do. Note the the function parameters and return value types are identical to the trait specification.
+En el código anterior, `RectangleGeometry` implementa el trait `ShapeGeometry` definiendo lo que deben hacer los métodos `boundary` y `area`. Note que los tipos de los parámetros de las funciones y los valores de retorno son idénticos a los especificados en el trait.
 
-## Parameter `self`
+## Parámetro `self`
 
-In the example above, `self` is a special parameter. When a parameter with name `self` is used, the implemented functions are also [attached to the instances of the type as methods](ch04-03-method-syntax.md#defining-methods). Here's an illustration,
+En el ejemplo anterior, `self` es un parámetro especial. Cuando se usa un parámetro con el nombre `self`, las funciones implementadas también [se adjuntan a las instancias del tipo como métodos](ch04-03-method-syntax.md#defining-methods). Aquí hay una ilustración,
 
-When the `ShapeGeometry` trait is implemented, the function `area` from the `ShapeGeometry` trait can be called in two ways:
+Cuando se implementa el trait `ShapeGeometry`, la función `area` del trait `ShapeGeometry` se puede llamar de dos maneras:
 
 ```rust
 let rect = Rectangle { ... }; // Rectangle instantiation
@@ -52,13 +52,11 @@ area1.print();
 area2.print();
 ```
 
-And the implementation of the `area` method will be accessed via the `self` parameter.
+## Traits con tipos genéricos
 
-## Traits with generic types
+Por lo general, queremos escribir un trait cuando queremos que múltiples tipos implementen una funcionalidad de una manera estándar. Sin embargo, en el ejemplo anterior, las firmas son estáticas y no se pueden usar para múltiples tipos. Para hacer esto, usamos tipos genéricos al definir traits.
 
-Usually we want to write a trait when we want multiple types to implement a functionality in a standard way. However, in the example above the signatures are static and cannot be used for multiple types. To do this, we use generic types when defining traits.
-
-In the example below, we use generic type `T` and our method signatures can use this alias which can be provided during implementation.
+En el siguiente ejemplo, usamos el tipo genérico `T` y nuestras firmas de métodos pueden usar este alias que se puede proporcionar durante la implementación.
 
 ```rust
 use debug::PrintTrait;
@@ -102,14 +100,13 @@ fn main() {
 }
 ```
 
-## Managing and using external trait implementations
+## Administrando y usando implementaciones de traits externos
 
-To use traits methods, you need to make sure the correct traits/implementation(s) are imported. In the code above we imported `PrintTrait` from `debug` with `use debug::PrintTrait;` to use `print()` methods.
+Para usar los métodos de traits, es necesario asegurarse de que los traits/implementaciones correctos estén importados. En el código anterior, importamos `PrintTrait` desde `debug` con `use debug::PrintTrait;` para usar el método `print()`.
 
-In some cases you might need to import not only the trait but also the implementation if they are declared in separate modules.
-If `CircleGeometry` was in a separate module/file `circle` then to use `boundary` on `circ: Circle`, we'd need to import `CircleGeometry` in addition to `ShapeGeometry`.
+En algunos casos, puede ser necesario importar no solo el trait, sino también la implementación si están declarados en módulos separados. Si `CircleGeometry` estuviera en un módulo/archivo separado `circle`, entonces para usar `boundary` en `circ: Circle`, necesitaríamos importar `CircleGeometry` además de `ShapeGeometry`.
 
-If the code was organised into modules like this,
+Si el código estuviera organizado en módulos de esta manera,
 
 ```rust
 use debug::PrintTrait;
@@ -146,13 +143,13 @@ fn main() {
 }
 ```
 
-To make it work, in addition to,
+Para hacer que funcione, además de,
 
 ```rust
 use geometry::ShapeGeometry;
 ```
 
-you might also need to use `CircleGeometry`,
+para hacerlo funcionar, también tendrías que usar `CircleGeometry`,
 
 ```rust
 use circle::CircleGeometry

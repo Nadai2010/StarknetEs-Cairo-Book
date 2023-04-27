@@ -51,17 +51,23 @@
 
 ## Tipos de datos Genéricos
 
-- [Tipos de datos Genéricos](ch07-00-generic-types.md)
+- [Tipos de datos Genéricos](ch07-00-generic-types-and-traíts.md)
 
   - [Funciones genéricas](ch07-01-generic-data-types.md)
   - [Traits en Cairo](ch07-02-traits-in-cairo.md)
 
-## Probando programas de Cairo
+## Pruebas de programas en Cairo
 
-- [Probando programas de Cairo](ch09-00-testing-cairo-programs.md)
+- [Pruebas de programas en Cairo](ch08-00-testing-cairo-programs.md)
+  - [Cómo escribir pruebas](ch08-01-how-to-write-tests.md)
+  - [Organización de pruebas](ch08-02-test-organization.md)
 
-  - [Cómo escribir Tests](ch09-01-how-to-write-tests.md)
-  - [Organización de Testing](ch09-02-test-organization.md)
+## ABIs e interacciones entre contratos cruzados
+
+- [Smart Contracts de Starknet](./ch09-starknet-smart-contracts.md)
+  - [ABIs e interacciones entre contratos cruzados](./ch09-00-00-abis-and-cross-contract-interactions.md)
+    - [ABIs e interfaces](./ch09-00-01-abis-and-interfaces.md)
+    - [Despachadores de contratos, despachadores de librerías y llamadas del sistema](./ch09-00-02-contract-dispatcher-library-dispatcher-and-system-calls.md)
 
 - [Apéndice](appendix-00.md)
-  - [A - Herramientas de desarrollo útiles](appendix-04-useful-development-tools.md)
+  - [A - Herramientas útiles para el desarrollo](appendix-04-useful-development-tools.md)
