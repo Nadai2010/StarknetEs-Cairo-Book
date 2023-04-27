@@ -144,9 +144,9 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="an-example-program-using-structs"><a class="header" href="#an-example-program-using-structs">An Example Program Using Structs</a></h1>
-<p>To understand when we might want to use structs, let’s write a program that calculates the area of a rectangle. We’ll start by using single variables, and then refactor the program until we’re using structs instead.</p>
-<p>Let’s make a new project with Scarb called <em>rectangles</em> that will take the width and height of a rectangle specified in pixels and calculate the area of the rectangle. Listing 4-6 shows a short program with one way of doing exactly that in our project’s <em>src/lib.cairo</em>.</p>
+                        <h1 id="an-example-program-using-structs"><a class="header" href="#an-example-program-using-structs">Un programa de ejemplo usando estructuras</a></h1>
+<p>Para entender cuándo podríamos usar estructuras, escribamos un programa que calcule el área de un rectángulo. Comenzaremos usando variables individuales y luego reescribiremos el programa hasta que estemos usando estructuras en su lugar.</p>
+<p>Hagamos un nuevo proyecto con Scarb llamado <em>rectangles</em> que tomará el ancho y la altura de un rectángulo en píxeles y calculará el área del rectángulo. El Listado 4-6 muestra un pequeño programa con una forma de hacer exactamente eso en el <em>src/lib.cairo</em> de nuestro proyecto.</p>
 <p><span class="filename">Filename: src/lib.cairo</span></p>
 <pre><code class="language-rust">use debug::PrintTrait;
 fn main() {
@@ -159,36 +159,36 @@ fn main() {
 fn area(width: u64, height: u64) -&gt; u64 {
     width * height
 }</code></pre>
-<p><span class="caption">Listing 4-6: Calculating the area of a rectangle specified by separate width and height variables</span></p>
-<p>Now run the program with <code>cairo-run src/lib.cairo</code>:</p>
+<p><span class="caption">Listing 4-6: Cálculo del área de un rectángulo especificado por variables separadas de ancho y alto </span></p>
+<p>Ahora, compilemos el programa con <code>cairo-run src/lib.cairo</code>:</p>
 <pre><code class="language-bash">$ cairo-run src/lib.cairo
 [DEBUG] ,                               (raw: 300)
 
 Run completed successfully, returning []
 </code></pre>
-<p>This code succeeds in figuring out the area of the rectangle by calling the <code>area</code> function with each dimension, but we can do more to make this code clear and readable.</p>
-<p>The issue with this code is evident in the signature of <code>area</code>:</p>
+<p>Este código logra calcular el área del rectángulo llamando a la función <code>area</code> con cada dimensión, pero podemos hacer más para que este código sea claro y legible.</p>
+<p>El problema con este código es evidente en la declaración de la función <code>area</code>:</p>
 <pre><code class="language-rust">fn area(width: u64, height: u64) -&gt; u64 {</code></pre>
-<p>The <code>area</code> function is supposed to calculate the area of one rectangle, but the function we wrote has two parameters, and it’s not clear anywhere in our program that the parameters are related. It would be more readable and more manageable to group width and height together. We’ve already discussed one way we might do that in <a href="ch02-02-data-types.html#the-tuple-type">Chapter 3</a>: using tuples.</p>
-<h2 id="refactoring-with-tuples"><a class="header" href="#refactoring-with-tuples">Refactoring with Tuples</a></h2>
-<p>Listing 4-7 shows another version of our program that uses tuples.</p>
+<p>Se supone que la función <code>area</code> calcula el área de un rectángulo, pero la función que escribimos tiene dos parámetros, y no está claro en ninguna parte de nuestro programa que los parámetros estén relacionados. Sería más legible y manejable agrupar el ancho y el alto juntos. Ya discutimos una forma en que podríamos hacer eso en el <a href="ch02-02-data-types.html#the-tuple-type">Capítulo 3</a>: usando tuplas.</p>
+<h2 id="refactoring-with-tuples"><a class="header" href="#refactoring-with-tuples">Reescribiendo con tuplas</a></h2>
+<p>Listing 4-7 muestra otra versión de nuestro programa usando tuplas.</p>
 <p><span class="filename">Filename: src/lib.cairo</span></p>
 <pre><code class="language-rust">use debug::PrintTrait;
 fn main() {
     let rectangle = (30_u64, 10_u64);
     let area = area(rectangle);
-    area.print(); // print out the area
+    area.print(); // imprime el área
 }
 
 fn area(dimension: (u64, u64)) -&gt; u64 {
     let (x,y) = dimension;
     x * y
 }</code></pre>
-<p><span class="caption">Listing 4-7: Specifying the width and height of the rectangle with a tuple</span></p>
-<p>In one way, this program is better. Tuples let us add a bit of structure, and we’re now passing just one argument. But in another way, this version is less clear: tuples don’t name their elements, so we have to index into the parts of the tuple, making our calculation less obvious.</p>
-<p>Mixing up the width and height wouldn’t matter for the area calculation, but if we want to calculate the difference, it would matter! We would have to keep in mind that <code>width</code> is the tuple index <code>0</code> and <code>height</code> is the tuple index <code>1</code>. This would be even harder for someone else to figure out and keep in mind if they were to use our code. Because we haven’t conveyed the meaning of our data in our code, it’s now easier to introduce errors.</p>
-<h2 id="refactoring-with-structs-adding-more-meaning"><a class="header" href="#refactoring-with-structs-adding-more-meaning">Refactoring with Structs: Adding More Meaning</a></h2>
-<p>We use structs to add meaning by labeling the data. We can transform the tuple we’re using into a struct with a name for the whole as well as names for the parts.</p>
+<p><span class="caption">Listing 4-7: Especificando el ancho y alto de un rectangulo con una tupla</span></p>
+<p>En cierto modo, este programa es mejor. Las tuplas nos permiten agregar un poco de estructura y ahora estamos pasando solo un argumento. Pero en otro sentido, esta versión es menos clara: las tuplas no nombran sus elementos, por lo que tenemos que indexar las partes de la tupla, lo que hace que nuestro cálculo sea menos obvio.</p>
+<p>Mezclar el ancho y la altura no importaría para el cálculo del área, pero si queremos calcular la diferencia, ¡sería importante! Tendríamos que tener en cuenta que <code>width</code> es el índice de tupla <code>0</code> y <code>height</code> es el índice de tupla <code>1</code>. Esto sería aún más difícil de entender y tener en cuenta para otra persona si usara nuestro código. Debido a que no hemos transmitido el significado de nuestros datos en nuestro código, ahora es más fácil introducir errores.</p>
+<h2 id="refactoring-with-structs-adding-more-meaning"><a class="header" href="#refactoring-with-structs-adding-more-meaning">Reescribiendo con <em>Struct</em>: Agrega más significado</a></h2>
+<p>Usamos estructuras para agregar significado al etiquetar los datos. Podemos transformar la tupla que estamos usando en una estructura con un nombre para el todo y nombres para las partes.</p>
 <p><span class="filename">Filename: src/lib.cairo</span></p>
 <pre><code class="language-rust">use debug::PrintTrait;
 
@@ -209,10 +209,10 @@ fn main() {
 fn area(rectangle: Rectangle) -&gt; u64 {
     rectangle.width * rectangle.heigh
 }</code></pre>
-<p><span class="caption">Listing 4-8: Defining a <code>Rectangle</code> struct</span></p>
-<p>Here we’ve defined a struct and named it <code>Rectangle</code>. Inside the curly brackets, we defined the fields as <code>width</code> and <code>height</code>, both of which have type <code>u64</code>. Then, in <code>main</code>, we created a particular instance of <code>Rectangle</code> that has a width of <code>30</code> and a height of <code>10</code>. Our <code>area</code> function is now defined with one parameter, which we’ve named <code>rectangle</code> which is of type <code>Rectangle</code> struct. We can then access the fields of the instance with dot notation, and it gives descriptive names to the values rather than using the tuple index values of <code>0</code> and <code>1</code>.</p>
-<h2 id="adding-useful-functionality-with-trait"><a class="header" href="#adding-useful-functionality-with-trait">Adding Useful Functionality with Trait</a></h2>
-<p>It’d be useful to be able to print an instance of <code>Rectangle</code> while we’re debugging our program and see the values for all its fields. Listing 4-9 tries using the <code>print</code> as we have used in previous chapters. This won’t work.</p>
+<p><span class="caption">Listing 4-8: Definición de una estructura llamada <code>Rectangle</code></span></p>
+<p>Aquí hemos definido una estructura y la hemos llamado <code>Rectangle</code>. Dentro de las llaves, definimos los campos como <code>width</code> y <code>height</code>, los cuales tienen el tipo <code>u64</code>. Luego, en <code>main</code>, creamos una instancia particular de <code>Rectangle</code> que tiene un ancho de <code>30</code> y una altura de <code>10</code >. Nuestra función <code>area</code> ahora está definida con un parámetro, al que hemos llamado <code>rectangle</code> que es de tipo de la estructura <code>Rectangle</code>. Luego podemos acceder a los campos de la instancia con notación de punto, y dar nombres descriptivos a los valores en lugar de usar los valores de índice de tupla de <code>0</code> y <code>1</code>.</p>
+<h2 id="adding-useful-functionality-with-trait"><a class="header" href="#adding-useful-functionality-with-trait">Agregando funcionalidades útiles con <code>Trait</code></a></h2>
+<p>Sería útil poder imprimir una instancia de <code>Rectangle</code> mientras estamos depurando nuestro programa y ver los valores de todos sus campos. El Listado 4-9 intenta usar <code>print</code> como lo hemos usado en capítulos anteriores. Esto no funcionará.</p>
 <p><span class="filename">Filename: src/lib.cairo</span></p>
 <pre><code class="language-rust">use debug::PrintTrait;
 
@@ -228,8 +228,8 @@ fn main() {
     };
     rectangle.print();
 }</code></pre>
-<p><span class="caption">Listing 4-9: Attempting to print a <code>Rectangle</code> instance</span></p>
-<p>When we compile this code, we get an error with this message:</p>
+<p><span class="caption">Listing 4-9: Intentando imprimir una instancia de <code>Rectangle</code> </span></p>
+<p>Cuando compilamos este código, obtenemos un error con el siguiente mensaje:</p>
 <pre><code class="language-bash">$ cairo-compile src/lib.cairo
 error: Method `print` not found on type &quot;../src::Rectangle&quot;. Did you import the correct trait and impl?
  --&gt; lib.cairo:16:15
@@ -238,8 +238,8 @@ error: Method `print` not found on type &quot;../src::Rectangle&quot;. Did you i
 
 Error: Compilation failed.
 </code></pre>
-<p>The <code>print</code> trait is implemented for many data types, but not for the <code>Rectangle</code> struct. We can fix this by implementing the <code>PrintTrait</code> trait on <code>Rectangle</code> as shown in Listing 4-10.
-To learn more about traits, see <a href="ch07-02-traits-in-cairo.html">Traits in Cairo</a>.</p>
+<p>El trait <code>print</code> esttá implementado para muchos tipos de datos, pero no para la estructura <code>Rectangle</code>. Podemos arreglar esto implementando el trait <code>PrintTrait</code> en la estructura <code>Rectangle</code> como se muestra en el Listado 4-10.
+Para aprender más sobre traits, see <a href="ch07-02-traits-in-cairo.html">Traits en Cairo</a>.</p>
 <p><span class="filename">Filename: src/lib.cairo</span></p>
 <pre><code class="language-rust">use debug::PrintTrait;
 
@@ -262,8 +262,10 @@ impl RectanglePrintImpl of PrintTrait&lt;Rectangle&gt; {
         self.heigh.print();
     }
 }</code></pre>
-<p><span class="caption">Listing 4-10: Implementing the <code>PrintTrait</code> trait on <code>Rectangle</code></span></p>
-<p>Nice! It’s not the prettiest output, but it shows the values of all the fields for this instance, which would definitely help during debugging.</p>
+<p><span class="caption">Listing 4-10: Implementación del trait <code>PrintTrait</code> en <code>Rectangle</code></span></p>
+
+¡Bien! No es el resultado más bonito, pero muestra los valores de todos los campos para esta instancia, lo que definitivamente ayudaría durante la depuración.
+
 
                     </main>
 
