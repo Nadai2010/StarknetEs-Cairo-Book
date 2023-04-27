@@ -91,12 +91,9 @@ fn another_function(x: felt252, y:felt252) {
 }
 ```
 
-This example creates a function named `another_function` with two
-parameters. The first parameter is named `x` and is an `felt252`. The second is
-named `y` and is type `felt252` too. The function then prints the content of the felt `x` and then the content of the felt `y`.
+Este ejemplo crea una función llamada `another_function` con dos parámetros. El primer parámetro se llama `x` y es un `felt252`. El segundo se llama `y` y también es del tipo `felt252`. La función luego imprime el contenido del `x` y luego el contenido del `y`.
 
-Let’s try running this code. Replace the program currently in your *functions*
-project’s *src/lib.cairo* file with the preceding example and run it using `cairo-run src/lib.cairo`:
+Intentemos ejecutar este código. Reemplaza el programa actualmente en el archivo *src/lib.cairo* de tu proyecto *functions* con el ejemplo anterior y ejecútalo usando `cairo-run src/lib.cairo`.
 
 ```console
 $ cairo-run src/lib.cairo
@@ -104,8 +101,7 @@ $ cairo-run src/lib.cairo
 [DEBUG]                                 (raw: 6)
 ```
 
-Because we called the function with `5` as the value for `x` and `6` as
-the value for `y`, the program output contains those values.
+Debido a que llamamos a la función con `5` como valor para `x` y `6` como valor para `y`, la salida del programa contiene esos valores.
 
 ### Statements and Expressions
 
