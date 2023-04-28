@@ -1,8 +1,9 @@
-# Defining and Instantiating Structs
+# Definiendo e instanciando una estructura
 
-Structs are similar to tuples, discussed in [The Data Types](ch02-02-data-types.md) section, in that both hold multiple related values. Like tuples, the pieces of a struct can be different types. Unlike with tuples, in a struct you’ll name each piece of data so it’s clear what the values mean. Adding these names means that structs are more flexible than tuples: you don’t have to rely on the order of the data to specify or access the values of an instance.
+Las estructuras son similares a las tuplas, discutidas en la sección [Tipos de datos](ch02-02-data-types.md), en el sentido de que ambas contienen múltiples valores relacionados. Al igual que las tuplas, las piezas de una estructura pueden ser de diferentes tipos. A diferencia de las tuplas, en una estructura se nombra cada dato para que quede claro lo que significan los valores. Agregar estos nombres significa que las estructuras son más flexibles que las tuplas: no se tiene que depender del orden de los datos para especificar o acceder a los valores de una instancia.
 
-To define a struct, we enter the keyword `struct` and name the entire struct. A struct’s name should describe the significance of the pieces of data being grouped together. Then, inside curly brackets, we define the names and types of the pieces of data, which we call fields. For example, Listing 4-1 shows a struct that stores information about a user account.
+Para definir una estructura, usamos la palabra reservada `struct` y nombramos la estructura completa. El nombre de una estructura debe describir la importancia de los datos que se agrupan. Luego, dentro de corchetes, definimos los nombres y tipos de los datos, a los que llamamos campos. Por ejemplo, el Listado 4-1 muestra una estructura que almacena información sobre una cuenta de usuario (*User*).
+
 
 <span class="filename">Filename: structs.cairo</span>
 
@@ -16,12 +17,12 @@ struct User {
 }
 ```
 
-<span class="caption">Listing 4-1: A `User` struct definition</span>
+<span class="caption">Listado 4-1: Definición de la estructura `User`</span>
 
-To use a struct after we’ve defined it, we create an _instance_ of that struct by specifying concrete values for each of the fields.
-We create an instance by stating the name of the struct and then add curly brackets containing _key: value_ pairs, where the keys are the names of the fields and the values are the data we want to store in those fields. We don’t have to specify the fields in the same order in which we declared them in the struct. In other words, the struct definition is like a general template for the type, and instances fill in that template with particular data to create values of the type.
 
-For example, we can declare a particular user as shown in Listing 4-2.
+Para usar una estructura después de haberla definido, creamos una instancia de esa estructura especificando valores concretos para cada uno de los campos. Creamos una instancia indicando el nombre de la estructura y luego agregamos corchetes que contienen pares de *clave: valor*, donde las claves son los nombres de los campos y los valores son los datos que queremos almacenar en esos campos. No tenemos que especificar los campos en el mismo orden en que los declaramos en la estructura. En otras palabras, la definición de una estructura es como una plantilla general para el tipo y las instancias completan esa plantilla con datos particulares para crear valores del tipo.
+
+Por ejemplo, podemos declarar un usuario (*User*) en particular como se muestra en el Listado 4-2.
 
 <span class="filename">Filename: structs.cairo</span>
 
@@ -43,9 +44,10 @@ fn main() {
 }
 ```
 
-<span class="caption">Listing 4-2: Creating an instance of the `User` struct</span>
+<span class="caption">Listado 4-2: Creando una instancia de la estructura `User`</span>
 
-To get a specific value from a struct, we use dot notation. For example, to access this user’s email address, we use `user1.email`. If the instance is mutable, we can change a value by using the dot notation and assigning into a particular field. Listing 4-3 shows how to change the value in the `email` field of a mutable `User` instance.
+Para obtener un valor específico de una estructura, usamos la notación punto. Por ejemplo, para acceder a la dirección de correo electrónico de este usuario, usamos `user1.email`. Si la instancia es mutable, podemos cambiar un valor usando la notación punto y asignándolo a un campo en particular. El listado 4-3 muestra cómo cambiar el valor en el campo `email`de una instancia mutable de `User`.
+
 
 <span class="filename">Filename: structs.cairo</span>
 
@@ -61,13 +63,14 @@ fn main() {
 }
 ```
 
-<span class="caption">Listing 4-3: Changing the value in the email field of a `User` instance</span>
+<span class="caption">Listado 4-3: Cambiando el valor del campo email de la instancia `User`</span>
 
-Note that the entire instance must be mutable; Cairo doesn’t allow us to mark only certain fields as mutable.
+Tenga en cuenta que toda la instancia debe ser mutable; Cairo no nos permite marcar solo ciertos campos como mutables.
 
-As with any expression, we can construct a new instance of the struct as the last expression in the function body to implicitly return that new instance.
+Como con cualquier expresión, podemos construir una nueva instancia de la estructura como la última expresión en el cuerpo de la función para devolver implícitamente esa nueva instancia.
 
-Listing 4-4 shows a `build_user` function that returns a `User` instance with the given email and username. The `active` field gets the value of `true`, and the `sign_in_count` gets a value of `1`.
+Listado 4-4 muestra la función `build_user` que retorna una instancia de la estructura `User` con el email y el username. Al campo `active` se le asigna el valor `true`,y el campo `sign_in_count` obtiene el valor de `1`.
+
 
 <span class="filename">Filename: structs.cairo</span>
 
@@ -82,13 +85,14 @@ fn build_user(email: felt, username: String) -> User {
 }
 ```
 
-<span class="caption">Listing 4-4: A `build_user` function that takes an email and username and returns a `User` instance</span>
+<span class="caption">Listado 4-4: Función `build_user` que toma los argumentos *email* y *username*, y retorna una instancia de la estructura `User`</span>
 
-It makes sense to name the function parameters with the same name as the struct fields, but having to repeat the `email` and `username` field names and variables is a bit tedious. If the struct had more fields, repeating each name would get even more annoying. Luckily, there’s a convenient shorthand!
+Tiene sentido nombrar los parámetros de la función con el mismo nombre que los campos de la estructura, porque tener que repetir los nombres y variables de los campos `email`y `username` es un poco tedioso. Si la estructura tuviera más campos, repetir cada nombre sería aún más molesto. ¡Afortunadamente, hay una forma abreviada!
 
-## Using the Field Init Shorthand
 
-Because the parameter names and the struct field names are exactly the same in Listing 4-4, we can use the field init shorthand syntax to rewrite `build_user` so it behaves exactly the same but doesn’t have the repetition of `username` and `email`, as shown in Listing 4-5.
+## Usando la abreviatura *Field Init*
+
+Debido a que los nombres de los parámetros y los nombres de los campos de la estructura son exactamente iguales en el Listado 4-4, podemos usar la sintaxis abreviada de *Field Init* para reescribir la función `build_user` y que se comporte exactamente igual, pero no tenga la repetición de `username` y `email`, como se muestra en el Listado 4-5.
 
 <span class="filename">Filename: structs.cairo</span>
 
@@ -103,6 +107,7 @@ fn build_user(email: felt252, username: felt252) -> User {
 }
 ```
 
-<span class="caption">Listing 4-5: A `build_user` function that uses field init shorthand because the `username` and `email` parameters have the same name as struct fields</span>
+<span class="caption">Listado 4-5: Función `build_user` que usa la abreviatura *field init* porque los parámetros `username` y `email` tienen el mismo nombre que los campos de la estructura</span>
 
-Here, we’re creating a new instance of the `User` struct, which has a field named `email`. We want to set the `email` field’s value to the value in the `email` parameter of the `build_user` function. Because the `email` field and the `email` parameter have the same name, we only need to write `email` rather than `email: email`.
+Aquí, estamos creando una nueva instancia de la estructura `User`, que tiene un campo llamado `email`. Queremos establecer el valor del campo `email` con el valor del parámetro `email` de la función `build_user`. Debido a que el campo `email` y el parámetro `email` tienen el mismo nombre, solo necesitamos escribir `email` en lugar de `email: email`.
+   

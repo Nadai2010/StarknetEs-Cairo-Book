@@ -1,19 +1,10 @@
-## Method Syntax
+## Sintaxis de métodos
 
-_Methods_ are similar to functions: we declare them with the `fn` keyword and a
-name, they can have parameters and a return value, and they contain some code
-that’s run when the method is called from somewhere else. Unlike functions,
-methods are defined within the context of a type and their first parameter is
-always `self`, which represents the instance of the type the method is being
-called on. For those familiar with Rust, Cairo's approach might be confusing,
-as methods cannot be defined directly on types. Instead, you must define a trait
-and an implementation associated with the type for which the method is intended.
+Los métodos son similares a las funciones: los declaramos con la palabra clave `fn` y un nombre, pueden tener parámetros, retornar un valor, y contener código que se ejecuta cuando el método es llamado desde otro lugar. A diferencia de las funciones, los métodos se definen dentro del contexto de un tipo y su primer parámetro siempre es `self`, que representa la instancia del tipo al que se llama el método. Para aquellos familiarizados con Rust, el enfoque de Cairo puede resultar confuso, ya que los métodos no se pueden definir directamente en los tipos. En su lugar, debe definir un `trait` y una implementación asociados con el tipo para el que está destinado el método.
 
-### Defining Methods
+### Definición de métodos
 
-Let’s change the `area` function that has a `Rectangle` instance as a parameter
-and instead make an `area` method defined on the `RectangleTrait` trait, as shown
-in Listing 5-13.
+Cambiemos la función `area` que tiene una instancia de `Rectangle` como parámetro y en su lugar crea un método `area` definido en el *trait* `RectangleTrait`, como se muestra en el Listado 4-13. 
 
 <span class="filename">Filename: src/lib.cairo</span>
 
@@ -42,53 +33,21 @@ fn main() {
 }
 ```
 
-<span class="caption">Listing 4-13: Defining an `area` method to use on the
-`Rectangle` </span>
+<span class="caption">Listado 4-13: Definiendo el método `area` para usar en la estructura `Rectangle` </span>
 
-To define the function within the context of `Rectangle`, we start by definining a `trait`
-block with the signature of the method that we want to implement. Traits are not linked to
-a specific type; only the `self` parameter of the method defines which type it can be used
-with. Then, we define an `impl` (implementation) block for `RectangleTrait`, that defines
-the behavior of the methods implemented. Everything within this `impl` block will be
-associated with the type of the `self` parameter of the method called. While it is technically
-possible to define methods for multiple types within the same `impl` block, it is not
-a recommended practice, as it can lead to confusion. We recommend that the type of the `self` parameter
-stays consistent within the same `impl` block.
-Then we move the `area` function within the `impl` curly brackets and change the first (and in this case, only)
-parameter to be `self` in the signature and everywhere within the body. In
-`main`, where we called the `area` function and passed `rect1` as an argument,
-we can instead use the _method syntax_ to call the `area` method on our `Rectangle`
-instance. The method syntax goes after an instance: we add a dot followed by
-the method name, parentheses, and any arguments.
+Para definir la función dentro del contexto de `Rectangle`, comenzamos definiendo un `trait` con la declaración del método que queremos implementar. Los *Traits* no están vinculados a un tipo específico; solo el parámetro `self` del método define qué tipo se puede usar con dicho *trait*. Luego, definimos un bloque con la palabra clave `impl` para `RectangleTrait`, que define el comportamiento de los métodos implementados. Todo dentro de este bloque `impl` será asociado con el tipo del parámetro `self` del método llamado. Si bien es técnicamente posible definir métodos para múltiples tipos dentro del mismo bloque `impl`, no es una práctica recomendada, ya que puede producir una confusión. Recomendamos que el tipo del parámetro `self` permanece consistente dentro del mismo bloque `impl`. Luego movemos la función `area` dentro de los corchetes `impl` y cambiamos el primer (y en este caso, único) parámetro para ser `self` en la declaración y en todas partes dentro del cuerpo. En `main`, donde llamamos a la función `area` y pasamos `rect1` como argumento, en su lugar, podemos usar la *sintaxis del método* para llamar al método `area` en nuestra instancia del `Rectangle`. La sintaxis del método va después de una instancia: agregamos un punto seguido del nombre del método, los paréntesis y los argumentos.
 
-Methods must have a parameter named `self` of the type they will be applied to for their first parameter.
-Note that we used the `@` snapshot operator in front of the `Rectangle` type in the function signature.
-By doing so, we indicate that this method takes an immutable snapshot of the `Rectangle` instance, which is
-automatically created by the compiler when passing the instance to the method.
-Methods can take ownership of `self`, use `self` with snapshots as we’ve done here, or use a mutable reference to `self`
-using the `ref self: T` syntax.
+Los métodos deben tener un parámetro llamado `self` del tipo al que se aplicarán para su primer parámetro. Tenga en cuenta que usamos el operador `@` (*snapshot*) delante del tipo `Rectangle` en la declaración de la función. Al hacerlo, indicamos que este método toma un *snapshot* inmutable de la instancia de `Rectangle`, que es creado automáticamente por el compilador al pasar la instancia al método. Los métodos pueden tomar posesión de `self`, usar `self` con *snapshot* como lo hemos hecho aquí, o usar una referencia mutable a `self`
+    utilizando la sintaxis `ref self: T`.
 
-We chose `self: @Rectangle` here for the same reason we used `@Rectangle` in the function
-version: we don’t want to take ownership, and we just want to read the data in
-the struct, not write to it. If we wanted to change the instance that we’ve
-called the method on as part of what the method does, we’d use `ref self: Rectangle` as
-the first parameter. Having a method that takes ownership of the instance by
-using just `self` as the first parameter is rare; this technique is usually
-used when the method transforms `self` into something else and you want to
-prevent the caller from using the original instance after the transformation.
+Elegimos `self: @Rectangle` por la misma razón que usamos `@Rectangle` en la función versión: no queremos tomar posesión, y solo queremos leer los datos en la estructura, no escribir en ella. Si quisiéramos cambiar la instancia que hemos llamado al método como parte de lo que hace el método, usaríamos `ref self: Rectangle` como el primer parámetro. Tener un método que tome posesión de la instancia por usar solo `self` como primer parámetro es raro; esta técnica suele ser usada cuando el método transforma `self` en otra cosa y desea evitar que la persona que llama use la instancia original después de la transformación.
 
-Observe the use of the desnap operator `*` within the area method when accessing the struct's members.
-This is necessary because the struct is passed as a snapshot, and all of its field values are of type `@T`,
-requiring them to be desnapped in order to manipulate them.
+Observe el uso del operador *desnap* `*` dentro del método *area* cuando accede a los miembros de la estructura. Esto es necesario porque la estructura se pasa como una *snapshot* y todos sus valores de campo son del tipo `@T`, requiriendo que sean *desnapped* para poder manipularlos.
 
-The main reason for using methods instead of functions is for organization and code clarity. We’ve put all the things we can do with an instance of a type in one combination of `trait` & `impl` blocks, rather than making future users
-of our code search for capabilities of `Rectangle` in various places in the
-library we provide. However, we can define multiple combinations of `trait` & `impl` blocks for the same type at different places, which can be useful for a more granular code organization. For example, you could implement
-the `Add` trait for your type in one `impl` block, and the `Sub` trait in another block.
+La principal razón para usar métodos en lugar de funciones es la organización y la claridad del código. Hemos puesto todas las cosas que podemos hacer con una instancia de un tipo en una combinación de bloques de tipo `trait` &amp; `impl`, en lugar de hacer que los futuros usuarios de nuestro código busquen capacidades de `Rectangle` en varios lugares en la biblioteca que ofrecemos. Sin embargo, podemos definir múltiples combinaciones de `trait` &amp; `impl` para el mismo tipo en diferentes lugares, lo que puede ser útil para organizar nuestro código. Por ejemplo, podría implementar el *trait* `Add` para su tipo en un bloque `impl`, y el *trait* `Sub` en otro bloque.
 
-Note that we can choose to give a method the same name as one of the struct’s
-fields. For example, we can define a method on `Rectangle` that is also named
-`width`:
+Tenga en cuenta que podemos optar por dar a un método el mismo nombre que uno de los campos de la estructura. Por ejemplo, podemos definir un método en `Rectangle` que también se llama
+    `width`:
 
 <span class="filename">Filename: src/lib.cairo</span>
 
@@ -116,21 +75,11 @@ fn main() {
 }
 ```
 
-Here, we’re choosing to make the `width` method return `true` if the value in
-the instance’s `width` field is greater than `0` and `false` if the value is
-`0`: we can use a field within a method of the same name for any purpose. In
-`main`, when we follow `rect1.width` with parentheses, Cairo knows we mean the
-method `width`. When we don’t use parentheses, Cairo knows we mean the field
-`width`.
+Aquí, elegimos hacer que el método `width` devuelva `true` si el valor en el campo `width` de la instancia es mayor que `0` y `false` si el valor es `0`: podemos usar un campo dentro de un método del mismo nombre para cualquier propósito. En `main`, cuando colocamos `rect1.width` entre paréntesis, Cairo sabe que nos referimos al método `width`. Cuando no usamos paréntesis, Cairo sabe que nos referimos al campo `widht`.
 
-### Methods with More Parameters
+### Métodos con más parámetros
 
-Let’s practice using methods by implementing a second method on the `Rectangle`
-struct. This time we want an instance of `Rectangle` to take another instance
-of `Rectangle` and return `true` if the second `Rectangle` can fit completely
-within `self` (the first `Rectangle`); otherwise, it should return `false`.
-That is, once we’ve defined the `can_hold` method, we want to be able to write
-the program shown in Listing 5-14.
+Practiquemos el uso de métodos implementando un segundo método en la estructura `Rectangle`. Esta vez queremos que una instancia de `Rectangle` tome otra instancia de `Rectangle` y devolver `true` si el segundo `Rectangle` puede caber completamente dentro de `self` (el primer `Rectangle`); de lo contrario, debería devolver `false`. Es decir, una vez que hemos definido el método `can_hold`, queremos poder escribir el programa que se muestra en el Listado 4-14.
 
 <span class="filename">Filename: src/lib.cairo</span>
 
@@ -165,12 +114,9 @@ fn main() {
 }
 ```
 
-<span class="caption">Listing 5-14: Using the as-yet-unwritten `can_hold`
-method</span>
+<span class="caption">Listing 4-14:  Usando el método todavia no escrito `can_hold`</span>
 
-The expected output would look like the following because both dimensions of
-`rect2` are smaller than the dimensions of `rect1`, but `rect3` is wider than
-`rect1`:
+La salida esperada sería similar a la siguiente porque ambas dimensiones de `rect2` son más pequeñas que las dimensiones de `rect1`, pero `rect3` es más ancha que` rect1`:
 
 ```text
 ❯ cairo-run src/lib.cairo
@@ -197,7 +143,9 @@ calling the `can_hold` method. The return value of `can_hold` will be a
 Boolean, and the implementation will check whether the width and height of
 `self` are greater than the width and height of the other `Rectangle`,
 respectively. Let’s add the new `can_hold` method to the `trait` and `impl` blocks from
-Listing 5-13, shown in Listing 5-15.
+Listing 4-13, shown in Listing 4-15.
+
+Sabemos que queremos definir un método, por lo que estará dentro del bloque `trait RectangleTrait` e `impl RectangleImpl of RectangleTrait`. El nombre del método será `can_hold`, y tomará una *snapshot* de otro `Rectangle` como parámetro. Podemos decir cuál será el tipo de parámetro si miramos el código que llama al método: `rect1.can_hold(@rect2)` pasa `@rect2`, que es un *snapshot* para `rect2`, una instancia de `Rectangle`. Esto tiene sentido porque solo necesitamos leer `rect2` (en lugar de escribir, lo que significaría que necesitaríamos un préstamo mutable), y queremos que `main` conserve la propiedad de `rect2` para que podamos usarlo nuevamente después llamando al método `can_hold`. El valor de retorno de `can_hold` será un Boolean, y la implementación verificará si el ancho y la altura de `self` son mayores que el ancho y alto del otro `Rectangle`, respectivamente. Agreguemos el nuevo método `can_hold` a los bloques `trait` y `impl` del Listado 4-13, mostrado en el Listado 4-15.
 
 <span class="filename">Filename: src/lib.cairo</span>
 
@@ -218,25 +166,18 @@ impl RectangleImpl of RectangleTrait {
 }
 ```
 
-<span class="caption">Listing 5-15: Implementing the `can_hold` method on
-`Rectangle` that takes another `Rectangle` instance as a parameter</span>
+<span class="caption">Listing 4-15: Implementación del método `can_hold` en `Rectangle` que recibe una instancia de `Rectangle` como parámetro</span>
 
 When we run this code with the `main` function in Listing 5-14, we’ll get our
 desired output. Methods can take multiple parameters that we add to the
 signature after the `self` parameter, and those parameters work just like
 parameters in functions.
 
-### Accessing implementation functions
+Cuando ejecutamos este código con la función `main` en el Listado 4-14, obtendremos nuestra salida deseada. Los métodos pueden tomar múltiples parámetros que agregamos a su definición después del parámetro `self`, y esos parámetros funcionan como parámetros en las funciones.
 
-All functions defined within a `trait` and `impl` block can be directly addressed
-using the `::` operator on the implementation name.
-Functions in traits that aren’t methods are often used for constructors that
-will return a new instance of the struct. These are often called `new`, but
-`new` isn’t a special name and isn’t built into the language. For example, we
-could choose to provide an associated function named `square` that would have
-one dimension parameter and use that as both width and height, thus making it
-easier to create a square `Rectangle` rather than having to specify the same
-value twice:
+### Acceso a las funciones de implementación
+
+Todas las funciones definidas dentro de un bloque `trait` e `impl` se pueden llamar directamente utilizando el operador `::` en el nombre de la implementación. Las funciones en los *trait* que no son métodos a menudo se usan para constructores que devolverá una nueva instancia de la estructura. Estos a menudo se denominan `new`, pero `new` no es un nombre especial y no está integrado en el lenguaje de Cairo. Por ejemplo, nosotros podriamos optar por proporcionar una función asociada llamada `square` que tendría un parámetro de dimensión y usarlo como ancho y alto, haciéndolo así más fácil para crear un cuadrado con `Rectangle` en lugar de tener que especificar el mismo valor dos veces:
 
 <span class="filename">Filename: src/lib.cairo</span>
 
@@ -252,18 +193,16 @@ impl RectangleImpl of RectangleTrait {
 }
 ```
 
-To call this function, we use the `::` syntax with the implementation name;
-`let square = RectangleImpl::square(10_u64);` is an example. This function is namespaced by
-the implementation: the `::` syntax is used for both trait functions and
-namespaces created by modules. We’ll discuss modules in [Chapter 7][modules]<!-- ignore -->.
+Para llamar a esta función, usamos la sintaxis `::` con el nombre de implementación; por ejemplo, `let square = RectangleImpl::square(10_u64);`. Esta función está espaciada por la implementación: la sintaxis `::` se usa tanto para funciones del *trait* y espacios de nombres creados por módulos. Lo discutiremos en el [Capítulo 7][modules]<!-- ignore -->.
 
 > Note: It is also possible to call this function using the trait name, with `RectangleTrait::square(10_u64)`.
 
-### Multiple `impl` Blocks
+> Nota: También es posible llamar a esta función usando el nombre del *trait*, con `RectangleTrait::square(10_u64)`.
 
-Each struct is allowed to have multiple `trait` and `impl` blocks. For example, Listing
-5-15 is equivalent to the code shown in Listing 5-16, which has each method in
-its own `trait` and `impl` blocks.
+
+### Multiples bloques con `impl`
+
+Cada estructura tiene permitido tener múltiples bloques con `trait` e `impl`. Por ejemplo, en el Listado 4-15 es equivalente al código mostrado en el Listado 4-16, que tiene cada método en su propio bloque de `trait` e `impl`.
 
 ```rust
 trait RectangleCalc {
@@ -286,20 +225,14 @@ impl RectangleCmpImpl of RectangleCmp {
 }
 ```
 
-<span class="caption">Listing 5-16: Rewriting Listing 5-15 using multiple `impl`
-blocks</span>
+<span class="caption">Listado 4-16: Reescribiendo el Listado 4-15 usando múltiples bloques de `impl`</span>
 
-There’s no reason to separate these methods into multiple `trait` and `impl` blocks here,
-but this is valid syntax. We’ll see a case in which multiple blocks are
-useful in [Chapter 7](ch07-00-generic-types-and-traits.md), where we discuss generic types and traits.
 
-## Summary
+No hay razón para separar estos métodos en múltiples bloques de `trait` e `impl`, pero es una sintaxis válida. 
+Veremos un caso en el que usar múltiples bloques es adecuado en el [Capítulo 7](ch07-00-generic-types-and-traits.md), donde discutimos tipos y <em>traits</em> genéricos.
 
-Structs let you create custom types that are meaningful for your domain. By
-using structs, you can keep associated pieces of data connected to each other
-and name each piece to make your code clear. In `trait` and `impl` blocks, you can define
-methods, which are functions associated to a type and let you specify the behavior that instances of your
-type have.
+## Resumen 
 
-But structs aren’t the only way you can create custom types: let’s turn to
-Cairo’s enum feature to add another tool to your toolbox.
+Las estructuras permiten crear tipos personalizados que son significativos para su dominio. Usando estructuras, puede mantener partes de datos asociadas conectadas entre sí y nombra cada pieza para que tu código quede claro. En los bloques `trait` e `impl`, puedes definir métodos, que son funciones asociadas a un tipo y le permiten especificar el comportamiento que las instancias de su tipo pueden tener.
+
+Pero las estructuras (`struct`) no son la única manera de crear tipos personalizados: pasemos a la función de enumeración (`enum`) de Cairo para agregar otra herramienta.
