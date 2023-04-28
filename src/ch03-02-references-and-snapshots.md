@@ -1,26 +1,14 @@
-## References and Snapshots
+## Referencias y Snapshots
 
-The issue with the tuple code in Listing 3-5 is that we have to return the
-`Array` to the calling function so we can still use the `Array` after the
-call to `calculate_length`, because the `Array` was moved into
-`calculate_length`.
+El problema con el código de tupla en el Listado 3-5 es que tenemos que devolver el `Array` a la función de llamada para que podamos seguir usando el `Array` después de la llamada a `calculate_length`, ya que el `Array` se movió a `calculate_length`.
 
 ### Snapshots
 
-Instead, we can provide a _snapshot_ of the `Array` value. In Cairo, a snapshot
-is an immutable view of a value at a certain point in time. In the previous chapter,
-we talked about how Cairo's ownership system prevents us from using a value after
-we've moved it, protecting us from potentially writing twice to the same memory cell when
-appending values to arrays. However, it's not very convenient. Let's see how we can retain ownership
-of the value in the calling function using snapshots.
+En su lugar, podemos proporcionar una _instantánea_ del valor `Array`. En Cairo, una instantánea es una vista inmutable de un valor en un cierto momento en el tiempo. En el capítulo anterior, hablamos de cómo el sistema de propiedad de Cairo nos impide usar un valor después de haberlo movido, protegiéndonos de escribir potencialmente dos veces en la misma celda de memoria al agregar valores a los arreglos. Sin embargo, no es muy conveniente. Veamos cómo podemos mantener la propiedad del valor en la función de llamada usando instantáneas.
 
-Here is how you would define and use a `calculate_length` function that takes a
-snapshot to an array as a parameter instead of taking ownership of the underlying value. In this example,
-the `calculate_length` function returns the length of the array passed as parameter.
-As we're passing it as a snapshot, which is an immutable view of the array, we can be sure that
-the `calculate_length` function will not mutate the array, and ownership of the array is kept in the main function.
+Aquí es cómo definiría y usaría una función `calculate_length` que toma una instantánea de un arreglo como parámetro en lugar de tomar propiedad del valor subyacente. En este ejemplo, la función `calculate_length` devuelve la longitud del arreglo pasado como parámetro. Como lo estamos pasando como una instantánea, que es una vista inmutable del arreglo, podemos estar seguros de que la función `calculate_length` no mutará el arreglo, y la propiedad del arreglo se mantiene en la función principal.
 
-<span class="filename">Filename: src/lib.cairo</span>
+<span class="filename">Nombre de archivo: src/lib.cairo</span>
 
 ```rust
 use array::ArrayTrait;
@@ -41,9 +29,9 @@ fn calculate_length(arr: @Array<u128>) -> usize {
 }
 ```
 
-> Note: It is only possible to call the `len()` method on an array snapshot because it is defined as such in the `ArrayTrait` trait. If you try to call a method that is not defined for snapshots on a snapshot, you will get a compilation error. However, you can call methods expecting a snapshot on non-snapshot types.
+> Nota: Solo es posible llamar al método `len()` en un snapshot de un array porque está definido así en el trait `ArrayTrait`. Si intentas llamar a un método que no está definido para snapshots en un snapshot, obtendrás un error de compilación. Sin embargo, puedes llamar a métodos que esperan un snapshot en tipos que no son snapshots. 
 
-The output of this program is:
+La salida de este programa es:
 
 ```console
 [DEBUG]	                               	(raw: 0)
@@ -53,19 +41,18 @@ The output of this program is:
 Run completed successfully, returning []
 ```
 
-First, notice that all the tuple code in the variable declaration and the function return value is gone. Second, note
-that we pass `@arr1` into `calculate_length` and, in its definition, we take `@Array<u128>` rather than `Array<u128>`.
+La primera observación es que todo el código de tuplas en la declaración de variables y en el valor de retorno de la función ha desaparecido. La segunda observación es que pasamos `@arr1` a `calculate_length` y, en su definición, tomamos `@Array<u128>` en lugar de `Array<u128>`.
 
-Let’s take a closer look at the function call here:
+Veamos más de cerca la llamada a la función aquí:
 
 ```rust
 let mut arr1 = ArrayTrait::<u128>::new();
 let second_length = calculate_length(@arr1); // Calculate the current length of the array
 ```
 
-The `@arr1` syntax lets us create a snapshot of the value in `arr1`. Because a snapshot is an immutable view of a value, the value it points to cannot be modified through the snapshot, and the value it refers to will not be dropped once the snapshot stops being used.
+La sintaxis `@arr1` nos permite crear una instantánea (snapshot) del valor en `arr1`. Como una instantánea es una vista inmutable de un valor, el valor al que apunta no puede ser modificado a través de la instantánea y el valor al que se refiere no será eliminado una vez que la instantánea deje de ser usada.
 
-Similarly, the signature of the function uses `@` to indicate that the type of the parameter `arr` is a snapshot. Let’s add some explanatory annotations:
+De manera similar, la firma de la función utiliza `@` para indicar que el tipo del parámetro `arr` es una instantánea. Añadamos algunas anotaciones explicativas:
 
 ```rust
 fn calculate_length(array_snapshot: @Array<u128>) -> usize { // array_snapshot is a snapshot of an Array
@@ -74,11 +61,11 @@ fn calculate_length(array_snapshot: @Array<u128>) -> usize { // array_snapshot i
 // However, because it is only a view of what the original array `arr` contains, the original `arr` can still be used.
 ```
 
-The scope in which the variable `array_snapshot` is valid is the same as any function parameter’s scope, but the underlying value of the snapshot is not dropped when `array_snapshot` stops being used. When functions have snapshots as parameters instead of the actual values, we won’t need to return the values in order to give back ownership of the original value, because we never had it.
+El alcance en el que la variable `array_snapshot` es válida es el mismo que el alcance de cualquier parámetro de función, pero el valor subyacente del snapshot no se eliminará cuando `array_snapshot` deje de usarse. Cuando las funciones tienen snapshots como parámetros en lugar de los valores reales, no necesitamos devolver los valores para devolver la propiedad del valor original, porque nunca la tuvimos.
 
-Snapshots can be converted back into regular values using the `desnap` operator `*`, as long as the value type is copyable (which is not the case for Arrays, as they don't implement `Copy`). In the following example, we want to calculate the area of a rectangle, but we don't want to take ownership of the rectangle in the `calculate_area` function, because we might want to use the rectangle again after the function call. Since our function doesn't mutate the rectangle instance, we can pass the snapshot of the rectangle to the function, and then transform the snapshots back into values using the `desnap` operator `*`.
+Los snapshots se pueden convertir de nuevo en valores regulares usando el operador `desnap` `*`, siempre y cuando el tipo de valor sea copiable (lo cual no es el caso para los Arrays, ya que no implementan `Copy`). En el siguiente ejemplo, queremos calcular el área de un rectángulo, pero no queremos tomar la propiedad del rectángulo en la función `calculate_area`, porque podríamos querer usar el rectángulo de nuevo después de la llamada a la función. Dado que nuestra función no muta la instancia del rectángulo, podemos pasar el snapshot del rectángulo a la función, y luego transformar los snapshots de nuevo en valores usando el operador `desnap` `*`.
 
-The snapshot type is always copyable and droppable, so that you can use it multiple times without worrying about ownership transfers.
+El tipo de snapshot siempre es copiable y eliminable, para que pueda usarlo varias veces sin preocuparse por las transferencias de propiedad.
 
 ```rust
 #[derive(Copy,Drop)]
@@ -100,10 +87,9 @@ fn calculate_area(rec: @Rectangle) -> u64 {
 }
 ```
 
-But, what happens if we try to modify something we’re passing as snapshot? Try the code in
-Listing 3-6. Spoiler alert: it doesn’t work!
+Pero, ¿qué sucede si intentamos modificar algo que estamos pasando como instantánea? Prueba el código en la Lista 3-6. ¡Alerta de spoiler: no funciona!
 
-<span class="filename">Filename: src/lib.cairo</span>
+<span class="filename">Nombre de archivo: src/lib.cairo</span>
 
 ```rust
 #[derive(Copy,Drop)]
@@ -124,9 +110,9 @@ fn flip(rec: @Rectangle) {
 }
 ```
 
-<span class="caption">Listing 3-6: Attempting to modify a snapshot value</span>
+<span class="caption">Listado 3-6: Intentando modificar un valor de snapshot</span>
 
-Here’s the error:
+Aquí está el error:
 
 ```console
 error: Invalid left-hand side of assignment.
@@ -135,16 +121,15 @@ error: Invalid left-hand side of assignment.
     ^********^
 ```
 
-The compiler prevents us from modifying values associated to snapshots.
+### Referencias mutables
 
-### Mutable References
+Podemos lograr el comportamiento que queremos en el Listado 3-6 utilizando una _referencia mutable_ en lugar de un snapshot. Las referencias mutables son valores mutables pasados a una función que se devuelven implícitamente al final de la función, devolviendo la propiedad al contexto de llamada. Al hacerlo, le permiten mutar el valor pasado y mantener su propiedad devolviéndolo automáticamente al final de la ejecución.
 
-We can achieve the behavior we want in Listing 3-6 by using a _mutable reference_ instead of a snapshot. Mutable references are actually mutable values passed to a function that are implicitly returned at the end of the function, returning ownership to the calling context. By doing so, they allow you to mutate the value passed while keeping ownership of it by returning it automatically at the end of the execution.
-In Cairo, a parameter can be passed as _mutable reference_ using the `ref` modifier.
+En Cairo, se puede pasar un parámetro como _referencia mutable_ utilizando el modificador `ref`.
 
-> **Note**: In Cairo, a parameter can only be passed as _mutable reference_ using the `ref` modifier if the variable is declared as mutable with `mut`.
+> **Nota**: En Cairo, un parámetro solo se puede pasar como _referencia mutable_ utilizando el modificador `ref` si la variable se declara como mutable con `mut`.
 
-In Listing 3-7, we use a mutable reference to modify the value of the `height` field of the `Rectangle` instance in the `flip` function.
+En el Listado 3-7, usamos una referencia mutable para modificar el valor del campo `height` de la instancia de `Rectangle` en la función `flip`.
 
 ```rust
 use debug::PrintTrait;
@@ -168,9 +153,9 @@ fn flip(ref rec: Rectangle) {
 }
 ```
 
-First, we change `rec` to be `mut`. Then we pass a mutable reference of `rec` into `flip` with `ref rec`, and update the function signature to accept a mutable reference with `ref rec: Rectangle`. This makes it very clear that the `flip` function will mutate the value of the `Rectangle` instance passed as parameter.
+Primero, cambiamos `rec` a `mut`. Luego, pasamos una referencia mutable de `rec` a `flip` con `ref rec` y actualizamos la firma de la función para aceptar una referencia mutable con `ref rec: Rectangle`. Esto deja muy claro que la función `flip` modificará el valor de la instancia de `Rectangle` pasada como parámetro.
 
-The output of the program is:
+La salida del programa es:
 
 ```console
 [DEBUG]
@@ -179,14 +164,10 @@ The output of the program is:
 [DEBUG]	                        (raw: 3)
 ```
 
-As expected, the `height` and `width` fields of the `rec` variable have been swapped.
+Como resumen, lo que hemos discutido acerca de ownership, snapshots y las referencias es:
 
-### Small recap
-
-Let’s recap what we’ve discussed about ownership, snapshots, and references:
-
-- At any given time, a variable can only have one owner.
-- You can pass a variable by-value, by-snapshot, or by-reference to a function.
-- If you pass-by-value, ownership of the variable is transferred to the function.
-- If you want to keep ownership of the variable and know that your function won’t mutate it, you can pass it as a snapshot with `@`.
-- If you want to keep ownership of the variable and know that your function will mutate it, you can pass it as a mutable reference with `ref`.
+- En un momento dado, una variable solo puede tener un propietario.
+- Puedes pasar una variable por valor, por instantánea o por referencia a una función.
+- Si pasas una variable por valor, la propiedad de la variable se transfiere a la función.
+- Si quieres mantener la propiedad de la variable y sabes que tu función no la va a modificar, puedes pasarla como instantánea con `@`.
+- Si quieres mantener la propiedad de la variable y sabes que tu función la modificará, puedes pasarla como referencia mutable con `ref`.

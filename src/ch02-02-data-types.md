@@ -137,7 +137,7 @@ let my_first_string = 'Hello world';
 
 ### Conversión de Tipos
 
-En Cairo, puedes convertir valores entre tipos escalares comunes y `felt252` usando los métodos `try_into` e `into` proporcionados por los rasgos `TryInto` e `Into`, respectivamente.
+En Cairo, puedes convertir valores entre tipos escalares comunes y `felt252` usando los métodos `try_into` e `into` proporcionados por los traits `TryInto` e `Into`, respectivamente.
 
 El método `try_into` permite una conversión de tipos segura cuando el tipo de destino puede no encajar con el valor de origen. Ten en cuenta que `try_into` devuelve un tipo `Option<T>`, que tendrás que desenvolver para acceder al nuevo valor.
 

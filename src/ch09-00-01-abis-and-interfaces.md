@@ -7,7 +7,7 @@ Para lograr esto en Starknet, se requiere algo que llamamos una interfaz.
 ## Interfaz
 Una interfaz es una lista de definiciones de funciones de un contrato sin implementaciones. En otras palabras, una interfaz especifica las declaraciones de función (nombre, parámetros, visibilidad y valor de retorno) contenidas en un contrato inteligente sin incluir el cuerpo de la función.
 
-Las interfaces en Cairo son rasgos con el atributo `[abi]`. Si eres nuevo en los rasgos, consulta el capítulo dedicado a [rasgos](./ch07-02-traits-in-cairo.md).
+Las interfaces en Cairo son traits con el atributo `[abi]`. Si eres nuevo en los traits, consulta el capítulo dedicado a [traits](./ch07-02-traits-in-cairo.md).
 
 Para que tu código de Cairo califique como una interfaz, debe cumplir con los siguientes requisitos:
 

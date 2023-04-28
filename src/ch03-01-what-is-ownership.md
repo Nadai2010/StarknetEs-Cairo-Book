@@ -1,40 +1,26 @@
-## What Is Ownership?
+## ¿Qué es Ownership?
 
-Cairo implements an ownership system to ensure the safety and correctness of its compiled code.
-The ownership mechanism complements the linear type system, which enforces that objects are used exactly once.
-This helps prevent common operations that can produce runtime errors, such as illegal memory address
-references or multiple writes to the same memory address, and ensures the soundness of Cairo programs
-by checking at compile time that all the dictionaries are squashed.
+Cairo implementa un sistema de propiedad para garantizar la seguridad y corrección de su código compilado. El mecanismo de propiedad complementa el sistema de tipos lineales, que obliga a que los objetos se usen exactamente una vez. Esto ayuda a prevenir operaciones comunes que pueden producir errores en tiempo de ejecución, como referencias ilegales de direcciones de memoria o múltiples escrituras en la misma dirección de memoria, y garantiza la corrección de los programas de Cairo comprobando en tiempo de compilación que todos los diccionarios están aplastados.
 
-Now that we’re past basic Cairo syntax, we won’t include all the `fn main() {`
-code in examples, so if you’re following along, make sure to put the following
-examples inside a `main` function manually. As a result, our examples will be a
-bit more concise, letting us focus on the actual details rather than
-boilerplate code.
+Ahora que hemos pasado la sintaxis básica de Cairo, no incluiremos todo el código `fn main() {` en los ejemplos, así que si estás siguiendo, asegúrate de colocar los siguientes ejemplos dentro de una función `main` manualmente. Como resultado, nuestros ejemplos serán un poco más concisos, lo que nos permitirá enfocarnos en los detalles reales en lugar del código de plantilla.
 
-### Ownership Rules
+### Reglas de Ownership
 
-First, let’s take a look at the ownership rules. Keep these rules in mind as we
-work through the examples that illustrate them:
+En primer lugar, echemos un vistazo a las reglas de propiedad. Mantenga estas reglas en mente mientras trabajamos a través de los ejemplos que las ilustran:
 
-- Each value in Cairo has an _owner_.
-- There can only be one owner at a time.
-- When the owner goes out of scope, the value will be _dropped_.
+- Cada valor en Cairo tiene un _propietario_.
+- Solo puede haber un propietario a la vez.
+- Cuando el propietario sale del ámbito, el valor será _descartado_.
 
-### Variable Scope
+### Ámbito de Variables
 
-As a first example of ownership, we’ll look at the _scope_ of some variables. A
-scope is the range within a program for which an item is valid. Take the
-following variable:
+Como primer ejemplo de propiedad, veremos el _ámbito_ de algunas variables. Un ámbito es el alcance dentro de un programa para el cual un elemento es válido. Tomemos la siguiente variable:
 
 ```rust
 let s = 'hello';
 ```
 
-The variable `s` refers to a short string, where the value of the string is
-hardcoded into the text of our program. The variable is valid from the point at
-which it’s declared until the end of the current _scope_. Listing 3-1 shows a
-program with comments annotating where the variable `s` would be valid.
+La variable `s` hace referencia a una cadena corta, donde el valor de la cadena está codificado en el texto de nuestro programa. La variable es válida desde el momento en que se declara hasta el final del _ámbito_ actual. La Lista 3-1 muestra un programa con comentarios que anotan dónde sería válida la variable `s`.
 
 ```rust
     {                      // s is not valid here, it’s not yet declared
@@ -44,32 +30,21 @@ program with comments annotating where the variable `s` would be valid.
     }                      // this scope is now over, and s is no longer valid
 ```
 
-<span class="caption">Listing 3-1: A variable and the scope in which it is
-valid</span>
+<span class="caption">Lista 3-1: Una variable y el ámbito en el que es válida</span>
 
-In other words, there are two important points in time here:
+En otras palabras, hay dos puntos importantes en el tiempo aquí:
 
-- When `s` comes _into_ scope, it is valid.
-- It remains valid until it goes _out of_ scope.
+- Cuando `s` entra en el _ámbito_, es válida.
+- Permanece válida hasta que sale del _ámbito_.
 
-At this point, the relationship between scopes and when variables are valid is
-similar to that in other programming languages. Now we’ll build on top of this
-understanding by introducing the `Array` type.
+En este punto, la relación entre los ámbitos y cuándo las variables son válidas es similar a la de otros lenguajes de programación. Ahora construiremos sobre esta comprensión introduciendo el tipo de datos `Array`.
 
-### The `Array` Type
+### El tipo `Array`
 
-To illustrate the rules of ownership, we need a data type that is more complex
-than those we covered in the [“Data Types”][data-types]<!-- ignore --> section
-of Chapter 3. The types covered previously are of a known size, can be
-quickly and trivially copied to make a new, independent instance if another
-part of code needs to use the same value in a different scope, and can easily
-be dropped when they're no longer used. But we want to look at data whose size
-is unknown at compile time and can't be trivially copied: the `Array` type.
+Para ilustrar las reglas de propiedad, necesitamos un tipo de datos que sea más complejo que los que cubrimos en la sección de [Tipos de Datos][data-types]<!-- ignore --> del Capítulo 3. Los tipos cubiertos anteriormente tienen un tamaño conocido, se pueden copiar rápida y trivialmente para crear una nueva instancia independiente si otra parte del código necesita usar el mismo valor en un ámbito diferente, y se pueden descartar fácilmente cuando ya no se usan. Pero queremos examinar datos cuyo tamaño es desconocido en tiempo de compilación y que no se pueden copiar trivialmente: el tipo `Array`.
 
-In Cairo, each memory cell can only be written to once. Arrays are represented in memory by
-a segment of contiguous memory cells, and Cairo's linear type system is used to ensure that each cell is
-never written to more than once.
-Consider the following code, in which we define a variable `arr` of `Array` type that holds `u128` values:
+En Cairo, cada celda de memoria solo se puede escribir una vez. Los arrays se representan en memoria mediante un segmento de celdas de memoria contiguas, y el sistema de tipos lineales de Cairo se utiliza para garantizar que cada celda nunca se escriba más de una vez.
+Considere el siguiente código, en el que definimos una variable `arr` de tipo `Array` que contiene valores `u128`:
 
 ```rust
 use array::ArrayTrait;
@@ -78,7 +53,7 @@ use array::ArrayTrait;
 let arr = ArrayTrait::<u128>::new();
 ```
 
-You can append values to an `Array` using the `append` method:
+Puede agregar valores a un `Array` utilizando el método `append`:
 
 ```rust
 let mut arr = ArrayTrait::<u128>::new();
@@ -86,9 +61,8 @@ arr.append(1);
 arr.append(2);
 ```
 
-So, how does the ownership system ensure that each cell is never written to more than once?
-Consider the following code, where we try to pass the same instance of an array in two consecutive
-function calls:
+Entonces, ¿cómo garantiza el sistema de propiedad que cada celda nunca se escriba más de una vez?
+Considere el siguiente código, en el que intentamos pasar la misma instancia de un array en dos llamadas de función consecutivas:
 
 ```rust
 use array::ArrayTrait;
@@ -105,15 +79,10 @@ fn main() {
 }
 ```
 
-In this case, we pass try to pass the same array instance `arr` by value to the functions `foo` and `bar`, which means
-that the parameter used in both function calls is the same instance of the array. If you append a value to the array
-in `foo`, and then try to append another value to the same array in `bar`, what would happen is that
-you would attempt to try to write to the same memory cell twice, which is not allowed in Cairo.
-To prevent this, the ownership of the `arr` variable moves from the `main` function to the `foo` function. When trying
-to call `bar` with `arr` as a parameter, the ownership of `arr` was already moved to the first call. The ownership
-system thus prevents us from using the same instance of `arr` in `foo`.
+En este caso, intentamos pasar la misma instancia de matriz `arr` por valor a las funciones `foo` y `bar`, lo que significa que el parámetro utilizado en ambas llamadas de función es la misma instancia de la matriz. Si agrega un valor a la matriz en `foo` y luego intenta agregar otro valor a la misma matriz en `bar`, lo que sucederá es que intentará escribir en la misma celda de memoria dos veces, lo que no está permitido en Cairo.
+Para evitar esto, la propiedad de la variable `arr` se mueve de la función `main` a la función `foo`. Cuando se intenta llamar a `bar` con `arr` como parámetro, la propiedad de `arr` ya se movió a la primera llamada. El sistema de propiedad nos impide usar la misma instancia de `arr` en `foo`.
 
-Running the code above will result in a compile-time error:
+Ejecutar el código anterior resultará en un error en tiempo de compilación:
 
 ```console
 error: Variable was previously moved. Trait has no implementation in context: core::traits::Copy::<core::array::Array::<core::integer::u128>>
@@ -122,11 +91,11 @@ error: Variable was previously moved. Trait has no implementation in context: co
         ^*****^
 ```
 
-### The `Copy` Trait
+### El Trait `Copy`
 
-If a type implements the `Copy` trait, passing it to a function will not move the ownership of the value to the function called, but will instead pass a copy of the value.
-You can implement the `Copy` trait on your type by adding the `#[derive(Copy)]` annotation to your type definition. However, Cairo won't allow a type to be annotated with Copy if the type itself or any of its components don't implement the Copy trait.
-While Arrays and Dictionaries can't be copied, custom types that don't contain either of them can be.
+Si un tipo implementa el trait `Copy`, pasar su valor a una función no moverá la propiedad del valor a la función llamada, sino que pasará una copia del valor.
+Puedes implementar el trait `Copy` en tu tipo agregando la anotación `#[derive(Copy)]` a la definición de tu tipo. Sin embargo, Cairo no permitirá que un tipo sea anotado con `Copy` si el tipo en sí mismo o cualquiera de sus componentes no implementan el trait `Copy`.
+Mientras que los Arrays y Diccionarios no pueden ser copiados, los tipos personalizados que no los contienen sí pueden serlo.
 
 ```rust
 #[derive(Copy, Drop)]
@@ -146,13 +115,14 @@ fn foo(p: Point) {
 }
 ```
 
-In this example, we can pass `p1` twice to the foo function because the `Point` type implements the `Copy` trait. This means that when we pass `p1` to `foo`, we are actually passing a copy of `p1`, and the ownership of `p1` remains with the main function.
-If you remove the `Copy` trait derivation from the `Point` type, you will get a compile-time error when trying to compile the code.
+En este ejemplo, podemos pasar `p1` dos veces a la función `foo` porque el tipo `Point` implementa el trait `Copy`. Esto significa que cuando pasamos `p1` a `foo`, en realidad estamos pasando una copia de `p1`, y la propiedad de `p1` permanece en la función principal.
 
-### The `Drop` Trait
+Si eliminamos la derivación del trait `Copy` del tipo `Point`, obtendremos un error en tiempo de compilación al intentar compilar el código.
 
-You may have noticed that the `Point` type in the previous example also implements the `Drop` trait. In Cairo, a value cannot go out of scope unless it has been previously moved.
-For example, the following code will not compile, because the struct `A` is not moved before it goes out of scope:
+### El Trait `Drop`
+
+Es posible que hayas notado que el tipo `Point` en el ejemplo anterior también implementa el trait `Drop`. En Cairo, un valor no puede salir del ámbito a menos que se haya movido previamente.
+Por ejemplo, el siguiente código no se compilará porque la estructura `A` no se mueve antes de que salga del ámbito:
 
 ```rust
 struct A {}
@@ -162,19 +132,12 @@ fn main() {
 }
 ```
 
-This is to ensure the soundness of Cairo programs. Soundness refers to the fact that if a
-statement during the execution of the program is false, no cheating prover can convince an
-honest verifier that it is true. In our case, we want to ensure the consistency of
-consecutive dictionary key updates during program execution, which is only checked when
-the dictionaries are`squashed` - which moves the ownership of the dictionary to the
-`squash` method, thus allowing the dictionary to go out of scope. Unsquashed dictionaries
-are dangerous, as a malicious prover could prove the correctness of inconsistent updates.
+En Cairo, esto se hace para garantizar la solidez de los programas. La solidez se refiere al hecho de que si una declaración durante la ejecución del programa es falsa, ningún probador deshonesto puede convencer a un verificador honesto de que es verdadera. En nuestro caso, queremos asegurar la consistencia de las actualizaciones consecutivas de claves de un diccionario durante la ejecución del programa, lo cual solo se verifica cuando los diccionarios se "aplastan" - lo que mueve la propiedad del diccionario al método `squash`, permitiendo que el diccionario salga de ámbito. Los diccionarios no "aplastados" son peligrosos, ya que un probador malintencionado podría probar la corrección de actualizaciones inconsistentes.
 
-However, types that implement the `Drop` trait are allowed to go out of scope without being explicitly moved. When a value of a type that implements the `Drop` trait goes out of scope, the `Drop` implementation is called on the type, which moves the value to the `drop` function, allowing it to go out of scope - This is what we call "dropping" a value.
-It is important to note that the implementation of drop is a "no-op", meaning that it doesn't perform any actions other than allowing the value to go out of scope.
+Sin embargo, los tipos que implementan el trait `Drop` se permiten que salgan de ámbito sin ser movidos explícitamente. Cuando un valor de un tipo que implementa el trait `Drop` sale de ámbito, se llama a la implementación `Drop` en el tipo, lo que mueve el valor a la función `drop`, permitiendo que salga de ámbito: esto es lo que llamamos "eliminar" un valor. Es importante tener en cuenta que la implementación de `Drop` es una "operación nula", lo que significa que no realiza ninguna acción aparte de permitir que el valor salga de ámbito.
 
-The `Drop` implementation can be derived for all types, allowing them to be dropped when goint out of scope, except for dictionaries (`Felt252Dict`) and types containing dictionaries.
-For example, the following code compiles:
+La implementación de `Drop` se puede derivar para todos los tipos, lo que les permite eliminarse al salir de ámbito, excepto para los diccionarios (`Felt252Dict`) y los tipos que contienen diccionarios.
+Por ejemplo, el siguiente código compila:
 
 ```rust
 #[derive(Drop)]
@@ -185,11 +148,11 @@ fn main() {
 }
 ```
 
-### The `Destruct` Trait
+### El trait `Destruct`
 
-Manually calling the `squash` method on a dictionary is not very convenient, and it is easy to forget to do so. To make it easier to use dictionaries, Cairo provides the `Destruct` trait, which allows you to specify the behavior of a type when it goes out of scope. While Dictionaries don't implement the `Drop` trait, they do implement the `Destruct` trait, which allows them to automatically be `squashed` when they go out of scope. This means that you can use dictionaries without having to manually call the `squash` method.
+Llamar manualmente al método `squash` en un diccionario no es muy conveniente y es fácil de olvidar hacerlo. Para facilitar el uso de los diccionarios, Cairo proporciona el trait `Destruct`, que te permite especificar el comportamiento de un tipo cuando sale del ámbito. Si bien los diccionarios no implementan el trait `Drop`, sí implementan el trait `Destruct`, lo que les permite ser `aplastados` automáticamente cuando salen del ámbito. Esto significa que puedes usar diccionarios sin tener que llamar manualmente al método `squash`.
 
-Consider the following example, in which we define a custom type that contains a dictionary:
+Considera el siguiente ejemplo, en el que definimos un tipo personalizado que contiene un diccionario:
 
 ```rust
 use dict::Felt252DictTrait;
@@ -205,7 +168,7 @@ fn main() {
 }
 ```
 
-If you try to run this code, you will get a compile-time error:
+Si intenta ejecutar este código, obtendrá un error de tiempo de compilación:
 
 ```console
 error: Variable not dropped. Trait has no implementation in context: core::traits::Drop::<temp7::temp7::A>. Trait has no implementation in context: core::traits::Destruct::<temp7::temp7::A>.
@@ -214,7 +177,7 @@ error: Variable not dropped. Trait has no implementation in context: core::trait
     ^*^
 ```
 
-When A goes out of scope, it can't be dropped as it implements neither the `Drop` (as it contains a dictionary and can't `derive(Drop)`) nor the `Destruct` trait. To fix this, we can derive the `Destruct` trait implementation for the `A` type:
+Cuando `A` sale del alcance, no puede ser liberado ya que no implementa ni el `Drop` (ya que contiene un diccionario y no puede `derive(Drop)`) ni el trait `Destruct`. Para solucionar esto, podemos derivar la implementación del trait `Destruct` para el tipo `A`:
 
 ```rust
 use dict::Felt252DictTrait;
@@ -231,16 +194,13 @@ fn main() {
 }
 ```
 
-Now, when `A` goes out of scope, its dictionary will be automatically `squashed`, and the program will compile.
+### Copiar datos de un Array con Clone
 
-### Copy Array data with Clone
+Si queremos copiar profundamente los datos de un `Array`, podemos utilizar un método común llamado `clone`. Discutiremos la sintaxis de los métodos en el Capítulo 5, pero como los métodos son una característica común en muchos lenguajes de programación, es probable que ya los hayas visto antes.
 
-If we _do_ want to deeply copy the data of an `Array`, we can use a common method called `clone`. We’ll discuss method syntax in Chapter 5, but because methods are a common feature in many
-programming languages, you’ve probably seen them before.
+Aquí hay un ejemplo del método `clone` en acción.
 
-Here’s an example of the `clone` method in action.
-
-> Note: in the following example, we need to import the `Clone` trait from the corelib `clone` module, and its implementation for the array type from the `array` module.
+> Nota: en el siguiente ejemplo, necesitamos importar el rasgo `Clone` del módulo `clone` de la biblioteca estándar, y su implementación para el tipo `array` del módulo `array`.
 
 ```rust
 use array::ArrayTrait;
@@ -252,20 +212,17 @@ let arr2 = arr1.clone();
 
 ```
 
-> Note: you will need to run `cairo-run` with the `--available-gas=2000000` option to run this example, because it uses a loop and must be ran with a gas limit.
+> Nota: necesitarás ejecutar `cairo-run` con la opción `--available-gas=2000000` para ejecutar este ejemplo, ya que utiliza un bucle y debe ser ejecutado con un límite de gas.
 
-When you see a call to `clone`, you know that some arbitrary code is being
-executed and that code may be expensive. It’s a visual indicator that something
-different is going on.
+Cuando ves una llamada a `clone`, sabes que se está ejecutando algún código arbitrario y ese código puede ser costoso. Es un indicador visual de que algo diferente está sucediendo.
 
-### Ownership and Functions
+### Propiedad y Funciones
 
-Passing a variable to a function will either move it or copy it. As seen in the Array section, passing an `Array` as a function parameter transfers its ownership; let's see what happens with other types.
+Pasar una variable a una función puede moverla o copiarla. Como se vio en la sección de Array, pasar un `Array` como parámetro de función transfiere su propiedad; veamos qué sucede con otros tipos.
 
-Listing 3-3 has an example with some annotations
-showing where variables go into and out of scope.
+El Listado 3-3 tiene un ejemplo con algunas anotaciones que muestran dónde las variables entran y salen de ámbito.
 
-<span class="filename">Filename: src/main.cairo</span>
+<span class="filename">Nombre de archivo: src/main.cairo</span>
 
 ```rust
 #[derive(Drop)]
@@ -293,21 +250,15 @@ fn makes_copy(some_uinteger: u128) { // some_uinteger comes into scope
 } // Here, some_integer goes out of scope and is dropped.
 ```
 
-<span class="caption">Listing 3-3: Functions with ownership and scope
-annotated</span>
+<span class="caption">Listado 3-3: Funciones con propiedad y alcance anotados</span>
 
-If we tried to use `my_struct` after the call to `takes_ownership`, Cairo would throw a
-compile-time error. These static checks protect us from mistakes. Try adding
-code to `main` that uses `my_struct` and `x` to see where you can use them and where
-the ownership rules prevent you from doing so.
+Si intentamos usar `my_struct` después de la llamada a `takes_ownership`, Cairo lanzará un error en tiempo de compilación. Estas verificaciones estáticas nos protegen de errores. Intenta agregar código a `main` que use `my_struct` y `x` para ver dónde puedes usarlos y dónde las reglas de propiedad te impiden hacerlo.
 
-### Return Values and Scope
+### Valores de retorno y alcance
 
-Returning values can also transfer ownership. Listing 3-4 shows an example of a
-function that returns some value, with similar annotations as those in Listing
-4-3.
+La devolución de valores también puede transferir la propiedad. El Listado 3-4 muestra un ejemplo de una función que devuelve algún valor, con anotaciones similares a las del Listado 3-3.
 
-<span class="filename">Filename: src/main.cairo</span>
+<span class="filename">Nombre de archivo: src/main.cairo</span>
 
 ```rust
 #[derive(Drop)]
@@ -344,20 +295,15 @@ fn takes_and_gives_back(some_a: A) -> A { // some_a comes into
 }
 ```
 
-<span class="caption">Listing 3-4: Transferring ownership of return
-values</span>
+<span class="caption">Listado 3-4: Transferencia de propiedad de valores devueltos</span>
 
-When a variable goes out of scope, its value is dropped, unless ownership of the value has been moved to another variable.
+Cuando una variable sale del ámbito, su valor se elimina, a menos que la propiedad del valor se haya transferido a otra variable.
 
-While this works, taking ownership and then returning ownership with every
-function is a bit tedious. What if we want to let a function use a value but
-not take ownership? It’s quite annoying that anything we pass in also needs to
-be passed back if we want to use it again, in addition to any data resulting
-from the body of the function that we might want to return as well.
+Si bien esto funciona, tomar propiedad y luego devolver la propiedad con cada función es un poco tedioso. ¿Qué sucede si queremos permitir que una función use un valor pero no tome posesión de él? Es bastante molesto que todo lo que pasemos también deba ser devuelto si queremos usarlo nuevamente, además de cualquier dato que resulte del cuerpo de la función que también podríamos querer devolver.
 
-Cairo does let us return multiple values using a tuple, as shown in Listing 3-5.
+Cairo nos permite devolver varios valores usando una tupla, como se muestra en el Listado 3-5. 
 
-<span class="filename">Filename: src/main.cairo</span>
+<span class="filename">Nombre de archivo: src/main.cairo</span>
 
 ```rust
 use array::ArrayTrait;
@@ -374,11 +320,9 @@ fn calculate_length(arr: Array<u128>) -> (Array<u128>, usize) {
 }
 ```
 
-<span class="caption">Listing 3-5: Returning ownership of parameters</span>
+<span class="caption">Listado 3-5: Devolviendo propiedad de los parámetros</span>
 
-But this is too much ceremony and a lot of work for a concept that should be
-common. Luckily for us, Cairo has two features for using a value without
-transferring ownership, called _references_ and _snapshots_.
+Pero esto es demasiado ceremonioso y mucho trabajo para un concepto que debería ser común. Afortunadamente, Cairo tiene dos características para usar un valor sin transferir la propiedad, llamadas _referencias_ y _snapshots_.
 
 [data-types]: ch02-02-data-types.html#data-types
 [method-syntax]: ch04-03-method-syntax.html#method-syntax

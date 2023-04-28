@@ -107,7 +107,7 @@ pantalla. Hay cuatro detalles importantes a tener en cuenta aquí.
 
 En primer lugar, el estilo de Cairo es hacer sangrías con cuatro espacios, no con una tabulación.
 
-Segundo, la función `print()` es un método del trait `PrintTrait`. Este trait se importa de la librería del núcleo de Cairo, y define cómo imprimir valores en la pantalla para diferentes tipos de datos. En nuestro caso, nuestro texto está definido como una "cadena corta", que es una cadena ASCII que puede caber en el tipo de datos básico de Cairo, que es el tipo `felt252`. Al llamar a `Hello, world!'.print()`, estamos llamando al método `print()` de la implementación `felt252` del rasgo `PrintTrait`.
+Segundo, la función `print()` es un método del trait `PrintTrait`. Este trait se importa de la librería del núcleo de Cairo, y define cómo imprimir valores en la pantalla para diferentes tipos de datos. En nuestro caso, nuestro texto está definido como una "cadena corta", que es una cadena ASCII que puede caber en el tipo de datos básico de Cairo, que es el tipo `felt252`. Al llamar a `Hello, world!'.print()`, estamos llamando al método `print()` de la implementación `felt252` del trait `PrintTrait`.
 
 En tercer lugar, ves la cadena corta `'Hello, world!'` Pasamos esta cadena corta como argumento
 a `print()`, y la cadena corta se imprime en la pantalla.

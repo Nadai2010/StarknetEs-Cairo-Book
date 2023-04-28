@@ -49,13 +49,13 @@ fn largest_list<T, impl TDrop: Drop<T>>(l1: Array<T>, l2: Array<T>) -> Array<T> 
 }
 ```
 
-La nueva función `largest_list` incluye en su definición el requisito de que cualquier tipo genérico que se coloque allí debe poder eliminarse. La función `main` sigue sin cambios, el compilador es lo suficientemente inteligente como para deducir qué tipo concreto se está utilizando y si implementa el rasgo `Drop`.
+La nueva función `largest_list` incluye en su definición el requisito de que cualquier tipo genérico que se coloque allí debe poder eliminarse. La función `main` sigue sin cambios, el compilador es lo suficientemente inteligente como para deducir qué tipo concreto se está utilizando y si implementa el trait `Drop`.
 
 ### Restricciones para tipos genéricos
 
-Al definir tipos genéricos, es útil tener información sobre ellos. Saber qué rasgos implementa un tipo genérico nos permite usarlos de manera más efectiva en la lógica de una función a costa de limitar los tipos genéricos que se pueden usar con la función. Vimos un ejemplo de esto anteriormente al agregar la implementación de `TDrop` como parte de los argumentos genéricos de `largest_list`. Si bien `TDrop` se agregó para cumplir con los requisitos del compilador, también podemos agregar restricciones para beneficiar nuestra lógica de función.
+Al definir tipos genéricos, es útil tener información sobre ellos. Saber qué traits implementa un tipo genérico nos permite usarlos de manera más efectiva en la lógica de una función a costa de limitar los tipos genéricos que se pueden usar con la función. Vimos un ejemplo de esto anteriormente al agregar la implementación de `TDrop` como parte de los argumentos genéricos de `largest_list`. Si bien `TDrop` se agregó para cumplir con los requisitos del compilador, también podemos agregar restricciones para beneficiar nuestra lógica de función.
 
-Imaginemos que queremos, dado una lista de elementos de algún tipo genérico `T`, encontrar el elemento más pequeño entre ellos. Inicialmente, sabemos que para que un elemento de tipo `T` sea comparable, debe implementar el rasgo `PartialOrd`. La función resultante sería:
+Imaginemos que queremos, dado una lista de elementos de algún tipo genérico `T`, encontrar el elemento más pequeño entre ellos. Inicialmente, sabemos que para que un elemento de tipo `T` sea comparable, debe implementar el trait `PartialOrd`. La función resultante sería:
 
 ```rust
 // This code does not compile!
@@ -96,9 +96,9 @@ fn main()  {
 }
 ```
 
-La función `smallest_element` utiliza un tipo genérico `T` que implementa el rasgo `PartialOrd`, toma una instantánea de un `Array<T>` como parámetro y devuelve una copia del elemento más pequeño. Debido a que el parámetro es de tipo `@Array<T>`, ya no necesitamos soltarlo al final de la ejecución y por lo tanto no necesitamos implementar el rasgo `Drop` para `T` también. ¿Por qué entonces no compila?
+La función `smallest_element` utiliza un tipo genérico `T` que implementa el trait `PartialOrd`, toma una instantánea de un `Array<T>` como parámetro y devuelve una copia del elemento más pequeño. Debido a que el parámetro es de tipo `@Array<T>`, ya no necesitamos soltarlo al final de la ejecución y por lo tanto no necesitamos implementar el trait `Drop` para `T` también. ¿Por qué entonces no compila?
 
-Cuando hacemos indexación en `list`, el valor resultante es una instantánea del elemento indexado, a menos que `PartialOrd` esté implementado para `@T` necesitamos deshacer la instantánea del elemento usando `*`. La operación `*` requiere una copia de `@T` a `T`, lo que significa que `T` necesita implementar el rasgo `Copy`. Después de copiar un elemento de tipo `@T` a `T`, ahora hay variables con tipo `T` que necesitan ser soltadas, lo que requiere que `T` implemente también el rasgo `Drop`. Debemos entonces agregar la implementación de los rasgos `Drop` y `Copy` para que la función sea correcta. Después de actualizar la función `smallest_element`, el código resultante sería:
+Cuando hacemos indexación en `list`, el valor resultante es una instantánea del elemento indexado, a menos que `PartialOrd` esté implementado para `@T` necesitamos deshacer la instantánea del elemento usando `*`. La operación `*` requiere una copia de `@T` a `T`, lo que significa que `T` necesita implementar el trait `Copy`. Después de copiar un elemento de tipo `@T` a `T`, ahora hay variables con tipo `T` que necesitan ser soltadas, lo que requiere que `T` implemente también el trait `Drop`. Debemos entonces agregar la implementación de los traits `Drop` y `Copy` para que la función sea correcta. Después de actualizar la función `smallest_element`, el código resultante sería:
 
 ```rs
 fn smallest_element<T, impl TPartialOrd: PartialOrd<T>, impl TCopy: Copy<T>, impl TDrop: Drop<T>>(list: @Array<T>) -> T {
