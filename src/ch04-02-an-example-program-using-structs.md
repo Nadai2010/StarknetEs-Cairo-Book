@@ -1,8 +1,8 @@
-# An Example Program Using Structs
+# Un programa de ejemplo usando estructuras
 
-To understand when we might want to use structs, let’s write a program that calculates the area of a rectangle. We’ll start by using single variables, and then refactor the program until we’re using structs instead.
+Para entender cuándo podríamos usar estructuras, escribamos un programa que calcule el área de un rectángulo. Comenzaremos usando variables individuales y luego reescribiremos el programa hasta que estemos usando estructuras en su lugar.
 
-Let’s make a new project with Scarb called _rectangles_ that will take the width and height of a rectangle specified in pixels and calculate the area of the rectangle. Listing 4-6 shows a short program with one way of doing exactly that in our project’s _src/lib.cairo_.
+Hagamos un nuevo proyecto con Scarb llamado *rectangles* que tomará el ancho y la altura de un rectángulo en píxeles y calculará el área del rectángulo. El Listado 4-6 muestra un pequeño programa con una forma de hacer exactamente eso en el *src/lib.cairo* de nuestro proyecto.
 
 <span class="filename">Filename: src/lib.cairo</span>
 
@@ -20,9 +20,9 @@ fn area(width: u64, height: u64) -> u64 {
 }
 ```
 
-<span class="caption">Listing 4-6: Calculating the area of a rectangle specified by separate width and height variables</span>
+<span class="caption">Listado 4-6: Cálculo del área de un rectángulo especificado por variables separadas de ancho y alto</span>
 
-Now run the program with `cairo-run src/lib.cairo`:
+Para compilar el programa usamos `cairo-run src/lib.cairo`:
 
 ```bash
 $ cairo-run src/lib.cairo
@@ -31,19 +31,20 @@ $ cairo-run src/lib.cairo
 Run completed successfully, returning []
 ```
 
-This code succeeds in figuring out the area of the rectangle by calling the `area` function with each dimension, but we can do more to make this code clear and readable.
+Este código logra calcular el área del rectángulo llamando a la función `area` con cada dimensión, pero podemos hacer más para que este código sea claro y legible.
 
-The issue with this code is evident in the signature of `area`:
+El problema con este código es evidente en la declaración de la función `area`:
 
 ```rust
 fn area(width: u64, height: u64) -> u64 {
 ```
 
-The `area` function is supposed to calculate the area of one rectangle, but the function we wrote has two parameters, and it’s not clear anywhere in our program that the parameters are related. It would be more readable and more manageable to group width and height together. We’ve already discussed one way we might do that in [Chapter 3](ch02-02-data-types.html#the-tuple-type): using tuples.
+Se supone que la función `area` calcula el área de un rectángulo, pero la función que escribimos tiene dos parámetros, y no está claro en ninguna parte de nuestro programa que los parámetros estén relacionados. Sería más legible y manejable agrupar el ancho y el alto juntos. Ya discutimos una forma en que podríamos hacer eso en el [Capítulo 3](ch02-02-data-types.html#the-tuple-type): usando tuplas.
 
-## Refactoring with Tuples
 
-Listing 4-7 shows another version of our program that uses tuples.
+## Reescribiendo con tuplas
+
+El listado 4-7 muestra otra versión de nuestro programa usando tuplas.
 
 <span class="filename">Filename: src/lib.cairo</span>
 
@@ -61,15 +62,18 @@ fn area(dimension: (u64, u64)) -> u64 {
 }
 ```
 
-<span class="caption">Listing 4-7: Specifying the width and height of the rectangle with a tuple</span>
+<span class="caption">Listing 4-7: Especificando el ancho y alto de un rectangulo con una tupla</span>
 
-In one way, this program is better. Tuples let us add a bit of structure, and we’re now passing just one argument. But in another way, this version is less clear: tuples don’t name their elements, so we have to index into the parts of the tuple, making our calculation less obvious.
+En cierto modo, este programa es mejor. Las tuplas nos permiten agregar un poco de estructura y ahora estamos pasando solo un argumento. Pero en otro sentido, esta versión es menos clara: las tuplas no nombran sus elementos, por lo que tenemos que indexar las partes de la tupla, lo que hace que nuestro cálculo sea menos obvio.
 
-Mixing up the width and height wouldn’t matter for the area calculation, but if we want to calculate the difference, it would matter! We would have to keep in mind that `width` is the tuple index `0` and `height` is the tuple index `1`. This would be even harder for someone else to figure out and keep in mind if they were to use our code. Because we haven’t conveyed the meaning of our data in our code, it’s now easier to introduce errors.
+Mezclar el ancho y la altura no importaría para el cálculo del área, pero si queremos calcular la diferencia, ¡sería importante! Tendríamos que tener en cuenta que `width` es el índice de tupla `0` y `height` es el índice de tupla `1`. Esto sería aún más difícil de entender y tener en cuenta para otra persona si usara nuestro código. Debido a que no hemos transmitido el significado de nuestros datos en nuestro código, ahora es más fácil introducir errores.
 
-## Refactoring with Structs: Adding More Meaning
 
-We use structs to add meaning by labeling the data. We can transform the tuple we’re using into a struct with a name for the whole as well as names for the parts.
+
+## Reescribiendo con `struct`: agrega más significado
+
+Usamos estructuras para agregar significado al etiquetar los datos. Podemos transformar la tupla que estamos usando en una estructura con un nombre para el todo y nombres para las partes.
+
 
 <span class="filename">Filename: src/lib.cairo</span>
 
@@ -95,13 +99,14 @@ fn area(rectangle: Rectangle) -> u64 {
 }
 ```
 
-<span class="caption">Listing 4-8: Defining a `Rectangle` struct</span>
+<span class="caption">Listado 4-8: Definición de una estructura llamada `Rectangle`</span>
 
-Here we’ve defined a struct and named it `Rectangle`. Inside the curly brackets, we defined the fields as `width` and `height`, both of which have type `u64`. Then, in `main`, we created a particular instance of `Rectangle` that has a width of `30` and a height of `10`. Our `area` function is now defined with one parameter, which we’ve named `rectangle` which is of type `Rectangle` struct. We can then access the fields of the instance with dot notation, and it gives descriptive names to the values rather than using the tuple index values of `0` and `1`.
+Aquí hemos definido una estructura y la hemos llamado `Rectangle`. Dentro de las llaves, definimos los campos como `width` y `height`, los cuales tienen el tipo `u64`. Luego, en `main`, creamos una instancia particular de `Rectangle` que tiene un ancho de `30` y una altura de `10`. Nuestra función `area` ahora está definida con un parámetro, al que hemos llamado `rectangle` que es de tipo de la estructura `Rectangle`. Luego podemos acceder a los campos de la instancia con notación de punto, y dar nombres descriptivos a los valores en lugar de usar los valores de índice de tupla de `0` y `1`.
 
-## Adding Useful Functionality with Trait
 
-It’d be useful to be able to print an instance of `Rectangle` while we’re debugging our program and see the values for all its fields. Listing 4-9 tries using the `print` as we have used in previous chapters. This won’t work.
+## Agregando funcionalidades útiles con `trait`
+
+Sería útil poder imprimir una instancia de `Rectangle` mientras estamos depurando nuestro programa y ver los valores de todos sus campos. El Listado 4-9 intenta usar `print` como lo hemos usado en capítulos anteriores. Esto no funcionará.
 
 <span class="filename">Filename: src/lib.cairo</span>
 
@@ -122,9 +127,9 @@ fn main() {
 }
 ```
 
-<span class="caption">Listing 4-9: Attempting to print a `Rectangle` instance</span>
+<span class="caption">Listado 4-9: Intentando imprimir una instancia de `Rectangle`</span>
 
-When we compile this code, we get an error with this message:
+Cuando compilamos este código, obtenemos un error con el siguiente mensaje:
 
 ```bash
 $ cairo-compile src/lib.cairo
@@ -136,8 +141,9 @@ error: Method `print` not found on type "../src::Rectangle". Did you import the 
 Error: Compilation failed.
 ```
 
-The `print` trait is implemented for many data types, but not for the `Rectangle` struct. We can fix this by implementing the `PrintTrait` trait on `Rectangle` as shown in Listing 4-10.
-To learn more about traits, see [Traits in Cairo](ch07-02-traits-in-cairo.md).
+El trait `print` está implementado para muchos tipos de datos, pero no para la estructura `Rectangle`. Podemos arreglar esto implementando el trait `PrintTrait` en la estructura `Rectangle` como se muestra en el Listado 4-10.
+
+Para aprender más sobre traits,[Traits en Cairo](ch07-02-traits-in-cairo.md).
 
 <span class="filename">Filename: src/lib.cairo</span>
 
@@ -165,6 +171,6 @@ impl RectanglePrintImpl of PrintTrait<Rectangle> {
 }
 ```
 
-<span class="caption">Listing 4-10: Implementing the `PrintTrait` trait on `Rectangle`</span>
+<span class="caption">Listado 4-10:  Implementación del trait `PrintTrait` en `Rectangle`</span>
 
-Nice! It’s not the prettiest output, but it shows the values of all the fields for this instance, which would definitely help during debugging.
+¡Bien! No es el resultado más bonito, pero muestra los valores de todos los campos para esta instancia, lo que definitivamente ayudaría durante la depuración.
